@@ -1,8 +1,6 @@
 package build.dream.admin.controllers;
 
-import build.dream.admin.models.host.CreateHostModel;
-import build.dream.admin.models.host.ListModel;
-import build.dream.admin.models.host.SaveModel;
+import build.dream.admin.models.host.*;
 import build.dream.admin.services.HostService;
 import build.dream.common.utils.ApplicationHandler;
 import build.dream.common.utils.MethodCaller;
@@ -63,5 +61,77 @@ public class HostController {
             return hostService.list(listModel);
         };
         return ApplicationHandler.callMethod(methodCaller, "查询主机列表失败", requestParameters);
+    }
+
+    /**
+     * 开机
+     *
+     * @return
+     */
+    @RequestMapping(value = "/start")
+    @ResponseBody
+    public String start() {
+        Map<String, String> requestParameters = ApplicationHandler.getRequestParameters();
+        MethodCaller methodCaller = () -> {
+            StartModel startModel = ApplicationHandler.instantiateObject(StartModel.class, requestParameters);
+            startModel.validateAndThrow();
+
+            return hostService.start(startModel);
+        };
+        return ApplicationHandler.callMethod(methodCaller, "开机失败", requestParameters);
+    }
+
+    /**
+     * 关机
+     *
+     * @return
+     */
+    @RequestMapping(value = "/shutdown")
+    @ResponseBody
+    public String shutdown() {
+        Map<String, String> requestParameters = ApplicationHandler.getRequestParameters();
+        MethodCaller methodCaller = () -> {
+            ShutdownModel shutdownModel = ApplicationHandler.instantiateObject(ShutdownModel.class, requestParameters);
+            shutdownModel.validateAndThrow();
+
+            return hostService.shutdown(shutdownModel);
+        };
+        return ApplicationHandler.callMethod(methodCaller, "关机失败", requestParameters);
+    }
+
+    /**
+     * 关机
+     *
+     * @return
+     */
+    @RequestMapping(value = "/destroy")
+    @ResponseBody
+    public String destroy() {
+        Map<String, String> requestParameters = ApplicationHandler.getRequestParameters();
+        MethodCaller methodCaller = () -> {
+            DestroyModel destroyModel = ApplicationHandler.instantiateObject(DestroyModel.class, requestParameters);
+            destroyModel.validateAndThrow();
+
+            return hostService.destroy(destroyModel);
+        };
+        return ApplicationHandler.callMethod(methodCaller, "关机失败", requestParameters);
+    }
+
+    /**
+     * 删除虚拟机
+     *
+     * @return
+     */
+    @RequestMapping(value = "/undefine")
+    @ResponseBody
+    public String undefine() {
+        Map<String, String> requestParameters = ApplicationHandler.getRequestParameters();
+        MethodCaller methodCaller = () -> {
+            UndefineModel undefineModel = ApplicationHandler.instantiateObject(UndefineModel.class, requestParameters);
+            undefineModel.validateAndThrow();
+
+            return hostService.undefine(undefineModel);
+        };
+        return ApplicationHandler.callMethod(methodCaller, "删除虚拟机失败", requestParameters);
     }
 }
