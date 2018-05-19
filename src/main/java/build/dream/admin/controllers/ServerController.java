@@ -1,5 +1,6 @@
 package build.dream.admin.controllers;
 
+import build.dream.admin.models.server.CreateServerModel;
 import build.dream.admin.models.server.ListModel;
 import build.dream.admin.services.ServerService;
 import build.dream.common.utils.ApplicationHandler;
@@ -28,5 +29,18 @@ public class ServerController {
             return serverService.list(listModel);
         };
         return ApplicationHandler.callMethod(methodCaller, "查询服务器列表失败", requestParameters);
+    }
+
+    @RequestMapping(value = "/createServer")
+    @ResponseBody
+    public String createServer() {
+        Map<String, String> requestParameters = ApplicationHandler.getRequestParameters();
+        MethodCaller methodCaller = () -> {
+            CreateServerModel createServerModel = ApplicationHandler.instantiateObject(CreateServerModel.class, requestParameters);
+            createServerModel.validateAndThrow();
+
+            return serverService.createServer(createServerModel);
+        };
+        return ApplicationHandler.callMethod(methodCaller, "创建服务器失败", requestParameters);
     }
 }
