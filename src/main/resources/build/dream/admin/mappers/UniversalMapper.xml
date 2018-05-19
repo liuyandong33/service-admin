@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
-<mapper namespace="build.dream.platform.mappers.UniversalMapper">
+<mapper namespace="build.dream.admin.mappers.UniversalMapper">
     <update id="universalUpdate" parameterType="build.dream.common.utils.UpdateModel">
         UPDATE ${tableName} SET
         <foreach collection="contentValues" index="index" item="contentValue" separator=",">
