@@ -6,8 +6,11 @@ import org.hibernate.validator.constraints.Length;
 import javax.validation.constraints.Max;
 import javax.validation.constraints.Min;
 import javax.validation.constraints.NotNull;
+import java.math.BigInteger;
 
-public class AddModel extends BasicModel {
+public class SaveModel extends BasicModel {
+    private BigInteger id;
+
     @NotNull
     @Length(max = 20)
     private String name;
@@ -25,6 +28,17 @@ public class AddModel extends BasicModel {
 
     @NotNull
     private String password;
+
+    @NotNull
+    private BigInteger userId;
+
+    public BigInteger getId() {
+        return id;
+    }
+
+    public void setId(BigInteger id) {
+        this.id = id;
+    }
 
     public String getName() {
         return name;
@@ -64,5 +78,13 @@ public class AddModel extends BasicModel {
 
     public void setPassword(String password) {
         this.password = password;
+    }
+
+    public BigInteger getUserId() {
+        return userId;
+    }
+
+    public void setUserId(BigInteger userId) {
+        this.userId = userId;
     }
 }

@@ -5,13 +5,29 @@ import build.dream.common.utils.ApplicationHandler;
 import build.dream.common.utils.NamingStrategyUtils;
 import build.dream.common.utils.SearchModel;
 import org.apache.commons.beanutils.BeanUtils;
+import org.apache.commons.beanutils.ConvertUtils;
+import org.apache.commons.beanutils.converters.BigDecimalConverter;
+import org.apache.commons.beanutils.converters.BigIntegerConverter;
+import org.apache.commons.beanutils.converters.DateConverter;
+import org.apache.commons.beanutils.converters.IntegerConverter;
+import org.apache.commons.collections.MapUtils;
 
+import java.math.BigDecimal;
+import java.math.BigInteger;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 import java.util.Map;
 
 public class DatabaseHelper {
     private static UniversalMapper UNIVERSAL_MAPPER;
+
+    static {
+        ConvertUtils.register(new BigIntegerConverter(null), BigInteger.class);
+        ConvertUtils.register(new IntegerConverter(null), Integer.class);
+        ConvertUtils.register(new BigDecimalConverter(null), BigDecimal.class);
+        ConvertUtils.register(new DateConverter(null), Date.class);
+    }
 
     public static UniversalMapper obtainUniversalMapper() {
         if (UNIVERSAL_MAPPER == null) {
@@ -42,8 +58,11 @@ public class DatabaseHelper {
         try {
             searchModel.setTableName(tableName);
             Map<String, Object> map = obtainUniversalMapper().find(searchModel);
-            T t = domainClass.newInstance();
-            BeanUtils.populate(t, map);
+            T t = null;
+            if (MapUtils.isNotEmpty(map)) {
+                t = domainClass.newInstance();
+                BeanUtils.populate(t, map);
+            }
             return t;
         } catch (Exception e) {
             throw new RuntimeException(e);
