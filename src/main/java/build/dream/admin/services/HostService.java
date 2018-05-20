@@ -115,6 +115,8 @@ public class HostService {
         String installResult = JSchUtils.executeCommand(session, installCommand.toString());
         System.out.println(installResult);
 
+        JSchUtils.disconnectSession(session);
+
         Host childHost = new Host();
         childHost.setType(2);
         childHost.setParentId(hostId);
@@ -168,6 +170,8 @@ public class HostService {
         String startCommand = "virsh start " + childHost.getName();
         String startResult = JSchUtils.executeCommand(session, startCommand);
 
+        JSchUtils.disconnectSession(session);
+
         ApiRest apiRest = new ApiRest();
         apiRest.setMessage("开机成功！");
         apiRest.setSuccessful(true);
@@ -200,6 +204,8 @@ public class HostService {
         Session session = JSchUtils.createSession(host.getUserName(), host.getPassword(), host.getIpAddress(), host.getSshPort());
         String shutdownCommand = "virsh shutdown " + childHost.getName();
         String shutdownResult = JSchUtils.executeCommand(session, shutdownCommand);
+
+        JSchUtils.disconnectSession(session);
 
         ApiRest apiRest = new ApiRest();
         apiRest.setMessage("关机成功！");
@@ -234,6 +240,8 @@ public class HostService {
         String shutdownCommand = "virsh destroy " + childHost.getName();
         String shutdownResult = JSchUtils.executeCommand(session, shutdownCommand);
 
+        JSchUtils.disconnectSession(session);
+
         ApiRest apiRest = new ApiRest();
         apiRest.setMessage("关机成功！");
         apiRest.setSuccessful(true);
@@ -266,6 +274,8 @@ public class HostService {
         Session session = JSchUtils.createSession(host.getUserName(), host.getPassword(), host.getIpAddress(), host.getSshPort());
         String shutdownCommand = "virsh undefine " + childHost.getName();
         String shutdownResult = JSchUtils.executeCommand(session, shutdownCommand);
+
+        JSchUtils.disconnectSession(session);
 
         childHost.setDeleted(true);
         DatabaseHelper.update(childHost);
@@ -332,6 +342,9 @@ public class HostService {
 
         ByteArrayInputStream byteArrayInputStream = new ByteArrayInputStream(byteArrayOutputStream.toByteArray());
         channelSftp.put(byteArrayInputStream, configFilePath, ChannelSftp.OVERWRITE);
+
+        JSchUtils.disconnectChannel(channelSftp);
+        JSchUtils.disconnectSession(session);
 
         ApiRest apiRest = new ApiRest();
         apiRest.setData(childHost);
