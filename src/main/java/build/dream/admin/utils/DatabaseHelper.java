@@ -1,5 +1,6 @@
 package build.dream.admin.utils;
 
+import build.dream.admin.constants.Constants;
 import build.dream.admin.mappers.UniversalMapper;
 import build.dream.common.utils.ApplicationHandler;
 import build.dream.common.utils.NamingStrategyUtils;
@@ -46,6 +47,15 @@ public class DatabaseHelper {
 
     public static long update(Object domain) {
         return obtainUniversalMapper().update(domain);
+    }
+
+    public static <T> T find(Class<T> domainClass, BigInteger id) {
+        String simpleName = domainClass.getSimpleName();
+        String tableName = NamingStrategyUtils.camelCaseToUnderscore(simpleName.substring(0, 1).toLowerCase() + simpleName.substring(1));
+
+        SearchModel searchModel = new SearchModel(true);
+        searchModel.addSearchCondition("id", Constants.SQL_OPERATION_SYMBOL_EQUALS, id);
+        return find(domainClass, tableName, searchModel);
     }
 
     public static <T> T find(Class<T> domainClass, SearchModel searchModel) {
