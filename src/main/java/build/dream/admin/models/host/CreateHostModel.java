@@ -27,7 +27,7 @@ public class CreateHostModel extends BasicModel {
     private Integer cpuCoreQuantity;
 
     @NotNull
-    @Min(value = 10485760)
+    @Min(value = 1024)
     private Integer memorySize;
 
     @NotNull

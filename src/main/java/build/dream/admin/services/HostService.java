@@ -318,8 +318,8 @@ public class HostService {
         Validate.notNull(host, "宿主机不存在！");
 
         Session session = JSchUtils.createSession(host.getUserName(), host.getPassword(), host.getIpAddress(), host.getSshPort());
-        String shutdownCommand = "virsh undefine " + childHost.getName();
-        String shutdownResult = JSchUtils.executeCommand(session, shutdownCommand);
+        String undefineCommand = "virsh undefine " + childHost.getName();
+        String undefineResult = JSchUtils.executeCommand(session, undefineCommand);
 
         JSchUtils.disconnectSession(session);
 
@@ -327,7 +327,39 @@ public class HostService {
         DatabaseHelper.update(childHost);
 
         ApiRest apiRest = new ApiRest();
+        apiRest.setData(undefineCommand);
         apiRest.setMessage("删除虚拟机成功！");
+        apiRest.setSuccessful(true);
+        return apiRest;
+    }
+
+    @Transactional(rollbackFor = Exception.class)
+    public ApiRest reboot(RebootModel rebootModel) throws JSchException, IOException {
+        BigInteger hostId = rebootModel.getHostId();
+        BigInteger userId = rebootModel.getUserId();
+
+        SearchModel childHostSearchModel = new SearchModel(true);
+        childHostSearchModel.addSearchCondition("id", Constants.SQL_OPERATION_SYMBOL_EQUALS, hostId);
+        Host childHost = DatabaseHelper.find(Host.class, childHostSearchModel);
+        Validate.notNull(childHost, "主机不存在！");
+
+        SearchModel hostSearchModel = new SearchModel(true);
+        hostSearchModel.addSearchCondition("id", Constants.SQL_OPERATION_SYMBOL_EQUALS, childHost.getParentId());
+        Host host = DatabaseHelper.find(Host.class, hostSearchModel);
+        Validate.notNull(host, "宿主机不存在！");
+
+        Session session = JSchUtils.createSession(host.getUserName(), host.getPassword(), host.getIpAddress(), host.getSshPort());
+        String rebootCommand = "virsh reboot " + childHost.getName();
+        String rebootResult = JSchUtils.executeCommand(session, rebootCommand);
+
+        JSchUtils.disconnectSession(session);
+
+        childHost.setDeleted(true);
+        DatabaseHelper.update(childHost);
+
+        ApiRest apiRest = new ApiRest();
+        apiRest.setData(rebootCommand);
+        apiRest.setMessage("重启虚拟机成功！");
         apiRest.setSuccessful(true);
         return apiRest;
     }

@@ -32,7 +32,7 @@ public class HostController {
         return ApplicationHandler.callMethod(methodCaller, "保存失败", requestParameters);
     }
 
-    @RequestMapping(value = "/createHost", method = RequestMethod.POST, produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
+    @RequestMapping(value = "/createHost", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
     @ResponseBody
     public String createHost() {
         Map<String, String> requestParameters = ApplicationHandler.getRequestParameters();
@@ -133,6 +133,19 @@ public class HostController {
             return hostService.undefine(undefineModel);
         };
         return ApplicationHandler.callMethod(methodCaller, "删除虚拟机失败", requestParameters);
+    }
+
+    @RequestMapping(value = "/reboot", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
+    @ResponseBody
+    public String reboot() {
+        Map<String, String> requestParameters = ApplicationHandler.getRequestParameters();
+        MethodCaller methodCaller = () -> {
+            RebootModel rebootModel = ApplicationHandler.instantiateObject(RebootModel.class, requestParameters);
+            rebootModel.validateAndThrow();
+
+            return hostService.reboot(rebootModel);
+        };
+        return ApplicationHandler.callMethod(methodCaller, "重启虚拟机失败", requestParameters);
     }
 
     /**
