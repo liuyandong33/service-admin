@@ -2,6 +2,7 @@ package build.dream.admin.models.host;
 
 import build.dream.common.models.BasicModel;
 
+import javax.validation.constraints.Min;
 import javax.validation.constraints.NotNull;
 import java.math.BigInteger;
 
@@ -10,12 +11,15 @@ public class UpdateModel extends BasicModel {
     private BigInteger id;
 
     @NotNull
+    @Min(value = 10)
     private Integer diskSize;
 
     @NotNull
+    @Min(value = 1)
     private Integer cupCoreQuantity;
 
     @NotNull
+    @Min(value = 10485760)
     private Integer memorySize;
 
     @NotNull

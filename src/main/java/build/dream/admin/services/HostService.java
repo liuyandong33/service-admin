@@ -115,6 +115,7 @@ public class HostService {
         String iosPath = "/disk/iso/CentOS-7-x86_64-Everything-1804.iso";
         StringBuilder installCommand = new StringBuilder("virt-install --virt-type kvm");
         installCommand.append(" --name " + name);
+        installCommand.append(" --vcpus=" + cupCoreQuantity);
         installCommand.append(" --ram " + memorySize);
         installCommand.append(" --cdrom=" + iosPath);
         installCommand.append(" --disk path=" + diskPath);
