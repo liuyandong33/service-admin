@@ -134,4 +134,22 @@ public class HostController {
         };
         return ApplicationHandler.callMethod(methodCaller, "删除虚拟机失败", requestParameters);
     }
+
+    /**
+     * 更新失败
+     *
+     * @return
+     */
+    @RequestMapping(value = "/update")
+    @ResponseBody
+    public String update() {
+        Map<String, String> requestParameters = ApplicationHandler.getRequestParameters();
+        MethodCaller methodCaller = () -> {
+            UpdateModel updateModel = ApplicationHandler.instantiateObject(UpdateModel.class, requestParameters);
+            updateModel.validateAndThrow();
+
+            return hostService.update(updateModel);
+        };
+        return ApplicationHandler.callMethod(methodCaller, "更新失败", requestParameters);
+    }
 }

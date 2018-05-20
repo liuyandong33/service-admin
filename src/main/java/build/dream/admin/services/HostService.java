@@ -7,14 +7,21 @@ import build.dream.admin.utils.JSchUtils;
 import build.dream.common.admin.domains.Host;
 import build.dream.common.api.ApiRest;
 import build.dream.common.utils.SearchModel;
+import com.jcraft.jsch.ChannelSftp;
 import com.jcraft.jsch.JSchException;
 import com.jcraft.jsch.Session;
+import com.jcraft.jsch.SftpException;
 import org.apache.commons.lang.Validate;
+import org.dom4j.Document;
+import org.dom4j.DocumentException;
+import org.dom4j.Element;
+import org.dom4j.io.OutputFormat;
+import org.dom4j.io.SAXReader;
+import org.dom4j.io.XMLWriter;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.io.File;
-import java.io.IOException;
+import java.io.*;
 import java.math.BigInteger;
 
 @Service
@@ -136,6 +143,7 @@ public class HostService {
 
     /**
      * 开机
+     *
      * @param startModel
      * @return
      * @throws JSchException
@@ -168,6 +176,7 @@ public class HostService {
 
     /**
      * 关机
+     *
      * @param shutdownModel
      * @return
      * @throws JSchException
@@ -200,6 +209,7 @@ public class HostService {
 
     /**
      * 关机
+     *
      * @param destroyModel
      * @return
      * @throws JSchException
@@ -232,6 +242,7 @@ public class HostService {
 
     /**
      * 删除虚拟机
+     *
      * @param undefineModel
      * @return
      * @throws JSchException
@@ -261,6 +272,70 @@ public class HostService {
 
         ApiRest apiRest = new ApiRest();
         apiRest.setMessage("删除虚拟机成功！");
+        apiRest.setSuccessful(true);
+        return apiRest;
+    }
+
+    /**
+     * 更新主机配置
+     *
+     * @param updateModel
+     * @return
+     * @throws JSchException
+     * @throws SftpException
+     * @throws IOException
+     */
+    @Transactional(readOnly = true)
+    public ApiRest update(UpdateModel updateModel) throws JSchException, SftpException, IOException, DocumentException {
+        BigInteger id = updateModel.getId();
+        int diskSize = updateModel.getDiskSize();
+        int cupCoreQuantity = updateModel.getCupCoreQuantity();
+        int memorySize = updateModel.getMemorySize();
+        BigInteger userId = updateModel.getUserId();
+
+        SearchModel childHostSearchModel = new SearchModel(true);
+        childHostSearchModel.addSearchCondition("id", Constants.SQL_OPERATION_SYMBOL_EQUALS, id);
+        Host childHost = DatabaseHelper.find(Host.class, childHostSearchModel);
+        Validate.notNull(childHost, "主机不存在！");
+
+        SearchModel hostSearchModel = new SearchModel(true);
+        hostSearchModel.addSearchCondition("id", Constants.SQL_OPERATION_SYMBOL_EQUALS, childHost.getParentId());
+        Host host = DatabaseHelper.find(Host.class, hostSearchModel);
+        Validate.notNull(host, "宿主机不存在！");
+
+        Session session = JSchUtils.createSession(host.getUserName(), host.getPassword(), host.getIpAddress(), host.getSshPort());
+        ChannelSftp channelSftp = (ChannelSftp) JSchUtils.openChannel(session, Constants.CHANNEL_TYPE_SFTP);
+        channelSftp.connect();
+
+        String configFilePath = "/etc/libvirt/qemu/" + childHost.getName() + ".xml";
+        InputStream inputStream = channelSftp.get(configFilePath);
+
+        Document document = new SAXReader().read(inputStream);
+        Element rootElement = document.getRootElement();
+
+        Element memoryElement = rootElement.element("memory");
+        memoryElement.setText(String.valueOf(memorySize));
+
+        Element currentMemoryElement = rootElement.element("currentMemory");
+        currentMemoryElement.setText(String.valueOf(memorySize));
+
+        Element vcpuElement = rootElement.element("vcpu");
+        vcpuElement.setText(String.valueOf(cupCoreQuantity));
+
+        OutputFormat outputFormat = OutputFormat.createPrettyPrint();
+        outputFormat.setEncoding(Constants.CHARSET_NAME_UTF_8);
+
+        ByteArrayOutputStream byteArrayOutputStream = new ByteArrayOutputStream();
+        XMLWriter xmlWriter = new XMLWriter(byteArrayOutputStream, outputFormat);
+
+        xmlWriter.write(document);
+
+        ByteArrayInputStream byteArrayInputStream = new ByteArrayInputStream(byteArrayOutputStream.toByteArray());
+        channelSftp.put(byteArrayInputStream, configFilePath, ChannelSftp.OVERWRITE);
+
+        ApiRest apiRest = new ApiRest();
+        apiRest.setData(childHost);
+        apiRest.setMessage("配置修改成功！");
         apiRest.setSuccessful(true);
         return apiRest;
     }
