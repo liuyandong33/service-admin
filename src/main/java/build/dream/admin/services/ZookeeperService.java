@@ -1,6 +1,7 @@
 package build.dream.admin.services;
 
 import build.dream.admin.models.zookeeper.ListNodesModel;
+import build.dream.admin.models.zookeeper.RestartModel;
 import build.dream.admin.models.zookeeper.StartModel;
 import build.dream.admin.models.zookeeper.StopModel;
 import build.dream.admin.utils.DatabaseHelper;
@@ -56,7 +57,7 @@ public class ZookeeperService {
         JSchUtils.disconnectSession(session);
 
         ApiRest apiRest = new ApiRest(startResult);
-        apiRest.setMessage("Zookeeper 启动成功！");
+        apiRest.setMessage("启动 Zookeeper 节点成功！");
         apiRest.setSuccessful(true);
         return apiRest;
     }
@@ -79,12 +80,40 @@ public class ZookeeperService {
         Session session = JSchUtils.createSession(zookeeperNode.getUserName(), zookeeperNode.getPassword(), zookeeperNode.getIpAddress(), zookeeperNode.getSshPort());
 
         String stopCommand = zookeeperNode.getZookeeperHome() + "/bin/zkServer.sh stop";
-        String startResult = JSchUtils.executeCommand(session, stopCommand);
+        String stopResult = JSchUtils.executeCommand(session, stopCommand);
 
         JSchUtils.disconnectSession(session);
 
-        ApiRest apiRest = new ApiRest(startResult);
-        apiRest.setMessage("Zookeeper 停止成功！");
+        ApiRest apiRest = new ApiRest(stopResult);
+        apiRest.setMessage("停止 Zookeeper 节点成功！");
+        apiRest.setSuccessful(true);
+        return apiRest;
+    }
+
+    /**
+     * 停止 zookeeper 节点
+     *
+     * @param restartModel
+     * @return
+     * @throws JSchException
+     * @throws IOException
+     */
+    @Transactional(readOnly = true)
+    public ApiRest restart(RestartModel restartModel) throws JSchException, IOException {
+        BigInteger nodeId = restartModel.getNodeId();
+
+        ZookeeperNode zookeeperNode = DatabaseHelper.find(ZookeeperNode.class, nodeId);
+        Validate.notNull(zookeeperNode, "Zookeeper 节点不存在！");
+
+        Session session = JSchUtils.createSession(zookeeperNode.getUserName(), zookeeperNode.getPassword(), zookeeperNode.getIpAddress(), zookeeperNode.getSshPort());
+
+        String restartCommand = zookeeperNode.getZookeeperHome() + "/bin/zkServer.sh stop";
+        String restartResult = JSchUtils.executeCommand(session, restartCommand);
+
+        JSchUtils.disconnectSession(session);
+
+        ApiRest apiRest = new ApiRest(restartResult);
+        apiRest.setMessage("重启 Zookeeper 节点成功！");
         apiRest.setSuccessful(true);
         return apiRest;
     }

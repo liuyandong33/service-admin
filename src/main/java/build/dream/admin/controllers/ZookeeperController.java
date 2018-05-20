@@ -1,6 +1,7 @@
 package build.dream.admin.controllers;
 
 import build.dream.admin.models.zookeeper.ListNodesModel;
+import build.dream.admin.models.zookeeper.RestartModel;
 import build.dream.admin.models.zookeeper.StartModel;
 import build.dream.admin.models.zookeeper.StopModel;
 import build.dream.admin.services.ZookeeperService;
@@ -58,5 +59,18 @@ public class ZookeeperController {
             return zookeeperService.stop(stopModel);
         };
         return ApplicationHandler.callMethod(methodCaller, "停止 Zookeeper 失败", requestParameters);
+    }
+
+    @RequestMapping(value = "/restart", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
+    @ResponseBody
+    public String restart() {
+        Map<String, String> requestParameters = ApplicationHandler.getRequestParameters();
+        MethodCaller methodCaller = () -> {
+            RestartModel restartModel = ApplicationHandler.instantiateObject(RestartModel.class, requestParameters);
+            restartModel.validateAndThrow();
+
+            return zookeeperService.restart(restartModel);
+        };
+        return ApplicationHandler.callMethod(methodCaller, "重启 Zookeeper 失败", requestParameters);
     }
 }
