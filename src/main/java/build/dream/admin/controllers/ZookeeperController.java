@@ -22,6 +22,11 @@ public class ZookeeperController {
     @Autowired
     private ZookeeperService zookeeperService;
 
+    /**
+     * 获取所有 zookeeper 节点
+     *
+     * @return
+     */
     @RequestMapping(value = "/listNodes", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
     @ResponseBody
     public String listNodes() {
@@ -35,6 +40,11 @@ public class ZookeeperController {
         return ApplicationHandler.callMethod(methodCaller, "获取 Zookeeper 节点失败", requestParameters);
     }
 
+    /**
+     * 启动 zookeeper 节点
+     *
+     * @return
+     */
     @RequestMapping(value = "/start", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
     @ResponseBody
     public String start() {
@@ -48,6 +58,11 @@ public class ZookeeperController {
         return ApplicationHandler.callMethod(methodCaller, "启动 Zookeeper 失败", requestParameters);
     }
 
+    /**
+     * 停止 zookeeper 节点
+     *
+     * @return
+     */
     @RequestMapping(value = "/stop", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
     @ResponseBody
     public String stop() {
@@ -61,6 +76,11 @@ public class ZookeeperController {
         return ApplicationHandler.callMethod(methodCaller, "停止 Zookeeper 失败", requestParameters);
     }
 
+    /**
+     * 重启 zookeeper 节点
+     *
+     * @return
+     */
     @RequestMapping(value = "/restart", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
     @ResponseBody
     public String restart() {
