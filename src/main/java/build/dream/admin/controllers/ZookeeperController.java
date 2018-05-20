@@ -1,9 +1,6 @@
 package build.dream.admin.controllers;
 
-import build.dream.admin.models.zookeeper.ListNodesModel;
-import build.dream.admin.models.zookeeper.RestartModel;
-import build.dream.admin.models.zookeeper.StartModel;
-import build.dream.admin.models.zookeeper.StopModel;
+import build.dream.admin.models.zookeeper.*;
 import build.dream.admin.services.ZookeeperService;
 import build.dream.common.utils.ApplicationHandler;
 import build.dream.common.utils.MethodCaller;
@@ -92,5 +89,23 @@ public class ZookeeperController {
             return zookeeperService.restart(restartModel);
         };
         return ApplicationHandler.callMethod(methodCaller, "重启 Zookeeper 失败", requestParameters);
+    }
+
+    /**
+     * 获取所有 zookeeper 节点
+     *
+     * @return
+     */
+    @RequestMapping(value = "/saveNode", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
+    @ResponseBody
+    public String saveNode() {
+        Map<String, String> requestParameters = ApplicationHandler.getRequestParameters();
+        MethodCaller methodCaller = () -> {
+            SaveNodeModel saveNodeModel = ApplicationHandler.instantiateObject(SaveNodeModel.class, requestParameters);
+            saveNodeModel.validateAndThrow();
+
+            return zookeeperService.saveNode(saveNodeModel);
+        };
+        return ApplicationHandler.callMethod(methodCaller, "保存 Zookeeper 节点失败", requestParameters);
     }
 }

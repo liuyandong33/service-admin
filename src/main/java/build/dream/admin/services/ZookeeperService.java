@@ -1,9 +1,6 @@
 package build.dream.admin.services;
 
-import build.dream.admin.models.zookeeper.ListNodesModel;
-import build.dream.admin.models.zookeeper.RestartModel;
-import build.dream.admin.models.zookeeper.StartModel;
-import build.dream.admin.models.zookeeper.StopModel;
+import build.dream.admin.models.zookeeper.*;
 import build.dream.admin.utils.DatabaseHelper;
 import build.dream.admin.utils.JSchUtils;
 import build.dream.common.admin.domains.ZookeeperNode;
@@ -116,5 +113,49 @@ public class ZookeeperService {
         apiRest.setMessage("重启 Zookeeper 节点成功！");
         apiRest.setSuccessful(true);
         return apiRest;
+    }
+
+    public ApiRest saveNode(SaveNodeModel saveNodeModel) {
+        BigInteger id = saveNodeModel.getId();
+        String hostName = saveNodeModel.getHostName();
+        String ipAddress = saveNodeModel.getIpAddress();
+        Integer sshPort = saveNodeModel.getSshPort();
+        String userName = saveNodeModel.getUserName();
+        String password = saveNodeModel.getPassword();
+        String zookeeperHome = saveNodeModel.getZookeeperHome();
+        BigInteger userId = saveNodeModel.getUserId();
+
+        try {
+            Session session = JSchUtils.createSession(userName, password, ipAddress, sshPort);
+            JSchUtils.disconnectSession(session);
+        } catch (Exception e) {
+            throw new RuntimeException("服务器与宿主机之间无法连通，请检查IP地址、SSH连接端口号、用户名、密码填写是否正确！");
+        }
+
+        ZookeeperNode zookeeperNode = null;
+        if (id != null) {
+            zookeeperNode = DatabaseHelper.find(ZookeeperNode.class, id);
+            Validate.notNull(zookeeperNode, "Zookeeper 节点不存在！");
+
+            zookeeperNode.setHostName(hostName);
+            zookeeperNode.setIpAddress(ipAddress);
+            zookeeperNode.setSshPort(sshPort);
+            zookeeperNode.setUserName(userName);
+            zookeeperNode.setPassword(password);
+            zookeeperNode.setZookeeperHome(zookeeperHome);
+            zookeeperNode.setLastUpdateUserId(userId);
+            DatabaseHelper.update(zookeeperNode);
+        } else {
+            zookeeperNode = new ZookeeperNode();
+            zookeeperNode.setHostName(hostName);
+            zookeeperNode.setIpAddress(ipAddress);
+            zookeeperNode.setSshPort(sshPort);
+            zookeeperNode.setUserName(userName);
+            zookeeperNode.setPassword(password);
+            zookeeperNode.setZookeeperHome(zookeeperHome);
+            DatabaseHelper.insert(zookeeperNode);
+        }
+
+        return new ApiRest(zookeeperNode, "保存 Zookeeper 节点失败！");
     }
 }

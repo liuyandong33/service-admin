@@ -1,4 +1,4 @@
-package build.dream.admin.models.host;
+package build.dream.admin.models.zookeeper;
 
 import build.dream.common.models.BasicModel;
 import org.hibernate.validator.constraints.Length;
@@ -8,12 +8,12 @@ import javax.validation.constraints.Min;
 import javax.validation.constraints.NotNull;
 import java.math.BigInteger;
 
-public class SaveModel extends BasicModel {
+public class SaveNodeModel extends BasicModel {
     private BigInteger id;
 
     @NotNull
     @Length(max = 20)
-    private String name;
+    private String hostName;
 
     @NotNull
     private String ipAddress;
@@ -32,16 +32,8 @@ public class SaveModel extends BasicModel {
     private String password;
 
     @NotNull
-    @Min(value = 10)
-    private Integer diskSize;
-
-    @NotNull
-    @Min(value = 1)
-    private Integer cpuCoreQuantity;
-
-    @NotNull
-    @Min(value = 10485760)
-    private Integer memorySize;
+    @Length(max = 255)
+    private String zookeeperHome;
 
     @NotNull
     private BigInteger userId;
@@ -54,12 +46,12 @@ public class SaveModel extends BasicModel {
         this.id = id;
     }
 
-    public String getName() {
-        return name;
+    public String getHostName() {
+        return hostName;
     }
 
-    public void setName(String name) {
-        this.name = name;
+    public void setHostName(String hostName) {
+        this.hostName = hostName;
     }
 
     public String getIpAddress() {
@@ -94,35 +86,19 @@ public class SaveModel extends BasicModel {
         this.password = password;
     }
 
+    public String getZookeeperHome() {
+        return zookeeperHome;
+    }
+
+    public void setZookeeperHome(String zookeeperHome) {
+        this.zookeeperHome = zookeeperHome;
+    }
+
     public BigInteger getUserId() {
         return userId;
     }
 
     public void setUserId(BigInteger userId) {
         this.userId = userId;
-    }
-
-    public Integer getDiskSize() {
-        return diskSize;
-    }
-
-    public void setDiskSize(Integer diskSize) {
-        this.diskSize = diskSize;
-    }
-
-    public Integer getCpuCoreQuantity() {
-        return cpuCoreQuantity;
-    }
-
-    public void setCpuCoreQuantity(Integer cpuCoreQuantity) {
-        this.cpuCoreQuantity = cpuCoreQuantity;
-    }
-
-    public Integer getMemorySize() {
-        return memorySize;
-    }
-
-    public void setMemorySize(Integer memorySize) {
-        this.memorySize = memorySize;
     }
 }
