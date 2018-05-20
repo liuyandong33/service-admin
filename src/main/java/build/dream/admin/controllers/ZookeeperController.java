@@ -96,7 +96,7 @@ public class ZookeeperController {
      *
      * @return
      */
-    @RequestMapping(value = "/saveNode", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
+    @RequestMapping(value = "/saveNode", method = RequestMethod.POST, produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
     @ResponseBody
     public String saveNode() {
         Map<String, String> requestParameters = ApplicationHandler.getRequestParameters();
