@@ -23,8 +23,8 @@ public class DatabaseHelper {
     private static UniversalMapper UNIVERSAL_MAPPER;
 
     static {
-        ConvertUtils.register(new BigIntegerConverter(null), BigInteger.class);
         ConvertUtils.register(new IntegerConverter(null), Integer.class);
+        ConvertUtils.register(new BigIntegerConverter(null), BigInteger.class);
         ConvertUtils.register(new BigDecimalConverter(null), BigDecimal.class);
         ConvertUtils.register(new DateConverter(null), Date.class);
     }
