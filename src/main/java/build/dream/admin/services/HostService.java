@@ -6,6 +6,8 @@ import build.dream.admin.utils.DatabaseHelper;
 import build.dream.admin.utils.JSchUtils;
 import build.dream.common.admin.domains.Host;
 import build.dream.common.api.ApiRest;
+import build.dream.common.utils.PagedSearchModel;
+import build.dream.common.utils.SearchCondition;
 import build.dream.common.utils.SearchModel;
 import com.jcraft.jsch.ChannelSftp;
 import com.jcraft.jsch.JSchException;
@@ -23,6 +25,10 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.io.*;
 import java.math.BigInteger;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 @Service
 public class HostService {
@@ -150,7 +156,34 @@ public class HostService {
      */
     @Transactional(readOnly = true)
     public ApiRest list(ListModel listModel) {
-        return new ApiRest();
+        int type = listModel.getType();
+        int page = listModel.getPage();
+        int rows = listModel.getRows();
+        BigInteger hostId = listModel.getHostId();
+
+        List<SearchCondition> searchConditions = new ArrayList<SearchCondition>();
+        searchConditions.add(new SearchCondition("type", Constants.SQL_OPERATION_SYMBOL_EQUALS, type));
+        if (type == 2) {
+            searchConditions.add(new SearchCondition("parent_id", Constants.SQL_OPERATION_SYMBOL_EQUALS, hostId));
+        }
+        SearchModel searchModel = new SearchModel(true);
+        searchModel.setSearchConditions(searchConditions);
+        long count = DatabaseHelper.count(Host.class, searchModel);
+
+        List<Host> hosts = new ArrayList<Host>();
+        if (count > 0) {
+            PagedSearchModel pagedSearchModel = new PagedSearchModel(true);
+            pagedSearchModel.setSearchConditions(searchConditions);
+            pagedSearchModel.setPage(page);
+            pagedSearchModel.setRows(rows);
+            hosts = DatabaseHelper.findAllPaged(Host.class, pagedSearchModel);
+        }
+
+        Map<String, Object> data = new HashMap<String, Object>();
+        data.put("total", count);
+        data.put("rows", hosts);
+
+        return new ApiRest(data, "查询主机列表成功！");
     }
 
     /**
