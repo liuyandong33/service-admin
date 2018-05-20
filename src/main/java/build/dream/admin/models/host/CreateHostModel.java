@@ -24,7 +24,7 @@ public class CreateHostModel extends BasicModel {
 
     @NotNull
     @Min(value = 1)
-    private Integer cupCoreQuantity;
+    private Integer cpuCoreQuantity;
 
     @NotNull
     @Min(value = 10485760)
@@ -65,12 +65,12 @@ public class CreateHostModel extends BasicModel {
         this.diskSize = diskSize;
     }
 
-    public Integer getCupCoreQuantity() {
-        return cupCoreQuantity;
+    public Integer getCpuCoreQuantity() {
+        return cpuCoreQuantity;
     }
 
-    public void setCupCoreQuantity(Integer cupCoreQuantity) {
-        this.cupCoreQuantity = cupCoreQuantity;
+    public void setCpuCoreQuantity(Integer cpuCoreQuantity) {
+        this.cpuCoreQuantity = cpuCoreQuantity;
     }
 
     public Integer getMemorySize() {

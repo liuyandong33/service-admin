@@ -48,7 +48,7 @@ public class HostService {
         String userName = saveModel.getUserName();
         String password = saveModel.getPassword();
         int diskSize = saveModel.getDiskSize();
-        int cupCoreQuantity = saveModel.getCupCoreQuantity();
+        int cpuCoreQuantity = saveModel.getCpuCoreQuantity();
         int memorySize = saveModel.getMemorySize();
 
         try {
@@ -72,7 +72,7 @@ public class HostService {
             host.setPassword(password);
             host.setLastUpdateUserId(userId);
             host.setDiskSize(diskSize);
-            host.setCupCoreQuantity(cupCoreQuantity);
+            host.setCpuCoreQuantity(cpuCoreQuantity);
             host.setMemorySize(memorySize);
             DatabaseHelper.update(host);
         } else {
@@ -86,7 +86,7 @@ public class HostService {
             host.setCreateUserId(userId);
             host.setLastUpdateUserId(userId);
             host.setDiskSize(diskSize);
-            host.setCupCoreQuantity(cupCoreQuantity);
+            host.setCpuCoreQuantity(cpuCoreQuantity);
             host.setMemorySize(memorySize);
             DatabaseHelper.insert(host);
         }
@@ -99,7 +99,7 @@ public class HostService {
         String name = createHostModel.getName();
         int diskSize = createHostModel.getDiskSize();
         String password = createHostModel.getPassword();
-        int cupCoreQuantity = createHostModel.getCupCoreQuantity();
+        int cpuCoreQuantity = createHostModel.getCpuCoreQuantity();
         int memorySize = createHostModel.getMemorySize();
         BigInteger userId = createHostModel.getUserId();
 
@@ -121,7 +121,7 @@ public class HostService {
         String iosPath = "/disk/iso/CentOS-7-x86_64-Everything-1804.iso";
         StringBuilder installCommand = new StringBuilder("virt-install --virt-type kvm");
         installCommand.append(" --name " + name);
-        installCommand.append(" --vcpus=" + cupCoreQuantity);
+        installCommand.append(" --vcpus=" + cpuCoreQuantity);
         installCommand.append(" --ram " + memorySize);
         installCommand.append(" --cdrom=" + iosPath);
         installCommand.append(" --disk path=" + diskPath);
@@ -141,6 +141,9 @@ public class HostService {
         childHost.setSshPort(22);
         childHost.setUserName("root");
         childHost.setPassword(password);
+        childHost.setDiskSize(diskSize);
+        childHost.setCpuCoreQuantity(cpuCoreQuantity);
+        childHost.setMemorySize(memorySize);
         childHost.setCreateUserId(userId);
         childHost.setLastUpdateUserId(userId);
         DatabaseHelper.insert(childHost);
@@ -342,7 +345,7 @@ public class HostService {
     public ApiRest update(UpdateModel updateModel) throws JSchException, SftpException, IOException, DocumentException {
         BigInteger id = updateModel.getId();
         int diskSize = updateModel.getDiskSize();
-        int cupCoreQuantity = updateModel.getCupCoreQuantity();
+        int cpuCoreQuantity = updateModel.getCpuCoreQuantity();
         int memorySize = updateModel.getMemorySize();
         BigInteger userId = updateModel.getUserId();
 
@@ -373,7 +376,7 @@ public class HostService {
         currentMemoryElement.setText(String.valueOf(memorySize));
 
         Element vcpuElement = rootElement.element("vcpu");
-        vcpuElement.setText(String.valueOf(cupCoreQuantity));
+        vcpuElement.setText(String.valueOf(cpuCoreQuantity));
 
         OutputFormat outputFormat = OutputFormat.createPrettyPrint();
         outputFormat.setEncoding(Constants.CHARSET_NAME_UTF_8);
@@ -388,6 +391,11 @@ public class HostService {
 
         JSchUtils.disconnectChannel(channelSftp);
         JSchUtils.disconnectSession(session);
+
+        childHost.setDiskSize(diskSize);
+        childHost.setCpuCoreQuantity(cpuCoreQuantity);
+        childHost.setMemorySize(memorySize);
+        DatabaseHelper.update(childHost);
 
         ApiRest apiRest = new ApiRest();
         apiRest.setData(childHost);
