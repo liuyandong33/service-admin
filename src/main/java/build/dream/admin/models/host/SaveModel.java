@@ -30,6 +30,18 @@ public class SaveModel extends BasicModel {
     private String password;
 
     @NotNull
+    @Min(value = 10)
+    private Integer diskSize;
+
+    @NotNull
+    @Min(value = 1)
+    private Integer cupCoreQuantity;
+
+    @NotNull
+    @Min(value = 10485760)
+    private Integer memorySize;
+
+    @NotNull
     private BigInteger userId;
 
     public BigInteger getId() {
@@ -86,5 +98,29 @@ public class SaveModel extends BasicModel {
 
     public void setUserId(BigInteger userId) {
         this.userId = userId;
+    }
+
+    public Integer getDiskSize() {
+        return diskSize;
+    }
+
+    public void setDiskSize(Integer diskSize) {
+        this.diskSize = diskSize;
+    }
+
+    public Integer getCupCoreQuantity() {
+        return cupCoreQuantity;
+    }
+
+    public void setCupCoreQuantity(Integer cupCoreQuantity) {
+        this.cupCoreQuantity = cupCoreQuantity;
+    }
+
+    public Integer getMemorySize() {
+        return memorySize;
+    }
+
+    public void setMemorySize(Integer memorySize) {
+        this.memorySize = memorySize;
     }
 }

@@ -41,6 +41,9 @@ public class HostService {
         int sshPort = saveModel.getSshPort();
         String userName = saveModel.getUserName();
         String password = saveModel.getPassword();
+        int diskSize = saveModel.getDiskSize();
+        int cupCoreQuantity = saveModel.getCupCoreQuantity();
+        int memorySize = saveModel.getMemorySize();
 
         try {
             Session session = JSchUtils.createSession(userName, password, ipAddress, sshPort);
@@ -62,6 +65,9 @@ public class HostService {
             host.setUserName(userName);
             host.setPassword(password);
             host.setLastUpdateUserId(userId);
+            host.setDiskSize(diskSize);
+            host.setCupCoreQuantity(cupCoreQuantity);
+            host.setMemorySize(memorySize);
             DatabaseHelper.update(host);
         } else {
             host = new Host();
@@ -73,6 +79,9 @@ public class HostService {
             host.setPassword(password);
             host.setCreateUserId(userId);
             host.setLastUpdateUserId(userId);
+            host.setDiskSize(diskSize);
+            host.setCupCoreQuantity(cupCoreQuantity);
+            host.setMemorySize(memorySize);
             DatabaseHelper.insert(host);
         }
         return new ApiRest(host, "保存成功！");
