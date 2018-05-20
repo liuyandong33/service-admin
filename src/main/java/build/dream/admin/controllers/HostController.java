@@ -19,7 +19,7 @@ public class HostController {
     @Autowired
     private HostService hostService;
 
-    @RequestMapping(value = "/save", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
+    @RequestMapping(value = "/save", method = RequestMethod.POST, produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
     @ResponseBody
     public String save() {
         Map<String, String> requestParameters = ApplicationHandler.getRequestParameters();
@@ -32,7 +32,7 @@ public class HostController {
         return ApplicationHandler.callMethod(methodCaller, "保存失败", requestParameters);
     }
 
-    @RequestMapping(value = "/createHost", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
+    @RequestMapping(value = "/createHost", method = RequestMethod.POST, produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
     @ResponseBody
     public String createHost() {
         Map<String, String> requestParameters = ApplicationHandler.getRequestParameters();
@@ -50,7 +50,7 @@ public class HostController {
      *
      * @return
      */
-    @RequestMapping(value = "/list")
+    @RequestMapping(value = "/list", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
     @ResponseBody
     public String list() {
         Map<String, String> requestParameters = ApplicationHandler.getRequestParameters();
@@ -68,7 +68,7 @@ public class HostController {
      *
      * @return
      */
-    @RequestMapping(value = "/start")
+    @RequestMapping(value = "/start", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
     @ResponseBody
     public String start() {
         Map<String, String> requestParameters = ApplicationHandler.getRequestParameters();
@@ -86,7 +86,7 @@ public class HostController {
      *
      * @return
      */
-    @RequestMapping(value = "/shutdown")
+    @RequestMapping(value = "/shutdown", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
     @ResponseBody
     public String shutdown() {
         Map<String, String> requestParameters = ApplicationHandler.getRequestParameters();
@@ -104,7 +104,7 @@ public class HostController {
      *
      * @return
      */
-    @RequestMapping(value = "/destroy")
+    @RequestMapping(value = "/destroy", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
     @ResponseBody
     public String destroy() {
         Map<String, String> requestParameters = ApplicationHandler.getRequestParameters();
@@ -122,7 +122,7 @@ public class HostController {
      *
      * @return
      */
-    @RequestMapping(value = "/undefine")
+    @RequestMapping(value = "/undefine", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
     @ResponseBody
     public String undefine() {
         Map<String, String> requestParameters = ApplicationHandler.getRequestParameters();
@@ -140,7 +140,7 @@ public class HostController {
      *
      * @return
      */
-    @RequestMapping(value = "/update")
+    @RequestMapping(value = "/update", method = RequestMethod.POST, produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
     @ResponseBody
     public String update() {
         Map<String, String> requestParameters = ApplicationHandler.getRequestParameters();
