@@ -4,6 +4,7 @@ import build.dream.admin.constants.Constants;
 import build.dream.admin.models.host.*;
 import build.dream.admin.utils.DatabaseHelper;
 import build.dream.admin.utils.JSchUtils;
+import build.dream.admin.utils.VirtualMachineUtils;
 import build.dream.common.admin.domains.Host;
 import build.dream.common.api.ApiRest;
 import build.dream.common.utils.PagedSearchModel;
@@ -202,23 +203,10 @@ public class HostService {
         BigInteger hostId = startModel.getHostId();
         BigInteger userId = startModel.getUserId();
 
-        SearchModel childHostSearchModel = new SearchModel(true);
-        childHostSearchModel.addSearchCondition("id", Constants.SQL_OPERATION_SYMBOL_EQUALS, hostId);
-        Host childHost = DatabaseHelper.find(Host.class, childHostSearchModel);
-        Validate.notNull(childHost, "主机不存在！");
-
-        SearchModel hostSearchModel = new SearchModel(true);
-        hostSearchModel.addSearchCondition("id", Constants.SQL_OPERATION_SYMBOL_EQUALS, childHost.getParentId());
-        Host host = DatabaseHelper.find(Host.class, hostSearchModel);
-        Validate.notNull(host, "宿主机不存在！");
-
-        Session session = JSchUtils.createSession(host.getUserName(), host.getPassword(), host.getIpAddress(), host.getSshPort());
-        String startCommand = "virsh start " + childHost.getName();
-        String startResult = JSchUtils.executeCommand(session, startCommand);
-
-        JSchUtils.disconnectSession(session);
+        String result = VirtualMachineUtils.operate(hostId, userId, Constants.OPERATE_TYPE_START);
 
         ApiRest apiRest = new ApiRest();
+        apiRest.setData(result);
         apiRest.setMessage("开机成功！");
         apiRest.setSuccessful(true);
         return apiRest;
@@ -237,23 +225,10 @@ public class HostService {
         BigInteger hostId = shutdownModel.getHostId();
         BigInteger userId = shutdownModel.getUserId();
 
-        SearchModel childHostSearchModel = new SearchModel(true);
-        childHostSearchModel.addSearchCondition("id", Constants.SQL_OPERATION_SYMBOL_EQUALS, hostId);
-        Host childHost = DatabaseHelper.find(Host.class, childHostSearchModel);
-        Validate.notNull(childHost, "主机不存在！");
-
-        SearchModel hostSearchModel = new SearchModel(true);
-        hostSearchModel.addSearchCondition("id", Constants.SQL_OPERATION_SYMBOL_EQUALS, childHost.getParentId());
-        Host host = DatabaseHelper.find(Host.class, hostSearchModel);
-        Validate.notNull(host, "宿主机不存在！");
-
-        Session session = JSchUtils.createSession(host.getUserName(), host.getPassword(), host.getIpAddress(), host.getSshPort());
-        String shutdownCommand = "virsh shutdown " + childHost.getName();
-        String shutdownResult = JSchUtils.executeCommand(session, shutdownCommand);
-
-        JSchUtils.disconnectSession(session);
+        String result = VirtualMachineUtils.operate(hostId, userId, Constants.OPERATE_TYPE_SHUTDOWN);
 
         ApiRest apiRest = new ApiRest();
+        apiRest.setData(result);
         apiRest.setMessage("关机成功！");
         apiRest.setSuccessful(true);
         return apiRest;
@@ -272,23 +247,10 @@ public class HostService {
         BigInteger hostId = destroyModel.getHostId();
         BigInteger userId = destroyModel.getUserId();
 
-        SearchModel childHostSearchModel = new SearchModel(true);
-        childHostSearchModel.addSearchCondition("id", Constants.SQL_OPERATION_SYMBOL_EQUALS, hostId);
-        Host childHost = DatabaseHelper.find(Host.class, childHostSearchModel);
-        Validate.notNull(childHost, "主机不存在！");
-
-        SearchModel hostSearchModel = new SearchModel(true);
-        hostSearchModel.addSearchCondition("id", Constants.SQL_OPERATION_SYMBOL_EQUALS, childHost.getParentId());
-        Host host = DatabaseHelper.find(Host.class, hostSearchModel);
-        Validate.notNull(host, "宿主机不存在！");
-
-        Session session = JSchUtils.createSession(host.getUserName(), host.getPassword(), host.getIpAddress(), host.getSshPort());
-        String shutdownCommand = "virsh destroy " + childHost.getName();
-        String shutdownResult = JSchUtils.executeCommand(session, shutdownCommand);
-
-        JSchUtils.disconnectSession(session);
+        String result = VirtualMachineUtils.operate(hostId, userId, Constants.OPERATE_TYPE_DESTROY);
 
         ApiRest apiRest = new ApiRest();
+        apiRest.setData(result);
         apiRest.setMessage("关机成功！");
         apiRest.setSuccessful(true);
         return apiRest;
@@ -307,27 +269,10 @@ public class HostService {
         BigInteger hostId = undefineModel.getHostId();
         BigInteger userId = undefineModel.getUserId();
 
-        SearchModel childHostSearchModel = new SearchModel(true);
-        childHostSearchModel.addSearchCondition("id", Constants.SQL_OPERATION_SYMBOL_EQUALS, hostId);
-        Host childHost = DatabaseHelper.find(Host.class, childHostSearchModel);
-        Validate.notNull(childHost, "主机不存在！");
-
-        SearchModel hostSearchModel = new SearchModel(true);
-        hostSearchModel.addSearchCondition("id", Constants.SQL_OPERATION_SYMBOL_EQUALS, childHost.getParentId());
-        Host host = DatabaseHelper.find(Host.class, hostSearchModel);
-        Validate.notNull(host, "宿主机不存在！");
-
-        Session session = JSchUtils.createSession(host.getUserName(), host.getPassword(), host.getIpAddress(), host.getSshPort());
-        String undefineCommand = "virsh undefine " + childHost.getName();
-        String undefineResult = JSchUtils.executeCommand(session, undefineCommand);
-
-        JSchUtils.disconnectSession(session);
-
-        childHost.setDeleted(true);
-        DatabaseHelper.update(childHost);
+        String result = VirtualMachineUtils.operate(hostId, userId, Constants.OPERATE_TYPE_UNDEFINE);
 
         ApiRest apiRest = new ApiRest();
-        apiRest.setData(undefineCommand);
+        apiRest.setData(result);
         apiRest.setMessage("删除虚拟机成功！");
         apiRest.setSuccessful(true);
         return apiRest;
@@ -338,27 +283,10 @@ public class HostService {
         BigInteger hostId = rebootModel.getHostId();
         BigInteger userId = rebootModel.getUserId();
 
-        SearchModel childHostSearchModel = new SearchModel(true);
-        childHostSearchModel.addSearchCondition("id", Constants.SQL_OPERATION_SYMBOL_EQUALS, hostId);
-        Host childHost = DatabaseHelper.find(Host.class, childHostSearchModel);
-        Validate.notNull(childHost, "主机不存在！");
-
-        SearchModel hostSearchModel = new SearchModel(true);
-        hostSearchModel.addSearchCondition("id", Constants.SQL_OPERATION_SYMBOL_EQUALS, childHost.getParentId());
-        Host host = DatabaseHelper.find(Host.class, hostSearchModel);
-        Validate.notNull(host, "宿主机不存在！");
-
-        Session session = JSchUtils.createSession(host.getUserName(), host.getPassword(), host.getIpAddress(), host.getSshPort());
-        String rebootCommand = "virsh reboot " + childHost.getName();
-        String rebootResult = JSchUtils.executeCommand(session, rebootCommand);
-
-        JSchUtils.disconnectSession(session);
-
-        childHost.setDeleted(true);
-        DatabaseHelper.update(childHost);
+        String result = VirtualMachineUtils.operate(hostId, userId, Constants.OPERATE_TYPE_REBOOT);
 
         ApiRest apiRest = new ApiRest();
-        apiRest.setData(rebootCommand);
+        apiRest.setData(result);
         apiRest.setMessage("重启虚拟机成功！");
         apiRest.setSuccessful(true);
         return apiRest;
