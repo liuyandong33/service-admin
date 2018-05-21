@@ -1,5 +1,6 @@
 package build.dream.admin.services;
 
+import build.dream.admin.constants.Constants;
 import build.dream.admin.models.zookeeper.*;
 import build.dream.admin.utils.DatabaseHelper;
 import build.dream.admin.utils.JSchUtils;
@@ -26,7 +27,10 @@ public class ZookeeperService {
      */
     @Transactional(readOnly = true)
     public ApiRest listNodes(ListNodesModel listNodesModel) {
+        BigInteger clusterId = listNodesModel.getClusterId();
+
         SearchModel searchModel = new SearchModel(true);
+        searchModel.addSearchCondition("cluster_id", Constants.SQL_OPERATION_SYMBOL_EQUAL, clusterId);
         List<ZookeeperNode> zookeeperNodes = DatabaseHelper.findAll(ZookeeperNode.class, searchModel);
         return new ApiRest(zookeeperNodes, "获取 Zookeeper 节点成功！");
     }
