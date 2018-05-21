@@ -61,9 +61,7 @@ public class HostService {
 
         Host host = null;
         if (id != null) {
-            SearchModel searchModel = new SearchModel(true);
-            searchModel.addSearchCondition("id", Constants.SQL_OPERATION_SYMBOL_EQUALS, id);
-            host = DatabaseHelper.find(Host.class, searchModel);
+            host = DatabaseHelper.find(Host.class, id);
             Validate.notNull(host, "主机不存在！");
 
             host.setName(name);
@@ -104,9 +102,7 @@ public class HostService {
         int memorySize = createHostModel.getMemorySize();
         BigInteger userId = createHostModel.getUserId();
 
-        SearchModel searchModel = new SearchModel(true);
-        searchModel.addSearchCondition("id", Constants.SQL_OPERATION_SYMBOL_EQUALS, hostId);
-        Host host = DatabaseHelper.find(Host.class, searchModel);
+        Host host = DatabaseHelper.find(Host.class, hostId);
         Validate.notNull(host, "主机不存在！");
 
         Session session = JSchUtils.createSession(host.getUserName(), host.getPassword(), host.getIpAddress(), host.getSshPort());
@@ -166,9 +162,9 @@ public class HostService {
         BigInteger hostId = listModel.getHostId();
 
         List<SearchCondition> searchConditions = new ArrayList<SearchCondition>();
-        searchConditions.add(new SearchCondition("type", Constants.SQL_OPERATION_SYMBOL_EQUALS, type));
+        searchConditions.add(new SearchCondition("type", Constants.SQL_OPERATION_SYMBOL_EQUAL, type));
         if (type == 2) {
-            searchConditions.add(new SearchCondition("parent_id", Constants.SQL_OPERATION_SYMBOL_EQUALS, hostId));
+            searchConditions.add(new SearchCondition("parent_id", Constants.SQL_OPERATION_SYMBOL_EQUAL, hostId));
         }
         SearchModel searchModel = new SearchModel(true);
         searchModel.setSearchConditions(searchConditions);
@@ -309,14 +305,10 @@ public class HostService {
         int memorySize = updateModel.getMemorySize();
         BigInteger userId = updateModel.getUserId();
 
-        SearchModel childHostSearchModel = new SearchModel(true);
-        childHostSearchModel.addSearchCondition("id", Constants.SQL_OPERATION_SYMBOL_EQUALS, id);
-        Host childHost = DatabaseHelper.find(Host.class, childHostSearchModel);
+        Host childHost = DatabaseHelper.find(Host.class, id);
         Validate.notNull(childHost, "主机不存在！");
 
-        SearchModel hostSearchModel = new SearchModel(true);
-        hostSearchModel.addSearchCondition("id", Constants.SQL_OPERATION_SYMBOL_EQUALS, childHost.getParentId());
-        Host host = DatabaseHelper.find(Host.class, hostSearchModel);
+        Host host = DatabaseHelper.find(Host.class, childHost.getParentId());
         Validate.notNull(host, "宿主机不存在！");
 
         Session session = JSchUtils.createSession(host.getUserName(), host.getPassword(), host.getIpAddress(), host.getSshPort());
