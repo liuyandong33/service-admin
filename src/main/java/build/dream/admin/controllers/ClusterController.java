@@ -1,5 +1,6 @@
 package build.dream.admin.controllers;
 
+import build.dream.admin.models.cluster.ListModel;
 import build.dream.admin.models.cluster.SaveModel;
 import build.dream.admin.services.ClusterService;
 import build.dream.common.utils.ApplicationHandler;
@@ -30,5 +31,18 @@ public class ClusterController {
             return clusterService.save(saveModel);
         };
         return ApplicationHandler.callMethod(methodCaller, "保存失败", requestParameters);
+    }
+
+    @RequestMapping(value = "/list", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
+    @ResponseBody
+    public String list() {
+        Map<String, String> requestParameters = ApplicationHandler.getRequestParameters();
+        MethodCaller methodCaller = () -> {
+            ListModel listModel = ApplicationHandler.instantiateObject(ListModel.class, requestParameters);
+            listModel.validateAndThrow();
+
+            return clusterService.list(listModel);
+        };
+        return ApplicationHandler.callMethod(methodCaller, "查询集群列表失败", requestParameters);
     }
 }
