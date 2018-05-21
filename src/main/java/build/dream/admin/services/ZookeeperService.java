@@ -109,12 +109,37 @@ public class ZookeeperService {
 
         JSchUtils.disconnectSession(session);
 
-        ApiRest apiRest = new ApiRest(restartResult);
-        apiRest.setMessage("重启 Zookeeper 节点成功！");
-        apiRest.setSuccessful(true);
-        return apiRest;
+        return new ApiRest(restartResult, "重启 Zookeeper 节点成功！");
     }
 
+    /**
+     * 获取 Zookeeper 节点状态
+     * @param statusModel
+     * @return
+     * @throws JSchException
+     * @throws IOException
+     */
+    public ApiRest status(StatusModel statusModel) throws JSchException, IOException {
+        BigInteger nodeId = statusModel.getNodeId();
+
+        ZookeeperNode zookeeperNode = DatabaseHelper.find(ZookeeperNode.class, nodeId);
+        Validate.notNull(zookeeperNode, "Zookeeper 节点不存在！");
+
+        Session session = JSchUtils.createSession(zookeeperNode.getUserName(), zookeeperNode.getPassword(), zookeeperNode.getIpAddress(), zookeeperNode.getSshPort());
+
+        String statusCommand = zookeeperNode.getZookeeperHome() + "/bin/zkServer.sh status";
+        String statusResult = JSchUtils.executeCommand(session, statusCommand);
+
+        JSchUtils.disconnectSession(session);
+
+        return new ApiRest(statusResult, "获取 Zookeeper 节点状态成功！");
+    }
+
+    /**
+     * 保存 Zookeeper 节点
+     * @param saveNodeModel
+     * @return
+     */
     public ApiRest saveNode(SaveNodeModel saveNodeModel) {
         BigInteger id = saveNodeModel.getId();
         String hostName = saveNodeModel.getHostName();

@@ -92,7 +92,25 @@ public class ZookeeperController {
     }
 
     /**
-     * 获取所有 zookeeper 节点
+     * 获取 zookeeper 节点状态
+     *
+     * @return
+     */
+    @RequestMapping(value = "/status", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
+    @ResponseBody
+    public String status() {
+        Map<String, String> requestParameters = ApplicationHandler.getRequestParameters();
+        MethodCaller methodCaller = () -> {
+            StatusModel statusModel = ApplicationHandler.instantiateObject(StatusModel.class, requestParameters);
+            statusModel.validateAndThrow();
+
+            return zookeeperService.status(statusModel);
+        };
+        return ApplicationHandler.callMethod(methodCaller, "获取 Zookeeper 节点状态失败", requestParameters);
+    }
+
+    /**
+     * 保存 zookeeper 节点
      *
      * @return
      */
