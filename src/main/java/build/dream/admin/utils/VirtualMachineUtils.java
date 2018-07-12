@@ -2,6 +2,7 @@ package build.dream.admin.utils;
 
 import build.dream.admin.constants.Constants;
 import build.dream.common.admin.domains.Host;
+import build.dream.common.utils.DatabaseHelper;
 import com.jcraft.jsch.JSchException;
 import com.jcraft.jsch.Session;
 import org.apache.commons.lang.Validate;

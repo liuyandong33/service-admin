@@ -2,11 +2,11 @@ package build.dream.admin.services;
 
 import build.dream.admin.constants.Constants;
 import build.dream.admin.models.host.*;
-import build.dream.admin.utils.DatabaseHelper;
 import build.dream.admin.utils.JSchUtils;
 import build.dream.admin.utils.VirtualMachineUtils;
 import build.dream.common.admin.domains.Host;
 import build.dream.common.api.ApiRest;
+import build.dream.common.utils.DatabaseHelper;
 import build.dream.common.utils.PagedSearchModel;
 import build.dream.common.utils.SearchCondition;
 import build.dream.common.utils.SearchModel;

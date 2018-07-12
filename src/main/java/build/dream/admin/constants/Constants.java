@@ -10,4 +10,6 @@ public class Constants extends build.dream.common.constants.Constants {
     public static final String OPERATE_TYPE_SUSPEND = "suspend";
     public static final String OPERATE_TYPE_RESUME = "resume";
     public static final String OPERATE_TYPE_UNDEFINE = "undefine";
+
+    public static final String ZOOKEEPER_CONNECTION_STRING = "zookeeper.connection.string";
 }
