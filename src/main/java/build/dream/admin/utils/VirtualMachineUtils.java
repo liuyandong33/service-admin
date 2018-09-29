@@ -9,6 +9,7 @@ import org.apache.commons.lang.Validate;
 
 import java.io.IOException;
 import java.math.BigInteger;
+import java.util.Date;
 
 public class VirtualMachineUtils {
     public static String operate(BigInteger hostId, BigInteger userId, String operateType) throws JSchException, IOException {
@@ -37,6 +38,8 @@ public class VirtualMachineUtils {
         } else if (Constants.OPERATE_TYPE_UNDEFINE.equals(operateType)) {
             command = "virsh undefine " + name;
             childHost.setDeleted(true);
+            childHost.setDeleteTime(new Date());
+            childHost.setLastUpdateUserId(userId);
             DatabaseHelper.update(childHost);
         }
         String result = JSchUtils.executeCommand(session, command);
