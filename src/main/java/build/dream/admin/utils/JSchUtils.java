@@ -2,8 +2,8 @@ package build.dream.admin.utils;
 
 import build.dream.admin.constants.Constants;
 import build.dream.common.utils.IOUtils;
+import build.dream.common.utils.ValidateUtils;
 import com.jcraft.jsch.*;
-import org.apache.commons.lang.Validate;
 
 import java.io.IOException;
 import java.io.InputStream;
@@ -43,7 +43,7 @@ public class JSchUtils {
         String result = IOUtils.toString(inputStream);
 
         int exitStatus = channelExec.getExitStatus();
-        Validate.isTrue(exitStatus == 0, result);
+        ValidateUtils.isTrue(exitStatus == 0, result);
 
         disconnectChannel(channelExec);
         return result;

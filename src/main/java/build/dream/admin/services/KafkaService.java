@@ -1,15 +1,18 @@
 package build.dream.admin.services;
 
 import build.dream.admin.constants.Constants;
-import build.dream.admin.models.kafka.*;
+import build.dream.admin.models.kafka.ListNodesModel;
+import build.dream.admin.models.kafka.SaveNodeModel;
+import build.dream.admin.models.kafka.StartModel;
+import build.dream.admin.models.kafka.StopModel;
 import build.dream.admin.utils.JSchUtils;
 import build.dream.common.admin.domains.KafkaNode;
 import build.dream.common.api.ApiRest;
 import build.dream.common.utils.DatabaseHelper;
 import build.dream.common.utils.SearchModel;
+import build.dream.common.utils.ValidateUtils;
 import com.jcraft.jsch.JSchException;
 import com.jcraft.jsch.Session;
-import org.apache.commons.lang.Validate;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -20,7 +23,7 @@ import java.util.List;
 @Service
 public class KafkaService {
     /**
-     * 获取zookeeper 节点
+     * 获取kafka节点
      *
      * @param listNodesModel
      * @return
@@ -32,11 +35,11 @@ public class KafkaService {
         SearchModel searchModel = new SearchModel(true);
         searchModel.addSearchCondition("cluster_id", Constants.SQL_OPERATION_SYMBOL_EQUAL, clusterId);
         List<KafkaNode> kafkaNodes = DatabaseHelper.findAll(KafkaNode.class, searchModel);
-        return new ApiRest(kafkaNodes, "获取 Kafka 节点成功！");
+        return ApiRest.builder().data(kafkaNodes).message("获取Kafka节点成功").successful(true).build();
     }
 
     /**
-     * 启动 zookeeper 节点
+     * 启动kafka节点
      *
      * @param startModel
      * @return
@@ -48,23 +51,20 @@ public class KafkaService {
         BigInteger nodeId = startModel.getNodeId();
 
         KafkaNode kafkaNode = DatabaseHelper.find(KafkaNode.class, nodeId);
-        Validate.notNull(kafkaNode, "Kafka 节点不存在！");
+        ValidateUtils.notNull(kafkaNode, "Kafka节点不存在！");
 
         Session session = JSchUtils.createSession(kafkaNode.getUserName(), kafkaNode.getPassword(), kafkaNode.getIpAddress(), kafkaNode.getSshPort());
 
-        String startCommand = kafkaNode.getKafkaHome() + "/bin/zkServer.sh start";
+        String startCommand = "sh " + kafkaNode.getKafkaHome() + "/bin/kafka-server-start.sh";
         String startResult = JSchUtils.executeCommand(session, startCommand);
 
         JSchUtils.disconnectSession(session);
 
-        ApiRest apiRest = new ApiRest(startResult);
-        apiRest.setMessage("启动 Zookeeper 节点成功！");
-        apiRest.setSuccessful(true);
-        return apiRest;
+        return ApiRest.builder().data(startResult).message("启动Kafka节点成功！").successful(true).build();
     }
 
     /**
-     * 停止 zookeeper 节点
+     * 停止kafka节点
      *
      * @param stopModel
      * @return
@@ -76,72 +76,20 @@ public class KafkaService {
         BigInteger nodeId = stopModel.getNodeId();
 
         KafkaNode kafkaNode = DatabaseHelper.find(KafkaNode.class, nodeId);
-        Validate.notNull(kafkaNode, "Kafka 节点不存在！");
+        ValidateUtils.notNull(kafkaNode, "Kafka节点不存在！");
 
         Session session = JSchUtils.createSession(kafkaNode.getUserName(), kafkaNode.getPassword(), kafkaNode.getIpAddress(), kafkaNode.getSshPort());
 
-        String stopCommand = kafkaNode.getKafkaHome() + "/bin/zkServer.sh stop";
+        String stopCommand = "sh " + kafkaNode.getKafkaHome() + "/bin/kafka-server-stop.sh";
         String stopResult = JSchUtils.executeCommand(session, stopCommand);
 
         JSchUtils.disconnectSession(session);
 
-        ApiRest apiRest = new ApiRest(stopResult);
-        apiRest.setMessage("停止 Kafka 节点成功！");
-        apiRest.setSuccessful(true);
-        return apiRest;
+        return ApiRest.builder().data(stopResult).message("停止Kafka节点成功！").successful(true).build();
     }
 
     /**
-     * 停止 zookeeper 节点
-     *
-     * @param restartModel
-     * @return
-     * @throws JSchException
-     * @throws IOException
-     */
-    @Transactional(readOnly = true)
-    public ApiRest restart(RestartModel restartModel) throws JSchException, IOException {
-        BigInteger nodeId = restartModel.getNodeId();
-
-        KafkaNode kafkaNode = DatabaseHelper.find(KafkaNode.class, nodeId);
-        Validate.notNull(kafkaNode, "Kafka 节点不存在！");
-
-        Session session = JSchUtils.createSession(kafkaNode.getUserName(), kafkaNode.getPassword(), kafkaNode.getIpAddress(), kafkaNode.getSshPort());
-
-        String restartCommand = kafkaNode.getKafkaHome() + "/bin/zkServer.sh stop";
-        String restartResult = JSchUtils.executeCommand(session, restartCommand);
-
-        JSchUtils.disconnectSession(session);
-
-        return new ApiRest(restartResult, "重启 Kafka 节点成功！");
-    }
-
-    /**
-     * 获取 Zookeeper 节点状态
-     *
-     * @param statusModel
-     * @return
-     * @throws JSchException
-     * @throws IOException
-     */
-    public ApiRest status(StatusModel statusModel) throws JSchException, IOException {
-        BigInteger nodeId = statusModel.getNodeId();
-
-        KafkaNode kafkaNode = DatabaseHelper.find(KafkaNode.class, nodeId);
-        Validate.notNull(kafkaNode, "Kafka 节点不存在！");
-
-        Session session = JSchUtils.createSession(kafkaNode.getUserName(), kafkaNode.getPassword(), kafkaNode.getIpAddress(), kafkaNode.getSshPort());
-
-        String statusCommand = kafkaNode.getKafkaHome() + "/bin/zkServer.sh status";
-        String statusResult = JSchUtils.executeCommand(session, statusCommand);
-
-        JSchUtils.disconnectSession(session);
-
-        return new ApiRest(statusResult, "获取 Kafka 节点状态成功！");
-    }
-
-    /**
-     * 保存 Zookeeper 节点
+     * 保存kafka节点
      *
      * @param saveNodeModel
      * @return
@@ -166,7 +114,7 @@ public class KafkaService {
         KafkaNode kafkaNode = null;
         if (id != null) {
             kafkaNode = DatabaseHelper.find(KafkaNode.class, id);
-            Validate.notNull(kafkaNode, "Kafka 节点不存在！");
+            ValidateUtils.notNull(kafkaNode, "Kafka节点不存在！");
 
             kafkaNode.setHostName(hostName);
             kafkaNode.setIpAddress(ipAddress);
@@ -187,6 +135,6 @@ public class KafkaService {
             DatabaseHelper.insert(kafkaHome);
         }
 
-        return new ApiRest(kafkaNode, "保存 Kafka 节点失败！");
+        return ApiRest.builder().data(kafkaNode).message("保存Kafka节点失败！").successful(true).build();
     }
 }

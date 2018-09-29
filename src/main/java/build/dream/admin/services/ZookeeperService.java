@@ -7,9 +7,9 @@ import build.dream.common.admin.domains.ZookeeperNode;
 import build.dream.common.api.ApiRest;
 import build.dream.common.utils.DatabaseHelper;
 import build.dream.common.utils.SearchModel;
+import build.dream.common.utils.ValidateUtils;
 import com.jcraft.jsch.JSchException;
 import com.jcraft.jsch.Session;
-import org.apache.commons.lang.Validate;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -32,7 +32,7 @@ public class ZookeeperService {
         SearchModel searchModel = new SearchModel(true);
         searchModel.addSearchCondition("cluster_id", Constants.SQL_OPERATION_SYMBOL_EQUAL, clusterId);
         List<ZookeeperNode> zookeeperNodes = DatabaseHelper.findAll(ZookeeperNode.class, searchModel);
-        return new ApiRest(zookeeperNodes, "获取 Zookeeper 节点成功！");
+        return new ApiRest(zookeeperNodes, "获取Zookeeper节点成功！");
     }
 
     /**
@@ -48,19 +48,16 @@ public class ZookeeperService {
         BigInteger nodeId = startModel.getNodeId();
 
         ZookeeperNode zookeeperNode = DatabaseHelper.find(ZookeeperNode.class, nodeId);
-        Validate.notNull(zookeeperNode, "Zookeeper 节点不存在！");
+        ValidateUtils.notNull(zookeeperNode, "Zookeeper 节点不存在！");
 
         Session session = JSchUtils.createSession(zookeeperNode.getUserName(), zookeeperNode.getPassword(), zookeeperNode.getIpAddress(), zookeeperNode.getSshPort());
 
-        String startCommand = zookeeperNode.getZookeeperHome() + "/bin/zkServer.sh start";
+        String startCommand = "sh " + zookeeperNode.getZookeeperHome() + "/bin/zkServer.sh start";
         String startResult = JSchUtils.executeCommand(session, startCommand);
 
         JSchUtils.disconnectSession(session);
 
-        ApiRest apiRest = new ApiRest(startResult);
-        apiRest.setMessage("启动 Zookeeper 节点成功！");
-        apiRest.setSuccessful(true);
-        return apiRest;
+        return ApiRest.builder().data(startResult).message("启动Zookeeper节点成功！").successful(true).build();
     }
 
     /**
@@ -76,19 +73,16 @@ public class ZookeeperService {
         BigInteger nodeId = stopModel.getNodeId();
 
         ZookeeperNode zookeeperNode = DatabaseHelper.find(ZookeeperNode.class, nodeId);
-        Validate.notNull(zookeeperNode, "Zookeeper 节点不存在！");
+        ValidateUtils.notNull(zookeeperNode, "Zookeeper 节点不存在！");
 
         Session session = JSchUtils.createSession(zookeeperNode.getUserName(), zookeeperNode.getPassword(), zookeeperNode.getIpAddress(), zookeeperNode.getSshPort());
 
-        String stopCommand = zookeeperNode.getZookeeperHome() + "/bin/zkServer.sh stop";
+        String stopCommand = "sh " + zookeeperNode.getZookeeperHome() + "/bin/zkServer.sh stop";
         String stopResult = JSchUtils.executeCommand(session, stopCommand);
 
         JSchUtils.disconnectSession(session);
 
-        ApiRest apiRest = new ApiRest(stopResult);
-        apiRest.setMessage("停止 Zookeeper 节点成功！");
-        apiRest.setSuccessful(true);
-        return apiRest;
+        return ApiRest.builder().data(stopResult).message("停止Zookeeper节点成功！").successful(true).build();
     }
 
     /**
@@ -104,16 +98,16 @@ public class ZookeeperService {
         BigInteger nodeId = restartModel.getNodeId();
 
         ZookeeperNode zookeeperNode = DatabaseHelper.find(ZookeeperNode.class, nodeId);
-        Validate.notNull(zookeeperNode, "Zookeeper 节点不存在！");
+        ValidateUtils.notNull(zookeeperNode, "Zookeeper节点不存在！");
 
         Session session = JSchUtils.createSession(zookeeperNode.getUserName(), zookeeperNode.getPassword(), zookeeperNode.getIpAddress(), zookeeperNode.getSshPort());
 
-        String restartCommand = zookeeperNode.getZookeeperHome() + "/bin/zkServer.sh stop";
+        String restartCommand = "sh " + zookeeperNode.getZookeeperHome() + "/bin/zkServer.sh restart";
         String restartResult = JSchUtils.executeCommand(session, restartCommand);
 
         JSchUtils.disconnectSession(session);
 
-        return new ApiRest(restartResult, "重启 Zookeeper 节点成功！");
+        return ApiRest.builder().data(restartResult).message("重启Zookeeper节点成功！").successful(true).build();
     }
 
     /**
@@ -124,20 +118,21 @@ public class ZookeeperService {
      * @throws JSchException
      * @throws IOException
      */
+    @Transactional(readOnly = true)
     public ApiRest status(StatusModel statusModel) throws JSchException, IOException {
         BigInteger nodeId = statusModel.getNodeId();
 
         ZookeeperNode zookeeperNode = DatabaseHelper.find(ZookeeperNode.class, nodeId);
-        Validate.notNull(zookeeperNode, "Zookeeper 节点不存在！");
+        ValidateUtils.notNull(zookeeperNode, "Zookeeper 节点不存在！");
 
         Session session = JSchUtils.createSession(zookeeperNode.getUserName(), zookeeperNode.getPassword(), zookeeperNode.getIpAddress(), zookeeperNode.getSshPort());
 
-        String statusCommand = zookeeperNode.getZookeeperHome() + "/bin/zkServer.sh status";
+        String statusCommand = "sh " + zookeeperNode.getZookeeperHome() + "/bin/zkServer.sh status";
         String statusResult = JSchUtils.executeCommand(session, statusCommand);
 
         JSchUtils.disconnectSession(session);
 
-        return new ApiRest(statusResult, "获取 Zookeeper 节点状态成功！");
+        return ApiRest.builder().data(statusResult).message("获取Zookeeper节点状态成功！").successful(true).build();
     }
 
     /**
@@ -146,6 +141,7 @@ public class ZookeeperService {
      * @param saveNodeModel
      * @return
      */
+    @Transactional(rollbackFor = Exception.class)
     public ApiRest saveNode(SaveNodeModel saveNodeModel) {
         BigInteger id = saveNodeModel.getId();
         String hostName = saveNodeModel.getHostName();
@@ -166,7 +162,7 @@ public class ZookeeperService {
         ZookeeperNode zookeeperNode = null;
         if (id != null) {
             zookeeperNode = DatabaseHelper.find(ZookeeperNode.class, id);
-            Validate.notNull(zookeeperNode, "Zookeeper 节点不存在！");
+            ValidateUtils.notNull(zookeeperNode, "Zookeeper节点不存在！");
 
             zookeeperNode.setHostName(hostName);
             zookeeperNode.setIpAddress(ipAddress);
@@ -187,6 +183,6 @@ public class ZookeeperService {
             DatabaseHelper.insert(zookeeperNode);
         }
 
-        return new ApiRest(zookeeperNode, "保存 Zookeeper 节点失败！");
+        return ApiRest.builder().data(zookeeperNode).message("保存Zookeeper节点失败！").successful(true).build();
     }
 }
