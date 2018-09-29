@@ -89,7 +89,7 @@ public class HostService {
             host.setMemorySize(memorySize);
             DatabaseHelper.insert(host);
         }
-        return new ApiRest(host, "保存成功！");
+        return ApiRest.builder().data(host).message("保存成功！").successful(true).build();
     }
 
     @Transactional(rollbackFor = Exception.class)
@@ -145,7 +145,7 @@ public class HostService {
         childHost.setLastUpdateUserId(userId);
         DatabaseHelper.insert(childHost);
 
-        return new ApiRest(childHost, "虚拟主机创建成功！");
+        return ApiRest.builder().data(childHost).message("虚拟主机创建成功！").successful(true).build();
     }
 
     /**
@@ -183,7 +183,7 @@ public class HostService {
         data.put("total", count);
         data.put("rows", hosts);
 
-        return new ApiRest(data, "查询主机列表成功！");
+        return ApiRest.builder().data(hosts).message("查询主机列表成功！").successful(true).build();
     }
 
     /**
@@ -201,11 +201,7 @@ public class HostService {
 
         String result = VirtualMachineUtils.operate(hostId, userId, Constants.OPERATE_TYPE_START);
 
-        ApiRest apiRest = new ApiRest();
-        apiRest.setData(result);
-        apiRest.setMessage("开机成功！");
-        apiRest.setSuccessful(true);
-        return apiRest;
+        return ApiRest.builder().data(result).message("开机成功！").successful(true).build();
     }
 
     /**
@@ -223,11 +219,7 @@ public class HostService {
 
         String result = VirtualMachineUtils.operate(hostId, userId, Constants.OPERATE_TYPE_SHUTDOWN);
 
-        ApiRest apiRest = new ApiRest();
-        apiRest.setData(result);
-        apiRest.setMessage("关机成功！");
-        apiRest.setSuccessful(true);
-        return apiRest;
+        return ApiRest.builder().data(result).message("关机成功！").successful(true).build();
     }
 
     /**
@@ -245,11 +237,7 @@ public class HostService {
 
         String result = VirtualMachineUtils.operate(hostId, userId, Constants.OPERATE_TYPE_DESTROY);
 
-        ApiRest apiRest = new ApiRest();
-        apiRest.setData(result);
-        apiRest.setMessage("关机成功！");
-        apiRest.setSuccessful(true);
-        return apiRest;
+        return ApiRest.builder().data(result).message("关机成功！").successful(true).build();
     }
 
     /**
@@ -267,11 +255,7 @@ public class HostService {
 
         String result = VirtualMachineUtils.operate(hostId, userId, Constants.OPERATE_TYPE_UNDEFINE);
 
-        ApiRest apiRest = new ApiRest();
-        apiRest.setData(result);
-        apiRest.setMessage("删除虚拟机成功！");
-        apiRest.setSuccessful(true);
-        return apiRest;
+        return ApiRest.builder().data(result).message("删除虚拟机成功！").successful(true).build();
     }
 
     @Transactional(rollbackFor = Exception.class)
@@ -281,11 +265,7 @@ public class HostService {
 
         String result = VirtualMachineUtils.operate(hostId, userId, Constants.OPERATE_TYPE_REBOOT);
 
-        ApiRest apiRest = new ApiRest();
-        apiRest.setData(result);
-        apiRest.setMessage("重启虚拟机成功！");
-        apiRest.setSuccessful(true);
-        return apiRest;
+        return ApiRest.builder().data(result).message("重启虚拟机成功！").successful(true).build();
     }
 
     /**
@@ -349,10 +329,6 @@ public class HostService {
         childHost.setMemorySize(memorySize);
         DatabaseHelper.update(childHost);
 
-        ApiRest apiRest = new ApiRest();
-        apiRest.setData(childHost);
-        apiRest.setMessage("配置修改成功！");
-        apiRest.setSuccessful(true);
-        return apiRest;
+        return ApiRest.builder().data(childHost).message("配置修改成功！").successful(true).build();
     }
 }
