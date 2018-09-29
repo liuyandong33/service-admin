@@ -5,13 +5,13 @@ import build.dream.admin.models.configuration.AddConfigurationModel;
 import build.dream.admin.models.configuration.DeleteConfigurationModel;
 import build.dream.admin.models.configuration.ListConfigurationsModel;
 import build.dream.admin.models.configuration.UpdateConfigurationModel;
-import build.dream.admin.utils.ZooKeeperUtils;
 import build.dream.common.api.ApiRest;
-import org.apache.zookeeper.*;
+import org.apache.curator.framework.CuratorFramework;
+import org.apache.curator.framework.api.*;
+import org.apache.zookeeper.CreateMode;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import java.io.UnsupportedEncodingException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -20,25 +20,27 @@ import java.util.Map;
 @Service
 public class ConfigurationService {
     @Autowired
-    private ZooKeeper zooKeeper;
+    private CuratorFramework curatorFramework;
 
     /**
      * 新增配置
      *
      * @param addConfigurationModel
      * @return
-     * @throws UnsupportedEncodingException
-     * @throws KeeperException
-     * @throws InterruptedException
+     * @throws Exception
      */
-    public ApiRest addConfiguration(AddConfigurationModel addConfigurationModel) throws UnsupportedEncodingException, KeeperException, InterruptedException {
-        String path = "/configurations/" + addConfigurationModel.getDeploymentEnvironment() + "-" + addConfigurationModel.getPartitionCode() + "-" + addConfigurationModel.getServiceName() + "/" + addConfigurationModel.getConfigurationKey();
-        ZooKeeperUtils.create(path, addConfigurationModel.getConfigurationValue().getBytes(Constants.CHARSET_NAME_UTF_8), ZooDefs.Ids.OPEN_ACL_UNSAFE, CreateMode.PERSISTENT);
+    public ApiRest addConfiguration(AddConfigurationModel addConfigurationModel) throws Exception {
+        String deploymentEnvironment = addConfigurationModel.getDeploymentEnvironment();
+        String partitionCode = addConfigurationModel.getPartitionCode();
+        String serviceName = addConfigurationModel.getServiceName();
+        String configurationKey = addConfigurationModel.getConfigurationKey();
+        String configurationValue = addConfigurationModel.getConfigurationValue();
 
-        ApiRest apiRest = new ApiRest();
-        apiRest.setMessage("新增配置成功！");
-        apiRest.setSuccessful(true);
-        return apiRest;
+        String path = "/configurations/" + deploymentEnvironment + "-" + partitionCode + "-" + serviceName + "/" + configurationKey;
+        CreateBuilder createBuilder = curatorFramework.create();
+        createBuilder.withMode(CreateMode.PERSISTENT).forPath(path, configurationValue.getBytes(Constants.CHARSET_NAME_UTF_8));
+
+        return ApiRest.builder().message("新增配置成功！").successful(true).build();
     }
 
     /**
@@ -46,34 +48,30 @@ public class ConfigurationService {
      *
      * @param listConfigurationsModel
      * @return
-     * @throws KeeperException
-     * @throws InterruptedException
-     * @throws UnsupportedEncodingException
+     * @throws Exception
      */
-    public ApiRest listConfigurations(ListConfigurationsModel listConfigurationsModel) throws KeeperException, InterruptedException, UnsupportedEncodingException {
-        String path = "/configurations/" + listConfigurationsModel.getDeploymentEnvironment() + "-" + listConfigurationsModel.getPartitionCode() + "-" + listConfigurationsModel.getServiceName();
-        List<String> children = zooKeeper.getChildren(path, new Watcher() {
-            @Override
-            public void process(WatchedEvent event) {
+    public ApiRest listConfigurations(ListConfigurationsModel listConfigurationsModel) throws Exception {
+        String deploymentEnvironment = listConfigurationsModel.getDeploymentEnvironment();
+        String partitionCode = listConfigurationsModel.getPartitionCode();
+        String serviceName = listConfigurationsModel.getServiceName();
 
-            }
-        });
+        String path = "/configurations/" + deploymentEnvironment + "-" + partitionCode + "-" + serviceName;
+        GetChildrenBuilder getChildrenBuilder = curatorFramework.getChildren();
+        List<String> keys = getChildrenBuilder.forPath(path);
+
+        GetDataBuilder getDataBuilder = curatorFramework.getData();
 
         List<Map<String, String>> configurations = new ArrayList<Map<String, String>>();
-        for (String child : children) {
+        for (String key : keys) {
             Map<String, String> configuration = new HashMap<String, String>();
-            configuration.put("configurationKey", child);
+            configuration.put("configurationKey", key);
 
-            String configurationValue = new String(zooKeeper.getData(path + "/" + child, false, null), Constants.CHARSET_NAME_UTF_8);
+            String configurationValue = new String(getDataBuilder.forPath(path + "/" + key), Constants.CHARSET_NAME_UTF_8);
             configuration.put("configurationValue", configurationValue);
             configurations.add(configuration);
         }
 
-        ApiRest apiRest = new ApiRest();
-        apiRest.setData(configurations);
-        apiRest.setMessage("查询配置成功！");
-        apiRest.setSuccessful(true);
-        return apiRest;
+        return ApiRest.builder().data(configurations).message("查询配置成功！").successful(true).build();
     }
 
     /**
@@ -81,18 +79,20 @@ public class ConfigurationService {
      *
      * @param updateConfigurationModel
      * @return
-     * @throws UnsupportedEncodingException
-     * @throws KeeperException
-     * @throws InterruptedException
+     * @throws Exception
      */
-    public ApiRest updateConfiguration(UpdateConfigurationModel updateConfigurationModel) throws UnsupportedEncodingException, KeeperException, InterruptedException {
-        String path = "/configurations/" + updateConfigurationModel.getDeploymentEnvironment() + "-" + updateConfigurationModel.getPartitionCode() + "-" + updateConfigurationModel.getServiceName() + "/" + updateConfigurationModel.getConfigurationKey();
-        zooKeeper.setData(path, updateConfigurationModel.getConfigurationValue().getBytes(Constants.CHARSET_NAME_UTF_8), -1);
+    public ApiRest updateConfiguration(UpdateConfigurationModel updateConfigurationModel) throws Exception {
+        String deploymentEnvironment = updateConfigurationModel.getDeploymentEnvironment();
+        String partitionCode = updateConfigurationModel.getPartitionCode();
+        String serviceName = updateConfigurationModel.getServiceName();
+        String configurationKey = updateConfigurationModel.getConfigurationKey();
+        String configurationValue = updateConfigurationModel.getConfigurationValue();
 
-        ApiRest apiRest = new ApiRest();
-        apiRest.setMessage("修改配置成功！");
-        apiRest.setSuccessful(true);
-        return apiRest;
+        String path = "/configurations/" + deploymentEnvironment + "-" + partitionCode + "-" + serviceName + "/" + configurationKey;
+
+        SetDataBuilder setDataBuilder = curatorFramework.setData();
+        setDataBuilder.forPath(path, configurationValue.getBytes(Constants.CHARSET_NAME_UTF_8));
+        return ApiRest.builder().message("修改配置成功！").successful(true).build();
     }
 
     /**
@@ -100,16 +100,18 @@ public class ConfigurationService {
      *
      * @param deleteConfigurationModel
      * @return
-     * @throws KeeperException
-     * @throws InterruptedException
+     * @throws Exception
      */
-    public ApiRest deleteConfiguration(DeleteConfigurationModel deleteConfigurationModel) throws KeeperException, InterruptedException {
-        String path = "/configurations/" + deleteConfigurationModel.getDeploymentEnvironment() + "-" + deleteConfigurationModel.getPartitionCode() + "-" + deleteConfigurationModel.getServiceName() + "/" + deleteConfigurationModel.getConfigurationKey();
-        zooKeeper.delete(path, -1);
+    public ApiRest deleteConfiguration(DeleteConfigurationModel deleteConfigurationModel) throws Exception {
+        String deploymentEnvironment = deleteConfigurationModel.getDeploymentEnvironment();
+        String partitionCode = deleteConfigurationModel.getPartitionCode();
+        String serviceName = deleteConfigurationModel.getServiceName();
+        String configurationKey = deleteConfigurationModel.getConfigurationKey();
 
-        ApiRest apiRest = new ApiRest();
-        apiRest.setMessage("删除配置成功！");
-        apiRest.setSuccessful(true);
-        return apiRest;
+        String path = "/configurations/" + deploymentEnvironment + "-" + partitionCode + "-" + serviceName + "/" + configurationKey;
+
+        DeleteBuilder deleteBuilder = curatorFramework.delete();
+        deleteBuilder.forPath(path);
+        return ApiRest.builder().message("删除配置成功！").successful(true).build();
     }
 }

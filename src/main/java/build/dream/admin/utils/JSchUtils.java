@@ -1,7 +1,7 @@
 package build.dream.admin.utils;
 
 import build.dream.admin.constants.Constants;
-import build.dream.common.utils.WebUtils;
+import build.dream.common.utils.IOUtils;
 import com.jcraft.jsch.*;
 import org.apache.commons.lang.Validate;
 
@@ -40,7 +40,7 @@ public class JSchUtils {
         channelExec.setCommand(command);
         channelExec.connect();
         InputStream inputStream = channelExec.getInputStream();
-        String result = WebUtils.inputStreamToString(inputStream);
+        String result = IOUtils.toString(inputStream);
 
         int exitStatus = channelExec.getExitStatus();
         Validate.isTrue(exitStatus == 0, result);
