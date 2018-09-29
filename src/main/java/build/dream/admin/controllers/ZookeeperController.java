@@ -2,6 +2,7 @@ package build.dream.admin.controllers;
 
 import build.dream.admin.models.zookeeper.*;
 import build.dream.admin.services.ZookeeperService;
+import build.dream.common.annotations.ApiRestAction;
 import build.dream.common.utils.ApplicationHandler;
 import build.dream.common.utils.MethodCaller;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -26,15 +27,9 @@ public class ZookeeperController {
      */
     @RequestMapping(value = "/listNodes", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
     @ResponseBody
+    @ApiRestAction(modelClass = ListNodesModel.class, serviceClass = ZookeeperService.class, serviceMethodName = "listNodes", error = "获取Zookeeper节点失败")
     public String listNodes() {
-        Map<String, String> requestParameters = ApplicationHandler.getRequestParameters();
-        MethodCaller methodCaller = () -> {
-            ListNodesModel listNodesModel = ApplicationHandler.instantiateObject(ListNodesModel.class, requestParameters);
-            listNodesModel.validateAndThrow();
-
-            return zookeeperService.listNodes(listNodesModel);
-        };
-        return ApplicationHandler.callMethod(methodCaller, "获取 Zookeeper 节点失败", requestParameters);
+        return null;
     }
 
     /**
@@ -44,15 +39,9 @@ public class ZookeeperController {
      */
     @RequestMapping(value = "/start", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
     @ResponseBody
+    @ApiRestAction(modelClass = StartModel.class, serviceClass = ZookeeperService.class, serviceMethodName = "start", error = "启动Zookeeper失败")
     public String start() {
-        Map<String, String> requestParameters = ApplicationHandler.getRequestParameters();
-        MethodCaller methodCaller = () -> {
-            StartModel startModel = ApplicationHandler.instantiateObject(StartModel.class, requestParameters);
-            startModel.validateAndThrow();
-
-            return zookeeperService.start(startModel);
-        };
-        return ApplicationHandler.callMethod(methodCaller, "启动 Zookeeper 失败", requestParameters);
+        return null;
     }
 
     /**
@@ -62,15 +51,9 @@ public class ZookeeperController {
      */
     @RequestMapping(value = "/stop", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
     @ResponseBody
+    @ApiRestAction(modelClass = StopModel.class, serviceClass = ZookeeperService.class, serviceMethodName = "stop", error = "停止Zookeeper失败")
     public String stop() {
-        Map<String, String> requestParameters = ApplicationHandler.getRequestParameters();
-        MethodCaller methodCaller = () -> {
-            StopModel stopModel = ApplicationHandler.instantiateObject(StopModel.class, requestParameters);
-            stopModel.validateAndThrow();
-
-            return zookeeperService.stop(stopModel);
-        };
-        return ApplicationHandler.callMethod(methodCaller, "停止 Zookeeper 失败", requestParameters);
+        return null;
     }
 
     /**
@@ -80,15 +63,9 @@ public class ZookeeperController {
      */
     @RequestMapping(value = "/restart", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
     @ResponseBody
+    @ApiRestAction(modelClass = RestartModel.class, serviceClass = ZookeeperService.class, serviceMethodName = "restart", error = "重启Zookeeper失败")
     public String restart() {
-        Map<String, String> requestParameters = ApplicationHandler.getRequestParameters();
-        MethodCaller methodCaller = () -> {
-            RestartModel restartModel = ApplicationHandler.instantiateObject(RestartModel.class, requestParameters);
-            restartModel.validateAndThrow();
-
-            return zookeeperService.restart(restartModel);
-        };
-        return ApplicationHandler.callMethod(methodCaller, "重启 Zookeeper 失败", requestParameters);
+        return null;
     }
 
     /**
@@ -98,15 +75,9 @@ public class ZookeeperController {
      */
     @RequestMapping(value = "/status", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
     @ResponseBody
+    @ApiRestAction(modelClass = StatusModel.class, serviceClass = ZookeeperService.class, serviceMethodName = "status", error = "获取Zookeeper节点状态失败")
     public String status() {
-        Map<String, String> requestParameters = ApplicationHandler.getRequestParameters();
-        MethodCaller methodCaller = () -> {
-            StatusModel statusModel = ApplicationHandler.instantiateObject(StatusModel.class, requestParameters);
-            statusModel.validateAndThrow();
-
-            return zookeeperService.status(statusModel);
-        };
-        return ApplicationHandler.callMethod(methodCaller, "获取 Zookeeper 节点状态失败", requestParameters);
+        return null;
     }
 
     /**
@@ -116,14 +87,8 @@ public class ZookeeperController {
      */
     @RequestMapping(value = "/saveNode", method = RequestMethod.POST, produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
     @ResponseBody
+    @ApiRestAction(modelClass = SaveNodeModel.class, serviceClass = ZookeeperService.class, serviceMethodName = "saveNode", error = "保存Zookeeper节点失败")
     public String saveNode() {
-        Map<String, String> requestParameters = ApplicationHandler.getRequestParameters();
-        MethodCaller methodCaller = () -> {
-            SaveNodeModel saveNodeModel = ApplicationHandler.instantiateObject(SaveNodeModel.class, requestParameters);
-            saveNodeModel.validateAndThrow();
-
-            return zookeeperService.saveNode(saveNodeModel);
-        };
-        return ApplicationHandler.callMethod(methodCaller, "保存 Zookeeper 节点失败", requestParameters);
+        return null;
     }
 }
