@@ -63,10 +63,10 @@ public class ConfigurationService {
 
         List<Map<String, String>> configurations = new ArrayList<Map<String, String>>();
         for (String key : keys) {
+            String configurationValue = new String(getDataBuilder.forPath(path + "/" + key), Constants.CHARSET_NAME_UTF_8);
             Map<String, String> configuration = new HashMap<String, String>();
             configuration.put("configurationKey", key);
 
-            String configurationValue = new String(getDataBuilder.forPath(path + "/" + key), Constants.CHARSET_NAME_UTF_8);
             configuration.put("configurationValue", configurationValue);
             configurations.add(configuration);
         }
