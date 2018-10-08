@@ -3,23 +3,15 @@ package build.dream.admin.controllers;
 import build.dream.admin.models.zookeeper.*;
 import build.dream.admin.services.ZookeeperService;
 import build.dream.common.annotations.ApiRestAction;
-import build.dream.common.utils.ApplicationHandler;
-import build.dream.common.utils.MethodCaller;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
 
-import java.util.Map;
-
 @Controller
 @RequestMapping(value = "/zookeeper")
 public class ZookeeperController {
-    @Autowired
-    private ZookeeperService zookeeperService;
-
     /**
      * 获取所有 zookeeper 节点
      *
