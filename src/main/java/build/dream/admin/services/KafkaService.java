@@ -122,7 +122,7 @@ public class KafkaService {
             kafkaNode.setUserName(userName);
             kafkaNode.setPassword(password);
             kafkaNode.setKafkaHome(kafkaHome);
-            kafkaNode.setLastUpdateUserId(userId);
+            kafkaNode.setUpdatedUserId(userId);
             DatabaseHelper.update(kafkaNode);
         } else {
             kafkaNode = new KafkaNode();

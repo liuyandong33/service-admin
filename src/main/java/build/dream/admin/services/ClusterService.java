@@ -35,8 +35,8 @@ public class ClusterService {
             Validate.notNull(cluster, "集群不存在！");
 
             cluster.setName(name);
-            cluster.setLastUpdateUserId(userId);
-            cluster.setLastUpdateRemark("修改集群信息！");
+            cluster.setUpdatedUserId(userId);
+            cluster.setUpdatedRemark("修改集群信息！");
             DatabaseHelper.update(cluster);
         } else {
             cluster = new Cluster();
@@ -44,9 +44,9 @@ public class ClusterService {
             cluster.setType(type);
             cluster.setType(type);
             cluster.setTenantId(tenantId);
-            cluster.setCreateUserId(userId);
-            cluster.setLastUpdateUserId(userId);
-            cluster.setLastUpdateRemark("新增集群信息！");
+            cluster.setCreatedUserId(userId);
+            cluster.setUpdatedUserId(userId);
+            cluster.setUpdatedRemark("新增集群信息！");
             DatabaseHelper.insert(cluster);
         }
 

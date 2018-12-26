@@ -21,7 +21,7 @@ public class ConfigurationController extends BasicController {
      *
      * @return
      */
-    @RequestMapping(value = "/addConfiguration", method = RequestMethod.POST, produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
+    @RequestMapping(value = "/addConfiguration", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
     @ResponseBody
     @ApiRestAction(modelClass = AddConfigurationModel.class, serviceClass = ConfigurationService.class, serviceMethodName = "addConfiguration", error = "新增配置失败")
     public String addConfiguration() {

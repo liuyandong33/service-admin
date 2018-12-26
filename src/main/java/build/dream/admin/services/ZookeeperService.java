@@ -170,7 +170,7 @@ public class ZookeeperService {
             zookeeperNode.setUserName(userName);
             zookeeperNode.setPassword(password);
             zookeeperNode.setZookeeperHome(zookeeperHome);
-            zookeeperNode.setLastUpdateUserId(userId);
+            zookeeperNode.setUpdatedUserId(userId);
             DatabaseHelper.update(zookeeperNode);
         } else {
             zookeeperNode = new ZookeeperNode();

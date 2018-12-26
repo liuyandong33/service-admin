@@ -69,7 +69,7 @@ public class HostService {
             host.setSshPort(sshPort);
             host.setUserName(userName);
             host.setPassword(password);
-            host.setLastUpdateUserId(userId);
+            host.setUpdatedUserId(userId);
             host.setDiskSize(diskSize);
             host.setCpuCoreQuantity(cpuCoreQuantity);
             host.setMemorySize(memorySize);
@@ -82,8 +82,8 @@ public class HostService {
             host.setSshPort(sshPort);
             host.setUserName(userName);
             host.setPassword(password);
-            host.setCreateUserId(userId);
-            host.setLastUpdateUserId(userId);
+            host.setCreatedUserId(userId);
+            host.setUpdatedUserId(userId);
             host.setDiskSize(diskSize);
             host.setCpuCoreQuantity(cpuCoreQuantity);
             host.setMemorySize(memorySize);
@@ -141,8 +141,8 @@ public class HostService {
         childHost.setDiskSize(diskSize);
         childHost.setCpuCoreQuantity(cpuCoreQuantity);
         childHost.setMemorySize(memorySize);
-        childHost.setCreateUserId(userId);
-        childHost.setLastUpdateUserId(userId);
+        childHost.setCreatedUserId(userId);
+        childHost.setUpdatedUserId(userId);
         DatabaseHelper.insert(childHost);
 
         return ApiRest.builder().data(childHost).message("虚拟主机创建成功！").successful(true).build();

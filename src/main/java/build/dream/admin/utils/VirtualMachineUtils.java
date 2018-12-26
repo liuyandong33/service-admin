@@ -38,8 +38,8 @@ public class VirtualMachineUtils {
         } else if (Constants.OPERATE_TYPE_UNDEFINE.equals(operateType)) {
             command = "virsh undefine " + name;
             childHost.setDeleted(true);
-            childHost.setDeleteTime(new Date());
-            childHost.setLastUpdateUserId(userId);
+            childHost.setDeletedTime(new Date());
+            childHost.setUpdatedUserId(userId);
             DatabaseHelper.update(childHost);
         }
         String result = JSchUtils.executeCommand(session, command);
