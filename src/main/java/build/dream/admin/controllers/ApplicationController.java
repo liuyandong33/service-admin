@@ -13,6 +13,11 @@ import org.springframework.web.bind.annotation.ResponseBody;
 @Controller
 @RequestMapping(value = "/application")
 public class ApplicationController {
+    /**
+     * 部署应用程序
+     *
+     * @return
+     */
     @RequestMapping(value = "/deploy", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
     @ResponseBody
     @ApiRestAction(modelClass = DeployModel.class, serviceClass = ApplicationService.class, serviceMethodName = "deploy", error = "部署应用失败")
@@ -20,6 +25,11 @@ public class ApplicationController {
         return null;
     }
 
+    /**
+     * 停止应用程序
+     *
+     * @return
+     */
     @RequestMapping(value = "/stop", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
     @ResponseBody
     @ApiRestAction(modelClass = StopModel.class, serviceClass = ApplicationService.class, serviceMethodName = "stop", error = "停止应用失败")

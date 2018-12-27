@@ -19,6 +19,14 @@ import java.util.Date;
 
 @Service
 public class ApplicationService {
+    /**
+     * 部署应用程序
+     *
+     * @param deployModel
+     * @return
+     * @throws JSchException
+     * @throws IOException
+     */
     @Transactional(rollbackFor = Exception.class)
     public ApiRest deploy(DeployModel deployModel) throws JSchException, IOException {
         BigInteger applicationId = deployModel.getApplicationId();
@@ -45,6 +53,14 @@ public class ApplicationService {
         return ApiRest.builder().message("部署成功！").successful(true).build();
     }
 
+    /**
+     * 停止应用程序
+     *
+     * @param stopModel
+     * @return
+     * @throws JSchException
+     * @throws IOException
+     */
     @Transactional(rollbackFor = Exception.class)
     public ApiRest stop(StopModel stopModel) throws JSchException, IOException {
         BigInteger applicationId = stopModel.getApplicationId();
