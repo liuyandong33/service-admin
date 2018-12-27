@@ -20,7 +20,7 @@ public class ApplicationController {
         return null;
     }
 
-    @RequestMapping(value = "/deploy", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
+    @RequestMapping(value = "/stop", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
     @ResponseBody
     @ApiRestAction(modelClass = StopModel.class, serviceClass = ApplicationService.class, serviceMethodName = "stop", error = "停止应用失败")
     public String stop() {
