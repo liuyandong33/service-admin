@@ -33,13 +33,7 @@ public class ApplicationService {
 
         String serviceName = application.getServiceName();
         Session session = JSchUtils.createSession(server.getUserName(), server.getPassword(), server.getIpAddress(), server.getSshPort());
-        JSchUtils.executeCommand(session, "service " + serviceName + " stop");
-        JSchUtils.executeCommand(session, "rm -rf /etc/init.d/" + serviceName);
-        JSchUtils.executeCommand(session, "rm -rf /usr/local/development/webapps/" + serviceName + "/" + serviceName + ".jar");
-        JSchUtils.executeCommand(session, "cp /usr/local/development/" + type + "/service-" + serviceName + "/service-" + serviceName + "-" + version + ".jar /usr/local/development/webapps/" + serviceName + "/" + serviceName + ".jar");
-        JSchUtils.executeCommand(session, "chmod 777 " + serviceName + ".jar");
-        JSchUtils.executeCommand(session, "ln -s /usr/local/development/webapps/" + serviceName + "/" + serviceName + ".jar /etc/init.d/" + serviceName);
-        JSchUtils.executeCommand(session, "service " + serviceName + " start");
+        JSchUtils.executeCommand(session, "sh /usr/local/development/webapps/deployd.sh " + serviceName + " " + type + " " + version);
         JSchUtils.disconnectSession(session);
 
         application.setType(type);
