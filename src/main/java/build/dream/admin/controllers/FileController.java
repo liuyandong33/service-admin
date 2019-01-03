@@ -4,7 +4,6 @@ import build.dream.admin.models.file.ListFilesModel;
 import build.dream.admin.services.FileService;
 import build.dream.common.annotations.ApiRestAction;
 import build.dream.common.utils.ApplicationHandler;
-import build.dream.common.utils.IOUtils;
 import build.dream.common.utils.LogUtils;
 import build.dream.common.utils.MimeMappingUtils;
 import org.apache.commons.lang.StringUtils;
@@ -31,11 +30,9 @@ public class FileController {
     @RequestMapping(value = "/download", method = RequestMethod.GET)
     public void download(HttpServletRequest httpServletRequest, HttpServletResponse httpServletResponse) throws IOException {
         LogUtils.info(ApplicationHandler.getRequestHeaders().toString());
-        File file = new File("F:\\迅雷下载\\cn_windows_server_2019_x64_dvd_4de40f33.iso");
+        File file = new File("C:\\Users\\liuyandong\\Desktop\\CentOS-7-x86_64-Minimal-1804.iso");
         long fileLength = file.length();
 
-        InputStream inputStream = new FileInputStream(file);
-        OutputStream outputStream = httpServletResponse.getOutputStream();
         String range = httpServletRequest.getHeader("Range");
 
         String fileName = file.getName();
@@ -43,16 +40,18 @@ public class FileController {
         httpServletResponse.setHeader("Content-Disposition", "attachment;filename=" + fileName);
         httpServletResponse.setHeader("Accept-Ranges", "bytes");
         httpServletResponse.setHeader("Content-Length", String.valueOf(fileLength));
+
+        long start = 0;
+        long end = 0;
         if (StringUtils.isNotBlank(range)) {
+            httpServletResponse.setStatus(HttpServletResponse.SC_PARTIAL_CONTENT);
             range = range.substring(6);
-            long start = 0;
-            long end = 0;
             if (range.indexOf("-") == range.length() - 1) {
                 start = Long.parseLong(range);
                 end = fileLength - 1;
             } else if (range.indexOf("-") == 0) {
                 long length = Long.parseLong(range.substring(1));
-                start = fileLength - end;
+                start = fileLength - length;
                 end = fileLength - 1;
             } else {
                 String[] array = range.split("-");
@@ -61,21 +60,37 @@ public class FileController {
             }
 
             httpServletResponse.setHeader("Content-Range", "bytes " + start + "-" + end + "/" + fileLength);
-            System.out.println("bytes " + start + "-" + end + "/" + fileLength);
-            RandomAccessFile randomAccessFile = new RandomAccessFile(file, "r");
-            randomAccessFile.seek(start);
-//            inputStream.skip(start);
-            BufferedOutputStream bufferedOutputStream = new BufferedOutputStream(outputStream);
-            while (randomAccessFile.getFilePointer() <= end) {
-                bufferedOutputStream.write(randomAccessFile.read());
-            }
-            randomAccessFile.close();
-            bufferedOutputStream.close();
         } else {
-            IOUtils.copy(inputStream, outputStream);
+            start = 0;
+            end = fileLength - 1;
         }
-        outputStream.flush();
-        outputStream.close();
-        inputStream.close();
+
+        InputStream inputStream = null;
+        OutputStream outputStream = null;
+        try {
+            inputStream = new FileInputStream(file);
+            outputStream = httpServletResponse.getOutputStream();
+            inputStream.skip(start);
+            long count = (end - start + 1) / 1024;
+            int remainder = (int) ((end - start + 1) % 1024);
+            byte[] buffer = new byte[1024];
+            int length = 0;
+            for (int index = 0; index < count; index++) {
+                length = inputStream.read(buffer, 0, 1024);
+                outputStream.write(buffer, 0, length);
+                outputStream.flush();
+            }
+
+            if (remainder > 0) {
+                inputStream.read(buffer, 0, remainder);
+                outputStream.write(buffer, 0, remainder);
+                outputStream.flush();
+            }
+        } catch (Exception e) {
+
+        } finally {
+            outputStream.close();
+            inputStream.close();
+        }
     }
 }
