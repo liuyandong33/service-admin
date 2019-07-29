@@ -60,18 +60,20 @@ public class ClusterService {
         int rows = listModel.getRows();
 
         List<SearchCondition> searchConditions = new ArrayList<SearchCondition>();
-        searchConditions.add(new SearchCondition("tenant_id", Constants.SQL_OPERATION_SYMBOL_EQUAL, tenantId));
+        searchConditions.add(new SearchCondition(Cluster.ColumnName.TENANT_ID, Constants.SQL_OPERATION_SYMBOL_EQUAL, tenantId));
         SearchModel searchModel = new SearchModel(true);
         searchModel.setSearchConditions(searchConditions);
         long count = DatabaseHelper.count(Cluster.class, searchModel);
 
-        List<Cluster> clusters = new ArrayList<Cluster>();
+        List<Cluster> clusters = null;
         if (count > 0) {
             PagedSearchModel pagedSearchModel = new PagedSearchModel(true);
             pagedSearchModel.setPage(page);
             pagedSearchModel.setRows(rows);
             pagedSearchModel.setSearchConditions(searchConditions);
             clusters = DatabaseHelper.findAllPaged(Cluster.class, pagedSearchModel);
+        } else {
+            clusters = new ArrayList<Cluster>();
         }
 
         Map<String, Object> data = new HashMap<String, Object>();
