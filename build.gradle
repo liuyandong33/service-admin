@@ -65,6 +65,7 @@ dependencies {
     compile("com.belerweb:pinyin4j:2.5.1")
     compile("com.jcraft:jsch:0.1.54")
     compile("org.aspectj:aspectjweaver:1.9.2")
+    compile group: 'commons-io', name: 'commons-io', version: '2.6'
 }
 
 publishing {

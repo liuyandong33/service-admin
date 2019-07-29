@@ -71,7 +71,7 @@ public class ClusterService {
             pagedSearchModel.setPage(page);
             pagedSearchModel.setRows(rows);
             pagedSearchModel.setSearchConditions(searchConditions);
-            clusters = DatabaseHelper.findAll(Cluster.class, pagedSearchModel);
+            clusters = DatabaseHelper.findAllPaged(Cluster.class, pagedSearchModel);
         }
 
         Map<String, Object> data = new HashMap<String, Object>();
