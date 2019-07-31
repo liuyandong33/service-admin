@@ -1,15 +1,11 @@
 package build.dream.admin.services;
 
-import build.dream.admin.constants.Constants;
 import build.dream.admin.models.configuration.AddConfigurationModel;
 import build.dream.admin.models.configuration.DeleteConfigurationModel;
 import build.dream.admin.models.configuration.ListConfigurationsModel;
 import build.dream.admin.models.configuration.UpdateConfigurationModel;
+import build.dream.admin.utils.ZookeeperUtils;
 import build.dream.common.api.ApiRest;
-import org.apache.curator.framework.CuratorFramework;
-import org.apache.curator.framework.api.*;
-import org.apache.zookeeper.CreateMode;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
@@ -19,9 +15,6 @@ import java.util.Map;
 
 @Service
 public class ConfigurationService {
-    @Autowired
-    private CuratorFramework curatorFramework;
-
     /**
      * 新增配置
      *
@@ -29,16 +22,22 @@ public class ConfigurationService {
      * @return
      * @throws Exception
      */
-    public ApiRest addConfiguration(AddConfigurationModel addConfigurationModel) throws Exception {
+    public ApiRest addConfiguration(AddConfigurationModel addConfigurationModel) {
         String deploymentEnvironment = addConfigurationModel.getDeploymentEnvironment();
         String partitionCode = addConfigurationModel.getPartitionCode();
         String serviceName = addConfigurationModel.getServiceName();
         String configurationKey = addConfigurationModel.getConfigurationKey();
         String configurationValue = addConfigurationModel.getConfigurationValue();
 
+        ZookeeperUtils.notExistsCreate("/configurations");
+        ZookeeperUtils.notExistsCreate("/configurations/" + deploymentEnvironment + "-" + partitionCode + "-" + serviceName);
+
         String path = "/configurations/" + deploymentEnvironment + "-" + partitionCode + "-" + serviceName + "/" + configurationKey;
-        CreateBuilder createBuilder = curatorFramework.create();
-        createBuilder.withMode(CreateMode.PERSISTENT).forPath(path, configurationValue.getBytes(Constants.CHARSET_NAME_UTF_8));
+        if (ZookeeperUtils.exists(path)) {
+            ZookeeperUtils.setData(path, configurationValue);
+        } else {
+            ZookeeperUtils.create(path, configurationValue);
+        }
 
         return ApiRest.builder().message("新增配置成功！").successful(true).build();
     }
@@ -56,21 +55,17 @@ public class ConfigurationService {
         String serviceName = listConfigurationsModel.getServiceName();
 
         String path = "/configurations/" + deploymentEnvironment + "-" + partitionCode + "-" + serviceName;
-        GetChildrenBuilder getChildrenBuilder = curatorFramework.getChildren();
-        List<String> keys = getChildrenBuilder.forPath(path);
-
-        GetDataBuilder getDataBuilder = curatorFramework.getData();
 
         List<Map<String, String>> configurations = new ArrayList<Map<String, String>>();
-        for (String key : keys) {
-            String configurationValue = new String(getDataBuilder.forPath(path + "/" + key), Constants.CHARSET_NAME_UTF_8);
-            Map<String, String> configuration = new HashMap<String, String>();
-            configuration.put("configurationKey", key);
-
-            configuration.put("configurationValue", configurationValue);
-            configurations.add(configuration);
+        if (ZookeeperUtils.exists(path)) {
+            List<String> keys = ZookeeperUtils.getChildren(path);
+            for (String key : keys) {
+                Map<String, String> configuration = new HashMap<String, String>();
+                configuration.put("configurationKey", key);
+                configuration.put("configurationValue", ZookeeperUtils.getData(path + "/" + key));
+                configurations.add(configuration);
+            }
         }
-
         return ApiRest.builder().data(configurations).message("查询配置成功！").successful(true).build();
     }
 
@@ -89,9 +84,7 @@ public class ConfigurationService {
         String configurationValue = updateConfigurationModel.getConfigurationValue();
 
         String path = "/configurations/" + deploymentEnvironment + "-" + partitionCode + "-" + serviceName + "/" + configurationKey;
-
-        SetDataBuilder setDataBuilder = curatorFramework.setData();
-        setDataBuilder.forPath(path, configurationValue.getBytes(Constants.CHARSET_NAME_UTF_8));
+        ZookeeperUtils.setData(path, configurationValue);
         return ApiRest.builder().message("修改配置成功！").successful(true).build();
     }
 
@@ -109,9 +102,7 @@ public class ConfigurationService {
         String configurationKey = deleteConfigurationModel.getConfigurationKey();
 
         String path = "/configurations/" + deploymentEnvironment + "-" + partitionCode + "-" + serviceName + "/" + configurationKey;
-
-        DeleteBuilder deleteBuilder = curatorFramework.delete();
-        deleteBuilder.forPath(path);
+        ZookeeperUtils.delete(path);
         return ApiRest.builder().message("删除配置成功！").successful(true).build();
     }
 }
