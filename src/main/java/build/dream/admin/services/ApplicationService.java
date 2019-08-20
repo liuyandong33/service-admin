@@ -2,8 +2,8 @@ package build.dream.admin.services;
 
 import build.dream.admin.models.application.DeployModel;
 import build.dream.admin.models.application.StopModel;
-import build.dream.common.admin.domains.Application;
-import build.dream.common.admin.domains.Server;
+import build.dream.common.domains.admin.Application;
+import build.dream.common.domains.admin.Server;
 import build.dream.common.api.ApiRest;
 import build.dream.common.utils.DatabaseHelper;
 import build.dream.common.utils.JSchUtils;

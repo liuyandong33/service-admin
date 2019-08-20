@@ -3,7 +3,7 @@ package build.dream.admin.services;
 import build.dream.admin.constants.Constants;
 import build.dream.admin.models.cluster.ListModel;
 import build.dream.admin.models.cluster.SaveModel;
-import build.dream.common.admin.domains.Cluster;
+import build.dream.common.domains.admin.Cluster;
 import build.dream.common.api.ApiRest;
 import build.dream.common.utils.DatabaseHelper;
 import build.dream.common.utils.PagedSearchModel;
