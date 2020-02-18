@@ -10,7 +10,6 @@ import build.dream.common.controllers.BasicController;
 import org.springframework.http.MediaType;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 @Controller
@@ -21,7 +20,7 @@ public class ConfigurationController extends BasicController {
      *
      * @return
      */
-    @RequestMapping(value = "/addConfiguration", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
+    @RequestMapping(value = "/addConfiguration", produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
     @ResponseBody
     @ApiRestAction(modelClass = AddConfigurationModel.class, serviceClass = ConfigurationService.class, serviceMethodName = "addConfiguration", error = "新增配置失败")
     public String addConfiguration() {
@@ -33,7 +32,7 @@ public class ConfigurationController extends BasicController {
      *
      * @return
      */
-    @RequestMapping(value = "/listConfigurations", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
+    @RequestMapping(value = "/listConfigurations", produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
     @ResponseBody
     @ApiRestAction(modelClass = ListConfigurationsModel.class, serviceClass = ConfigurationService.class, serviceMethodName = "listConfigurations", error = "查询配置失败")
     public String listConfigurations() {
@@ -45,7 +44,7 @@ public class ConfigurationController extends BasicController {
      *
      * @return
      */
-    @RequestMapping(value = "/updateConfiguration", method = RequestMethod.POST, produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
+    @RequestMapping(value = "/updateConfiguration", produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
     @ResponseBody
     @ApiRestAction(modelClass = UpdateConfigurationModel.class, serviceClass = ConfigurationService.class, serviceMethodName = "updateConfiguration", error = "修改配置失败")
     public String updateConfiguration() {
@@ -57,7 +56,7 @@ public class ConfigurationController extends BasicController {
      *
      * @return
      */
-    @RequestMapping(value = "/deleteConfiguration", method = RequestMethod.POST, produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
+    @RequestMapping(value = "/deleteConfiguration", produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
     @ResponseBody
     @ApiRestAction(modelClass = DeleteConfigurationModel.class, serviceClass = ConfigurationService.class, serviceMethodName = "deleteConfiguration", error = "删除配置失败")
     public String deleteConfiguration() {

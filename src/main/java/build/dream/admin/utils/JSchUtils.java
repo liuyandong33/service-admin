@@ -3,6 +3,7 @@ package build.dream.admin.utils;
 import build.dream.admin.constants.Constants;
 import build.dream.common.utils.ValidateUtils;
 import com.jcraft.jsch.*;
+import org.apache.commons.io.IOUtils;
 
 import java.io.IOException;
 import java.io.InputStream;
@@ -39,7 +40,7 @@ public class JSchUtils {
         channelExec.setCommand(command);
         channelExec.connect();
         InputStream inputStream = channelExec.getInputStream();
-        String result = "";
+        String result = IOUtils.toString(inputStream, Constants.CHARSET_UTF_8);
 
         int exitStatus = channelExec.getExitStatus();
         ValidateUtils.isTrue(exitStatus == 0, result);

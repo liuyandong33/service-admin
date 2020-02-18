@@ -1,7 +1,7 @@
 package build.dream.admin.listeners;
 
-import build.dream.admin.mappers.CommonMapper;
 import build.dream.common.listeners.BasicServletContextListener;
+import build.dream.common.mappers.CommonMapper;
 
 import javax.servlet.ServletContextEvent;
 import javax.servlet.annotation.WebListener;
