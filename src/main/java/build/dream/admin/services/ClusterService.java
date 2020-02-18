@@ -3,8 +3,8 @@ package build.dream.admin.services;
 import build.dream.admin.constants.Constants;
 import build.dream.admin.models.cluster.ListModel;
 import build.dream.admin.models.cluster.SaveModel;
-import build.dream.common.admin.domains.Cluster;
 import build.dream.common.api.ApiRest;
+import build.dream.common.domains.admin.Cluster;
 import build.dream.common.utils.DatabaseHelper;
 import build.dream.common.utils.PagedSearchModel;
 import build.dream.common.utils.SearchCondition;
@@ -71,7 +71,7 @@ public class ClusterService {
             pagedSearchModel.setPage(page);
             pagedSearchModel.setRows(rows);
             pagedSearchModel.setSearchConditions(searchConditions);
-            clusters = DatabaseHelper.findAll(Cluster.class, pagedSearchModel);
+            clusters = DatabaseHelper.findAllPaged(Cluster.class, pagedSearchModel);
         }
 
         Map<String, Object> data = new HashMap<String, Object>();

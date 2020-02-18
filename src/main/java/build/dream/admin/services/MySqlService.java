@@ -1,7 +1,7 @@
 package build.dream.admin.services;
 
-import build.dream.common.admin.domains.MySqlConfiguration;
 import build.dream.common.api.ApiRest;
+import build.dream.common.domains.admin.MySqlConfiguration;
 import build.dream.common.utils.DatabaseHelper;
 import build.dream.common.utils.SearchModel;
 import org.apache.commons.collections.CollectionUtils;
