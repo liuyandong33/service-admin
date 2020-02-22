@@ -5,7 +5,6 @@ import build.dream.common.utils.ValidateUtils;
 import com.jcraft.jsch.*;
 import org.apache.commons.io.IOUtils;
 
-import java.io.IOException;
 import java.io.InputStream;
 
 public class JSchUtils {
@@ -35,17 +34,30 @@ public class JSchUtils {
         }
     }
 
-    public static String executeCommand(Session session, String command) throws JSchException, IOException {
-        ChannelExec channelExec = (ChannelExec) openChannel(session, Constants.CHANNEL_TYPE_EXEC);
-        channelExec.setCommand(command);
-        channelExec.connect();
-        InputStream inputStream = channelExec.getInputStream();
-        String result = IOUtils.toString(inputStream, Constants.CHARSET_UTF_8);
+    public static String executeCommand(Session session, String command) {
+        ChannelExec channelExec = null;
+        String result = null;
+        try {
+            channelExec = (ChannelExec) openChannel(session, Constants.CHANNEL_TYPE_EXEC);
+            channelExec.setCommand(command);
+            channelExec.connect();
+            InputStream inputStream = channelExec.getInputStream();
+            result = IOUtils.toString(inputStream, Constants.CHARSET_UTF_8);
 
-        int exitStatus = channelExec.getExitStatus();
-        ValidateUtils.isTrue(exitStatus == 0, result);
-
-        disconnectChannel(channelExec);
+            int exitStatus = channelExec.getExitStatus();
+            ValidateUtils.isTrue(exitStatus == 0, result);
+        } catch (Exception e) {
+            throw new RuntimeException(e);
+        } finally {
+            disconnectChannel(channelExec);
+        }
         return result;
+    }
+
+    public static void main(String[] args) throws JSchException {
+        Session session = createSession("root", "root", "192.168.1.13", 22);
+        String result = executeCommand(session, "cat /etc/my.cnf");
+        System.out.println(result);
+        disconnectSession(session);
     }
 }
