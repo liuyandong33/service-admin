@@ -53,11 +53,4 @@ public class JSchUtils {
         }
         return result;
     }
-
-    public static void main(String[] args) throws JSchException {
-        Session session = createSession("root", "root", "192.168.1.13", 22);
-        String result = executeCommand(session, "cat /etc/my.cnf");
-        System.out.println(result);
-        disconnectSession(session);
-    }
 }
