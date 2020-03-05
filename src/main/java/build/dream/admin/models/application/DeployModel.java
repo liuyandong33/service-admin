@@ -4,11 +4,10 @@ import build.dream.common.constraints.InList;
 import build.dream.common.models.BasicModel;
 
 import javax.validation.constraints.NotNull;
-import java.math.BigInteger;
 
 public class DeployModel extends BasicModel {
     @NotNull
-    private BigInteger applicationId;
+    private Long appId;
 
     @NotNull
     @InList(value = {"snapshot", "release"})
@@ -17,15 +16,12 @@ public class DeployModel extends BasicModel {
     @NotNull
     private String version;
 
-    @NotNull
-    private BigInteger userId;
-
-    public BigInteger getApplicationId() {
-        return applicationId;
+    public Long getAppId() {
+        return appId;
     }
 
-    public void setApplicationId(BigInteger applicationId) {
-        this.applicationId = applicationId;
+    public void setAppId(Long appId) {
+        this.appId = appId;
     }
 
     public String getType() {
@@ -42,13 +38,5 @@ public class DeployModel extends BasicModel {
 
     public void setVersion(String version) {
         this.version = version;
-    }
-
-    public BigInteger getUserId() {
-        return userId;
-    }
-
-    public void setUserId(BigInteger userId) {
-        this.userId = userId;
     }
 }
