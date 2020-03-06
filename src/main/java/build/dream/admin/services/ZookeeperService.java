@@ -3,8 +3,8 @@ package build.dream.admin.services;
 import build.dream.admin.constants.Constants;
 import build.dream.admin.models.zookeeper.*;
 import build.dream.admin.utils.JSchUtils;
-import build.dream.common.domains.admin.ZookeeperNode;
 import build.dream.common.api.ApiRest;
+import build.dream.common.domains.admin.ZookeeperNode;
 import build.dream.common.utils.DatabaseHelper;
 import build.dream.common.utils.SearchModel;
 import build.dream.common.utils.ValidateUtils;
@@ -14,7 +14,6 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.io.IOException;
-import java.math.BigInteger;
 import java.util.List;
 
 @Service
@@ -27,7 +26,7 @@ public class ZookeeperService {
      */
     @Transactional(readOnly = true)
     public ApiRest listNodes(ListNodesModel listNodesModel) {
-        BigInteger clusterId = listNodesModel.getClusterId();
+        Long clusterId = listNodesModel.getClusterId();
 
         SearchModel searchModel = new SearchModel(true);
         searchModel.addSearchCondition("cluster_id", Constants.SQL_OPERATION_SYMBOL_EQUAL, clusterId);
@@ -45,7 +44,7 @@ public class ZookeeperService {
      */
     @Transactional(readOnly = true)
     public ApiRest start(StartModel startModel) throws JSchException, IOException {
-        BigInteger nodeId = startModel.getNodeId();
+        Long nodeId = startModel.getNodeId();
 
         ZookeeperNode zookeeperNode = DatabaseHelper.find(ZookeeperNode.class, nodeId);
         ValidateUtils.notNull(zookeeperNode, "Zookeeper 节点不存在！");
@@ -70,7 +69,7 @@ public class ZookeeperService {
      */
     @Transactional(readOnly = true)
     public ApiRest stop(StopModel stopModel) throws JSchException, IOException {
-        BigInteger nodeId = stopModel.getNodeId();
+        Long nodeId = stopModel.getNodeId();
 
         ZookeeperNode zookeeperNode = DatabaseHelper.find(ZookeeperNode.class, nodeId);
         ValidateUtils.notNull(zookeeperNode, "Zookeeper 节点不存在！");
@@ -95,7 +94,7 @@ public class ZookeeperService {
      */
     @Transactional(readOnly = true)
     public ApiRest restart(RestartModel restartModel) throws JSchException, IOException {
-        BigInteger nodeId = restartModel.getNodeId();
+        Long nodeId = restartModel.getNodeId();
 
         ZookeeperNode zookeeperNode = DatabaseHelper.find(ZookeeperNode.class, nodeId);
         ValidateUtils.notNull(zookeeperNode, "Zookeeper节点不存在！");
@@ -120,7 +119,7 @@ public class ZookeeperService {
      */
     @Transactional(readOnly = true)
     public ApiRest status(StatusModel statusModel) throws JSchException, IOException {
-        BigInteger nodeId = statusModel.getNodeId();
+        Long nodeId = statusModel.getNodeId();
 
         ZookeeperNode zookeeperNode = DatabaseHelper.find(ZookeeperNode.class, nodeId);
         ValidateUtils.notNull(zookeeperNode, "Zookeeper 节点不存在！");
@@ -143,14 +142,14 @@ public class ZookeeperService {
      */
     @Transactional(rollbackFor = Exception.class)
     public ApiRest saveNode(SaveNodeModel saveNodeModel) {
-        BigInteger id = saveNodeModel.getId();
+        Long id = saveNodeModel.getId();
         String hostName = saveNodeModel.getHostName();
         String ipAddress = saveNodeModel.getIpAddress();
         Integer sshPort = saveNodeModel.getSshPort();
         String userName = saveNodeModel.getUserName();
         String password = saveNodeModel.getPassword();
         String zookeeperHome = saveNodeModel.getZookeeperHome();
-        BigInteger userId = saveNodeModel.getUserId();
+        Long userId = saveNodeModel.getUserId();
 
         try {
             Session session = JSchUtils.createSession(userName, password, ipAddress, sshPort);

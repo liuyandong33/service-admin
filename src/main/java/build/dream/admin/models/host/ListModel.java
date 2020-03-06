@@ -6,7 +6,6 @@ import build.dream.common.utils.ApplicationHandler;
 import javax.validation.constraints.Max;
 import javax.validation.constraints.Min;
 import javax.validation.constraints.NotNull;
-import java.math.BigInteger;
 
 public class ListModel extends BasicModel {
     private static final Integer[] TYPES = {1, 2};
@@ -22,7 +21,7 @@ public class ListModel extends BasicModel {
     @NotNull
     private Integer type;
 
-    private BigInteger hostId;
+    private Long hostId;
 
     public Integer getPage() {
         return page;
@@ -48,11 +47,11 @@ public class ListModel extends BasicModel {
         this.type = type;
     }
 
-    public BigInteger getHostId() {
+    public Long getHostId() {
         return hostId;
     }
 
-    public void setHostId(BigInteger hostId) {
+    public void setHostId(Long hostId) {
         this.hostId = hostId;
     }
 

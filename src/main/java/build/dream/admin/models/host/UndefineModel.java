@@ -3,28 +3,27 @@ package build.dream.admin.models.host;
 import build.dream.common.models.BasicModel;
 
 import javax.validation.constraints.NotNull;
-import java.math.BigInteger;
 
 public class UndefineModel extends BasicModel {
     @NotNull
-    private BigInteger hostId;
+    private Long hostId;
 
     @NotNull
-    private BigInteger userId;
+    private Long userId;
 
-    public BigInteger getHostId() {
+    public Long getHostId() {
         return hostId;
     }
 
-    public void setHostId(BigInteger hostId) {
+    public void setHostId(Long hostId) {
         this.hostId = hostId;
     }
 
-    public BigInteger getUserId() {
+    public Long getUserId() {
         return userId;
     }
 
-    public void setUserId(BigInteger userId) {
+    public void setUserId(Long userId) {
         this.userId = userId;
     }
 }

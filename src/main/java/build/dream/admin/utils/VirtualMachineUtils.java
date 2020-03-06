@@ -8,11 +8,10 @@ import com.jcraft.jsch.Session;
 import org.apache.commons.lang.Validate;
 
 import java.io.IOException;
-import java.math.BigInteger;
 import java.util.Date;
 
 public class VirtualMachineUtils {
-    public static String operate(BigInteger hostId, BigInteger userId, String operateType) throws JSchException, IOException {
+    public static String operate(Long hostId, Long userId, String operateType) throws JSchException, IOException {
         Host childHost = DatabaseHelper.find(Host.class, hostId);
         Validate.notNull(childHost, "主机不存在！");
 

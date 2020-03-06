@@ -1,16 +1,14 @@
 package build.dream.admin.models.cluster;
 
 import build.dream.common.models.BasicModel;
-import build.dream.common.utils.ApplicationHandler;
 
 import javax.validation.constraints.Max;
 import javax.validation.constraints.Min;
 import javax.validation.constraints.NotNull;
-import java.math.BigInteger;
 
 public class ListModel extends BasicModel {
     @NotNull
-    private BigInteger tenantId;
+    private Long tenantId;
 
     @NotNull
     @Min(value = 1)
@@ -21,11 +19,11 @@ public class ListModel extends BasicModel {
     @Max(value = 50)
     private Integer rows;
 
-    public BigInteger getTenantId() {
+    public Long getTenantId() {
         return tenantId;
     }
 
-    public void setTenantId(BigInteger tenantId) {
+    public void setTenantId(Long tenantId) {
         this.tenantId = tenantId;
     }
 

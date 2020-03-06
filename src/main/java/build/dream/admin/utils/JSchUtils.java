@@ -14,7 +14,7 @@ public class JSchUtils {
         session.setConfig("PreferredAuthentications", "password");
         session.setConfig("StrictHostKeyChecking", "no");
         session.setPassword(password);
-        session.connect(3000);
+        session.connect(30000);
         return session;
     }
 
@@ -52,5 +52,21 @@ public class JSchUtils {
             disconnectChannel(channelExec);
         }
         return result;
+    }
+
+    public static boolean exists(Session session, String path) {
+        return "yes".equals(executeCommand(session, "[ -e " + path + " ] && echo -e yes'\\c' || echo -e no'\\c'"));
+    }
+
+    public static void mkdir(Session session, String path) {
+        executeCommand(session, "mkdir " + path);
+    }
+
+    public static void mkdirs(Session session, String path) {
+        executeCommand(session, "mkdir -p " + path);
+    }
+
+    public static void delete(Session session, String path) {
+        executeCommand(session, "rm -rf " + path);
     }
 }

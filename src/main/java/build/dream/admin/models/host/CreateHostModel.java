@@ -5,11 +5,10 @@ import org.hibernate.validator.constraints.Length;
 
 import javax.validation.constraints.Min;
 import javax.validation.constraints.NotNull;
-import java.math.BigInteger;
 
 public class CreateHostModel extends BasicModel {
     @NotNull
-    BigInteger hostId;
+    Long hostId;
 
     @NotNull
     @Length(max = 20)
@@ -31,13 +30,13 @@ public class CreateHostModel extends BasicModel {
     private Integer memorySize;
 
     @NotNull
-    private BigInteger userId;
+    private Long userId;
 
-    public BigInteger getHostId() {
+    public Long getHostId() {
         return hostId;
     }
 
-    public void setHostId(BigInteger hostId) {
+    public void setHostId(Long hostId) {
         this.hostId = hostId;
     }
 
@@ -81,11 +80,11 @@ public class CreateHostModel extends BasicModel {
         this.memorySize = memorySize;
     }
 
-    public BigInteger getUserId() {
+    public Long getUserId() {
         return userId;
     }
 
-    public void setUserId(BigInteger userId) {
+    public void setUserId(Long userId) {
         this.userId = userId;
     }
 }

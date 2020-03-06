@@ -4,8 +4,8 @@ import build.dream.admin.constants.Constants;
 import build.dream.admin.models.host.*;
 import build.dream.admin.utils.JSchUtils;
 import build.dream.admin.utils.VirtualMachineUtils;
-import build.dream.common.domains.admin.Host;
 import build.dream.common.api.ApiRest;
+import build.dream.common.domains.admin.Host;
 import build.dream.common.utils.DatabaseHelper;
 import build.dream.common.utils.PagedSearchModel;
 import build.dream.common.utils.SearchCondition;
@@ -25,7 +25,6 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.io.*;
-import java.math.BigInteger;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -41,8 +40,8 @@ public class HostService {
      */
     @Transactional(rollbackFor = Exception.class)
     public ApiRest save(SaveModel saveModel) {
-        BigInteger id = saveModel.getId();
-        BigInteger userId = saveModel.getUserId();
+        Long id = saveModel.getId();
+        Long userId = saveModel.getUserId();
         String name = saveModel.getName();
         String ipAddress = saveModel.getIpAddress();
         int sshPort = saveModel.getSshPort();
@@ -94,13 +93,13 @@ public class HostService {
 
     @Transactional(rollbackFor = Exception.class)
     public ApiRest createHost(CreateHostModel createHostModel) throws JSchException, IOException {
-        BigInteger hostId = createHostModel.getHostId();
+        Long hostId = createHostModel.getHostId();
         String name = createHostModel.getName();
         int diskSize = createHostModel.getDiskSize();
         String password = createHostModel.getPassword();
         int cpuCoreQuantity = createHostModel.getCpuCoreQuantity();
         int memorySize = createHostModel.getMemorySize();
-        BigInteger userId = createHostModel.getUserId();
+        Long userId = createHostModel.getUserId();
 
         Host host = DatabaseHelper.find(Host.class, hostId);
         Validate.notNull(host, "主机不存在！");
@@ -159,7 +158,7 @@ public class HostService {
         int type = listModel.getType();
         int page = listModel.getPage();
         int rows = listModel.getRows();
-        BigInteger hostId = listModel.getHostId();
+        Long hostId = listModel.getHostId();
 
         List<SearchCondition> searchConditions = new ArrayList<SearchCondition>();
         searchConditions.add(new SearchCondition("type", Constants.SQL_OPERATION_SYMBOL_EQUAL, type));
@@ -196,8 +195,8 @@ public class HostService {
      */
     @Transactional(rollbackFor = Exception.class)
     public ApiRest start(StartModel startModel) throws JSchException, IOException {
-        BigInteger hostId = startModel.getHostId();
-        BigInteger userId = startModel.getUserId();
+        Long hostId = startModel.getHostId();
+        Long userId = startModel.getUserId();
 
         String result = VirtualMachineUtils.operate(hostId, userId, Constants.OPERATE_TYPE_START);
 
@@ -214,8 +213,8 @@ public class HostService {
      */
     @Transactional(rollbackFor = Exception.class)
     public ApiRest shutdown(ShutdownModel shutdownModel) throws JSchException, IOException {
-        BigInteger hostId = shutdownModel.getHostId();
-        BigInteger userId = shutdownModel.getUserId();
+        Long hostId = shutdownModel.getHostId();
+        Long userId = shutdownModel.getUserId();
 
         String result = VirtualMachineUtils.operate(hostId, userId, Constants.OPERATE_TYPE_SHUTDOWN);
 
@@ -232,8 +231,8 @@ public class HostService {
      */
     @Transactional(rollbackFor = Exception.class)
     public ApiRest destroy(DestroyModel destroyModel) throws JSchException, IOException {
-        BigInteger hostId = destroyModel.getHostId();
-        BigInteger userId = destroyModel.getUserId();
+        Long hostId = destroyModel.getHostId();
+        Long userId = destroyModel.getUserId();
 
         String result = VirtualMachineUtils.operate(hostId, userId, Constants.OPERATE_TYPE_DESTROY);
 
@@ -250,8 +249,8 @@ public class HostService {
      */
     @Transactional(rollbackFor = Exception.class)
     public ApiRest undefine(UndefineModel undefineModel) throws JSchException, IOException {
-        BigInteger hostId = undefineModel.getHostId();
-        BigInteger userId = undefineModel.getUserId();
+        Long hostId = undefineModel.getHostId();
+        Long userId = undefineModel.getUserId();
 
         String result = VirtualMachineUtils.operate(hostId, userId, Constants.OPERATE_TYPE_UNDEFINE);
 
@@ -260,8 +259,8 @@ public class HostService {
 
     @Transactional(rollbackFor = Exception.class)
     public ApiRest reboot(RebootModel rebootModel) throws JSchException, IOException {
-        BigInteger hostId = rebootModel.getHostId();
-        BigInteger userId = rebootModel.getUserId();
+        Long hostId = rebootModel.getHostId();
+        Long userId = rebootModel.getUserId();
 
         String result = VirtualMachineUtils.operate(hostId, userId, Constants.OPERATE_TYPE_REBOOT);
 
@@ -279,11 +278,11 @@ public class HostService {
      */
     @Transactional(readOnly = true)
     public ApiRest update(UpdateModel updateModel) throws JSchException, SftpException, IOException, DocumentException {
-        BigInteger id = updateModel.getId();
+        Long id = updateModel.getId();
         int diskSize = updateModel.getDiskSize();
         int cpuCoreQuantity = updateModel.getCpuCoreQuantity();
         int memorySize = updateModel.getMemorySize();
-        BigInteger userId = updateModel.getUserId();
+        Long userId = updateModel.getUserId();
 
         Host childHost = DatabaseHelper.find(Host.class, id);
         Validate.notNull(childHost, "主机不存在！");

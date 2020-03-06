@@ -4,11 +4,10 @@ import build.dream.common.models.BasicModel;
 
 import javax.validation.constraints.Min;
 import javax.validation.constraints.NotNull;
-import java.math.BigInteger;
 
 public class UpdateModel extends BasicModel {
     @NotNull
-    private BigInteger id;
+    private Long id;
 
     @NotNull
     @Min(value = 10)
@@ -23,13 +22,13 @@ public class UpdateModel extends BasicModel {
     private Integer memorySize;
 
     @NotNull
-    private BigInteger userId;
+    private Long userId;
 
-    public BigInteger getId() {
+    public Long getId() {
         return id;
     }
 
-    public void setId(BigInteger id) {
+    public void setId(Long id) {
         this.id = id;
     }
 
@@ -57,11 +56,11 @@ public class UpdateModel extends BasicModel {
         this.memorySize = memorySize;
     }
 
-    public BigInteger getUserId() {
+    public Long getUserId() {
         return userId;
     }
 
-    public void setUserId(BigInteger userId) {
+    public void setUserId(Long userId) {
         this.userId = userId;
     }
 }

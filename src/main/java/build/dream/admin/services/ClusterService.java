@@ -3,8 +3,8 @@ package build.dream.admin.services;
 import build.dream.admin.constants.Constants;
 import build.dream.admin.models.cluster.ListModel;
 import build.dream.admin.models.cluster.SaveModel;
-import build.dream.common.domains.admin.Cluster;
 import build.dream.common.api.ApiRest;
+import build.dream.common.domains.admin.Cluster;
 import build.dream.common.utils.DatabaseHelper;
 import build.dream.common.utils.PagedSearchModel;
 import build.dream.common.utils.SearchCondition;
@@ -13,7 +13,6 @@ import org.apache.commons.lang.Validate;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.math.BigInteger;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -23,11 +22,11 @@ import java.util.Map;
 public class ClusterService {
     @Transactional(rollbackFor = Exception.class)
     public ApiRest save(SaveModel saveModel) {
-        BigInteger id = saveModel.getId();
+        Long id = saveModel.getId();
         String name = saveModel.getName();
         Integer type = saveModel.getType();
-        BigInteger tenantId = saveModel.getTenantId();
-        BigInteger userId = saveModel.getUserId();
+        Long tenantId = saveModel.getTenantId();
+        Long userId = saveModel.getUserId();
 
         Cluster cluster = null;
         if (id != null) {
@@ -55,7 +54,7 @@ public class ClusterService {
 
     @Transactional(readOnly = true)
     public ApiRest list(ListModel listModel) {
-        BigInteger tenantId = listModel.getTenantId();
+        Long tenantId = listModel.getTenantId();
         int page = listModel.getPage();
         int rows = listModel.getRows();
 

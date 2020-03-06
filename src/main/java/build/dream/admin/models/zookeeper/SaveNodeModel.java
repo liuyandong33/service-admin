@@ -6,10 +6,9 @@ import org.hibernate.validator.constraints.Length;
 import javax.validation.constraints.Max;
 import javax.validation.constraints.Min;
 import javax.validation.constraints.NotNull;
-import java.math.BigInteger;
 
 public class SaveNodeModel extends BasicModel {
-    private BigInteger id;
+    private Long id;
 
     @NotNull
     @Length(max = 20)
@@ -36,13 +35,13 @@ public class SaveNodeModel extends BasicModel {
     private String zookeeperHome;
 
     @NotNull
-    private BigInteger userId;
+    private Long userId;
 
-    public BigInteger getId() {
+    public Long getId() {
         return id;
     }
 
-    public void setId(BigInteger id) {
+    public void setId(Long id) {
         this.id = id;
     }
 
@@ -94,11 +93,11 @@ public class SaveNodeModel extends BasicModel {
         this.zookeeperHome = zookeeperHome;
     }
 
-    public BigInteger getUserId() {
+    public Long getUserId() {
         return userId;
     }
 
-    public void setUserId(BigInteger userId) {
+    public void setUserId(Long userId) {
         this.userId = userId;
     }
 }
