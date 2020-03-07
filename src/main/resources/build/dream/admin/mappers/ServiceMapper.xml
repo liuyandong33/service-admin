@@ -10,4 +10,12 @@
         WHERE service_node.deleted = 0
         AND service_node.service_id = #{serviceId}
     </select>
+
+    <delete id="deleteJavaOperations">
+        DELETE FROM java_operation WHERE service_id = #{serviceId}
+    </delete>
+
+    <delete id="deleteServiceConfigurations">
+        DELETE FROM service_configuration WHERE service_id = #{serviceId}
+    </delete>
 </mapper>

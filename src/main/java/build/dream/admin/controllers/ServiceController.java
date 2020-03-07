@@ -2,6 +2,7 @@ package build.dream.admin.controllers;
 
 import build.dream.admin.models.service.ListServicesModel;
 import build.dream.admin.models.service.ObtainServiceInfoModel;
+import build.dream.admin.models.service.SaveServiceModel;
 import build.dream.admin.services.ServiceService;
 import build.dream.common.annotations.ApiRestAction;
 import org.springframework.http.MediaType;
@@ -23,6 +24,13 @@ public class ServiceController {
     @ResponseBody
     @ApiRestAction(modelClass = ObtainServiceInfoModel.class, serviceClass = ServiceService.class, serviceMethodName = "obtainServiceInfo", error = "获取服务信息失败")
     public String obtainServiceInfo() {
+        return null;
+    }
+
+    @RequestMapping(value = "/saveService", produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
+    @ResponseBody
+    @ApiRestAction(modelClass = SaveServiceModel.class, serviceClass = ServiceService.class, serviceMethodName = "saveService", error = "保存服务失败")
+    public String saveService() {
         return null;
     }
 }

@@ -1,0 +1,31 @@
+{
+    "appId": 1,
+    "name": "zd1区餐饮服务",
+    "programName": "service-catering",
+    "programVersion": "0.1.0",
+    "configurations": {
+        "deployment.environment": "development",
+        "partition.code": "zd1",
+        "service.name": "catering",
+        "spring.cloud.zookeeper.connect-string": "node1:2181,node2:2181,node3:2181"
+    },
+    "javaOpts": {
+        "xms": "3072m",
+        "xmx": "3072m",
+        "xmn": "",
+        "xss": "",
+        "xxPermSize": "",
+        "xxMaxPermSize": "",
+        "xxUseSerialGc": false,
+        "xxUseParallelGc": true,
+        "xxParallelGcThreads": 4,
+        "xxUseParNewGc": false,
+        "xxUseParallelOldGc": false,
+        "xxUseConcMarkSweepGc": false,
+        "xxUseCmsCompactAtFullCollection": false,
+        "xxCmsInitiatingOccupancyFraction": "",
+        "xxMaxTenuringThreshold": "",
+        "xxMaxHeapFreeRation": "",
+        "xxMinHeapFreeRation": ""
+    }
+}
