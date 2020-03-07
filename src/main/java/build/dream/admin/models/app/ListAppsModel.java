@@ -1,12 +1,12 @@
 package build.dream.admin.models.app;
 
-import build.dream.common.models.BasicModel;
+import build.dream.common.models.weixinpay.DevOpsBasicModel;
 
 import javax.validation.constraints.Max;
 import javax.validation.constraints.Min;
 import javax.validation.constraints.NotNull;
 
-public class ListAppsModel extends BasicModel {
+public class ListAppsModel extends DevOpsBasicModel {
     @NotNull
     @Min(value = 1)
     private Integer page;

@@ -45,6 +45,7 @@ public class AppService {
 
     @Transactional(rollbackFor = Exception.class)
     public ApiRest saveApp(SaveAppModel saveAppModel) {
+        Long userId = saveAppModel.obtainUserId();
         Long id = saveAppModel.getId();
         String name = saveAppModel.getName();
         String description = saveAppModel.getDescription();
@@ -59,12 +60,16 @@ public class AppService {
 
             app.setName(name);
             app.setDescription(description);
+            app.setCreatedUserId(userId);
+            app.setUpdatedUserId(userId);
+            app.setUpdatedRemark("修改应用信息！");
         } else {
             App app = App.builder()
                     .name(name)
                     .description(description)
-                    .createdUserId(0L)
-                    .updatedUserId(0L)
+                    .createdUserId(userId)
+                    .updatedUserId(userId)
+                    .updatedRemark("新增应用信息！")
                     .build();
             DatabaseHelper.insert(app);
         }

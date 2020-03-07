@@ -1,11 +1,11 @@
 package build.dream.admin.models.app;
 
-import build.dream.common.models.BasicModel;
+import build.dream.common.models.weixinpay.DevOpsBasicModel;
 import org.hibernate.validator.constraints.Length;
 
 import javax.validation.constraints.NotNull;
 
-public class SaveAppModel extends BasicModel {
+public class SaveAppModel extends DevOpsBasicModel {
     private Long id;
 
     @NotNull

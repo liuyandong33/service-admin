@@ -1,12 +1,12 @@
 package build.dream.admin.models.service;
 
-import build.dream.common.models.BasicModel;
+import build.dream.common.models.weixinpay.DevOpsBasicModel;
 
 import javax.validation.constraints.Max;
 import javax.validation.constraints.Min;
 import javax.validation.constraints.NotNull;
 
-public class ListServicesModel extends BasicModel {
+public class ListServicesModel extends DevOpsBasicModel {
     @NotNull
     private Integer appId;
 

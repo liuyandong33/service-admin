@@ -1,10 +1,10 @@
 package build.dream.admin.models.service;
 
-import build.dream.common.models.BasicModel;
+import build.dream.common.models.weixinpay.DevOpsBasicModel;
 
 import javax.validation.constraints.NotNull;
 
-public class ObtainServiceInfoModel extends BasicModel {
+public class ObtainServiceInfoModel extends DevOpsBasicModel {
     @NotNull
     private Long serviceId;
 
