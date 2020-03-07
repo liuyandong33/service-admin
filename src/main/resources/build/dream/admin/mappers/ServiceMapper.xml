@@ -4,7 +4,10 @@
     <select id="listServiceNodes" resultType="build.dream.common.utils.UnderscoreToCamelCaseMap">
         SELECT
         host.name AS host_name,
-        host.ip_address AS host_ip_address
+        host.ip_address,
+        host.ssh_port,
+        host.user_name,
+        host.password
         FROM service_node
         INNER JOIN host ON service_node.host_id = host.id AND host.deleted = 0
         WHERE service_node.deleted = 0

@@ -1,5 +1,6 @@
 package build.dream.admin.controllers;
 
+import build.dream.admin.models.service.DeployModel;
 import build.dream.admin.models.service.ListServicesModel;
 import build.dream.admin.models.service.ObtainServiceInfoModel;
 import build.dream.admin.models.service.SaveServiceModel;
@@ -31,6 +32,13 @@ public class ServiceController {
     @ResponseBody
     @ApiRestAction(modelClass = SaveServiceModel.class, serviceClass = ServiceService.class, serviceMethodName = "saveService", error = "保存服务失败")
     public String saveService() {
+        return null;
+    }
+
+    @RequestMapping(value = "/deploy", produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
+    @ResponseBody
+    @ApiRestAction(modelClass = DeployModel.class, serviceClass = ServiceService.class, serviceMethodName = "deploy", error = "部署失败")
+    public String deploy() {
         return null;
     }
 }
