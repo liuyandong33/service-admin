@@ -1,12 +1,15 @@
 package build.dream.admin.services;
 
 import build.dream.admin.constants.Constants;
+import build.dream.admin.mappers.ServiceMapper;
 import build.dream.admin.models.service.ListServicesModel;
 import build.dream.admin.models.service.ObtainServiceInfoModel;
 import build.dream.common.api.ApiRest;
 import build.dream.common.domains.admin.$Service;
 import build.dream.common.domains.admin.JavaOperation;
+import build.dream.common.domains.admin.ServiceConfiguration;
 import build.dream.common.utils.*;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -14,6 +17,9 @@ import java.util.*;
 
 @Service
 public class ServiceService {
+    @Autowired
+    private ServiceMapper serviceMapper;
+
     @Transactional(readOnly = true)
     public ApiRest listServices(ListServicesModel listServicesModel) {
         Integer appId = listServicesModel.getAppId();
@@ -60,6 +66,15 @@ public class ServiceService {
         if (Objects.nonNull(javaOperation)) {
             data.put("javaOpts", javaOperation.buildJavaOpts());
         }
+
+        SearchModel serviceConfigurationSearchModel = SearchModel.builder()
+                .autoSetDeletedFalse()
+                .equal(ServiceConfiguration.ColumnName.SERVICE_ID, serviceId)
+                .build();
+        List<ServiceConfiguration> serviceConfigurations = DatabaseHelper.findAll(ServiceConfiguration.class, serviceConfigurationSearchModel);
+        List<Map<String, Object>> serviceNodes = serviceMapper.listServiceNodes(serviceId);
+        data.put("serviceConfigurations", serviceConfigurations);
+        data.put("serviceNodes", serviceNodes);
         return ApiRest.builder().data(data).message("获取服务信息成功！").successful(true).build();
     }
 }
