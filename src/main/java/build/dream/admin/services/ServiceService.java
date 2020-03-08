@@ -83,8 +83,8 @@ public class ServiceService {
                 .build();
         List<ServiceConfiguration> serviceConfigurations = DatabaseHelper.findAll(ServiceConfiguration.class, serviceConfigurationSearchModel);
         List<Map<String, Object>> serviceNodes = serviceMapper.listServiceNodes(serviceId);
-        data.put("serviceConfigurations", serviceConfigurations);
-        data.put("serviceNodes", serviceNodes);
+        data.put("configurations", serviceConfigurations);
+        data.put("nodes", serviceNodes);
         return ApiRest.builder().data(data).message("获取服务信息成功！").successful(true).build();
     }
 
