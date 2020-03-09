@@ -1,7 +1,7 @@
 package build.dream.devops.utils;
 
-import build.dream.devops.constants.Constants;
 import build.dream.common.utils.ValidateUtils;
+import build.dream.devops.constants.Constants;
 import com.jcraft.jsch.*;
 import org.apache.commons.io.IOUtils;
 
@@ -68,5 +68,13 @@ public class JSchUtils {
 
     public static void delete(Session session, String path) {
         executeCommand(session, "rm -rf " + path);
+    }
+
+    public static boolean processExists(Session session, String pid) {
+        return exists(session, "/proc/" + pid);
+    }
+
+    public static String killProcess(Session session, String pid) {
+        return executeCommand(session, "kill -9 " + pid);
     }
 }

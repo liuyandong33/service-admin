@@ -35,4 +35,11 @@
         INNER JOIN host ON host.id = service_node.host_id AND host.deleted = 0
         WHERE service_node.deleted = 0;
     </select>
+
+    <update id="updateServiceNodeStatusAndPid">
+        UPDATE
+        service_node
+        SET status = #{status}, pid = #{pid}
+        WHERE id = #{id}
+    </update>
 </mapper>
