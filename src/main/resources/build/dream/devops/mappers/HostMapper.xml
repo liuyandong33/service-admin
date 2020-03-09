@@ -14,6 +14,7 @@
         host.disk_size,
         host.cpu_core_quantity,
         host.memory_size,
+        host.status,
         parent_host.name AS parent_name,
         parent_host.ip_address AS parent_ip_address
         FROM host LEFT JOIN host AS parent_host ON parent_host.id = host.parent_id AND parent_host.deleted = 0

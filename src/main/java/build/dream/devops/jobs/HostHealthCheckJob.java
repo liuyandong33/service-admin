@@ -1,6 +1,7 @@
 package build.dream.devops.jobs;
 
 import build.dream.common.domains.admin.Host;
+import build.dream.devops.constants.Constants;
 import build.dream.devops.services.HostService;
 import build.dream.devops.utils.HostUtils;
 import org.quartz.DisallowConcurrentExecution;
@@ -26,12 +27,24 @@ public class HostHealthCheckJob implements Job {
     }
 
     public void pingHost(Host host) {
+        int status = host.getStatus();
         try {
             if (HostUtils.ping(host.getIpAddress())) {
-                
+                if (status != Constants.HOST_STATUS_RUNNING) {
+                    host.setStatus(Constants.HOST_STATUS_RUNNING);
+                    hostService.updateHost(host);
+                }
+            } else {
+                if (status != Constants.HOST_STATUS_STOPPED) {
+                    host.setStatus(Constants.HOST_STATUS_STOPPED);
+                    hostService.updateHost(host);
+                }
             }
         } catch (IOException e) {
-
+            if (status != Constants.HOST_STATUS_STOPPED) {
+                host.setStatus(Constants.HOST_STATUS_STOPPED);
+                hostService.updateHost(host);
+            }
         }
     }
 }

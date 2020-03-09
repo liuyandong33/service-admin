@@ -16,4 +16,10 @@ public class Constants extends build.dream.common.constants.Constants {
     public static final Integer SERVICE_NODE_STATUS_RUNNING = 1;
     public static final Integer SERVICE_NODE_STATUS_STOPPED = 2;
     public static final Integer SERVICE_NODE_STATUS_WRONG = 3;
+
+    public static final Integer HOST_STATUS_RUNNING = 1;
+    public static final Integer HOST_STATUS_STOPPED = 2;
+
+    public static final Integer HOST_TYPE_PHYSICAL_MACHINE = 1;
+    public static final Integer HOST_TYPE_VIRTUAL_MACHINE = 2;
 }

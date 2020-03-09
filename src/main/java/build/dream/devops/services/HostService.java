@@ -4,9 +4,13 @@ import build.dream.common.api.ApiRest;
 import build.dream.common.domains.admin.Host;
 import build.dream.common.utils.DatabaseHelper;
 import build.dream.common.utils.SearchModel;
+import build.dream.common.utils.ValidateUtils;
+import build.dream.devops.constants.Constants;
 import build.dream.devops.mappers.HostMapper;
 import build.dream.devops.models.host.ListHostsModel;
 import build.dream.devops.models.host.SaveHostModel;
+import build.dream.devops.models.host.ShutdownModel;
+import build.dream.devops.models.host.StartModel;
 import build.dream.devops.utils.JSchUtils;
 import com.jcraft.jsch.Session;
 import org.apache.commons.lang.Validate;
@@ -120,5 +124,76 @@ public class HostService {
     @Transactional(readOnly = true)
     public List<Host> obtainAllHosts() {
         return DatabaseHelper.findAll(Host.class, SearchModel.builder().autoSetDeletedFalse().build());
+    }
+
+    @Transactional(rollbackFor = Exception.class)
+    public void updateHost(Host host) {
+        DatabaseHelper.update(host);
+    }
+
+    /**
+     * 关闭虚拟机
+     *
+     * @param shutdownModel
+     * @return
+     */
+    @Transactional(rollbackFor = Exception.class)
+    public ApiRest shutdown(ShutdownModel shutdownModel) {
+        Long userId = shutdownModel.obtainUserId();
+        Long hostId = shutdownModel.getHostId();
+        Host host = DatabaseHelper.find(Host.class, hostId);
+        ValidateUtils.notNull(host, "虚拟机不存在！");
+        ValidateUtils.isTrue(host.getType() == Constants.HOST_TYPE_VIRTUAL_MACHINE, "只能关闭虚拟机！");
+        ValidateUtils.isTrue(host.getStatus() == Constants.HOST_STATUS_RUNNING, "虚拟机未运行，不能进行关机操作！");
+
+        Host parentHost = DatabaseHelper.find(Host.class, host.getParentId());
+        Session session = null;
+        try {
+            session = JSchUtils.createSession(parentHost.getUserName(), parentHost.getPassword(), parentHost.getIpAddress(), parentHost.getSshPort());
+            String result = JSchUtils.executeCommand(session, "virsh shutdown " + host.getName());
+        } catch (Exception e) {
+            throw new RuntimeException(e);
+        } finally {
+            JSchUtils.disconnectSession(session);
+        }
+
+        host.setStatus(Constants.HOST_STATUS_STOPPED);
+        host.setUpdatedUserId(userId);
+        host.setUpdatedRemark("关闭虚拟机！");
+        DatabaseHelper.update(host);
+        return ApiRest.builder().message("关闭虚拟机成功！").build();
+    }
+
+    /**
+     * 开启虚拟机
+     *
+     * @param startModel
+     * @return
+     */
+    @Transactional(rollbackFor = Exception.class)
+    public ApiRest start(StartModel startModel) {
+        Long userId = startModel.obtainUserId();
+        Long hostId = startModel.getHostId();
+        Host host = DatabaseHelper.find(Host.class, hostId);
+        ValidateUtils.notNull(host, "虚拟机不存在！");
+        ValidateUtils.isTrue(host.getType() == Constants.HOST_TYPE_VIRTUAL_MACHINE, "只能关闭虚拟机！");
+        ValidateUtils.isTrue(host.getStatus() == Constants.HOST_STATUS_STOPPED, "虚拟机正在运行中，不能进行开机操作！");
+
+        Host parentHost = DatabaseHelper.find(Host.class, host.getParentId());
+        Session session = null;
+        try {
+            session = JSchUtils.createSession(parentHost.getUserName(), parentHost.getPassword(), parentHost.getIpAddress(), parentHost.getSshPort());
+            String result = JSchUtils.executeCommand(session, "virsh start " + host.getName());
+        } catch (Exception e) {
+            throw new RuntimeException(e);
+        } finally {
+            JSchUtils.disconnectSession(session);
+        }
+
+        host.setStatus(Constants.HOST_STATUS_RUNNING);
+        host.setUpdatedUserId(userId);
+        host.setUpdatedRemark("开启虚拟机！");
+        DatabaseHelper.update(host);
+        return ApiRest.builder().message("开启虚拟机成功！").build();
     }
 }
