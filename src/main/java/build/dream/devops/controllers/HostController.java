@@ -4,6 +4,7 @@ import build.dream.common.annotations.ApiRestAction;
 import build.dream.devops.models.host.ListHostsModel;
 import build.dream.devops.models.host.SaveHostModel;
 import build.dream.devops.models.host.ShutdownModel;
+import build.dream.devops.models.host.StartModel;
 import build.dream.devops.services.HostService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
@@ -45,6 +46,18 @@ public class HostController {
     @ApiRestAction(modelClass = ShutdownModel.class, serviceClass = HostService.class, serviceMethodName = "shutdown", error = "关闭虚拟机失败")
     @ResponseBody
     public String shutdown() {
+        return null;
+    }
+
+    /**
+     * 关机
+     *
+     * @return
+     */
+    @RequestMapping(value = "/start", produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
+    @ApiRestAction(modelClass = StartModel.class, serviceClass = HostService.class, serviceMethodName = "start", error = "开启虚拟机失败")
+    @ResponseBody
+    public String start() {
         return null;
     }
 }
