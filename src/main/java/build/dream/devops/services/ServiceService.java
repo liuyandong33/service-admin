@@ -96,6 +96,7 @@ public class ServiceService {
         String name = saveServiceModel.getName();
         String programName = saveServiceModel.getProgramName();
         String programVersion = saveServiceModel.getProgramVersion();
+        String healthCheckPath = saveServiceModel.getHealthCheckPath();
         Map<String, String> configurations = saveServiceModel.getConfigurations();
         Map<String, Object> javaOpts = saveServiceModel.getJavaOpts();
 
@@ -111,6 +112,7 @@ public class ServiceService {
             service.setName(name);
             service.setProgramName(programName);
             service.setProgramVersion(programVersion);
+            service.setHealthCheckPath(healthCheckPath);
             service.setUpdatedUserId(userId);
             service.setUpdatedRemark("修改服务信息！");
             DatabaseHelper.update(service);
@@ -120,6 +122,7 @@ public class ServiceService {
                     .name(name)
                     .programName(programName)
                     .programVersion(programVersion)
+                    .healthCheckPath(healthCheckPath)
                     .createdUserId(userId)
                     .updatedUserId(userId)
                     .updatedRemark("新增服务信息！")

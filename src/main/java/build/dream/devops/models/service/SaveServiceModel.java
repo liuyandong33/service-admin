@@ -27,6 +27,9 @@ public class SaveServiceModel extends DevOpsBasicModel {
     @NotNull
     private String programVersion;
 
+    @NotNull
+    private String healthCheckPath;
+
     private Map<String, String> configurations;
 
     private Map<String, Object> javaOpts;
@@ -85,5 +88,13 @@ public class SaveServiceModel extends DevOpsBasicModel {
 
     public void setJavaOpts(Map<String, Object> javaOpts) {
         this.javaOpts = javaOpts;
+    }
+
+    public String getHealthCheckPath() {
+        return healthCheckPath;
+    }
+
+    public void setHealthCheckPath(String healthCheckPath) {
+        this.healthCheckPath = healthCheckPath;
     }
 }
