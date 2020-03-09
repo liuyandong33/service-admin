@@ -29,7 +29,7 @@ public class JobScheduler {
                 .jobClass(HealthCheckJob.class)
                 .triggerName("Health_Check_Trigger")
                 .triggerGroup("Health_Check_Trigger")
-                .cronExpression("*/5 * * * * ?")
+                .cronExpression("0 */1 * * * ?")
                 .build();
         JobUtils.scheduleCronJob(scheduleCronJobModel);
     }
