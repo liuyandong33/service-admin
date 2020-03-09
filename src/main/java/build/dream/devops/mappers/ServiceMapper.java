@@ -11,4 +11,6 @@ public interface ServiceMapper {
     Long deleteJavaOperations(@Param("serviceId") Long serviceId);
 
     Long deleteServiceConfigurations(@Param("serviceId") Long serviceId);
+
+    List<Map<String, Object>> findAllServiceNodes();
 }

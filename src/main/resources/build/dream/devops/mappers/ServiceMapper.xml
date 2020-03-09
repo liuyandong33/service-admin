@@ -21,4 +21,14 @@
     <delete id="deleteServiceConfigurations">
         DELETE FROM service_configuration WHERE service_id = #{serviceId}
     </delete>
+
+    <select id="findAllServiceNodes" resultType="build.dream.common.utils.UnderscoreToCamelCaseMap">
+        SELECT
+        service_node.id AS service_node_id,
+        host.ip_address
+        FROM service_node
+        INNER JOIN service ON service.id = service_node.service_id AND service.deleted = 0
+        INNER JOIN host ON host.id = service_node.host_id AND host.deleted = 0
+        WHERE service_node.deleted = 0;
+    </select>
 </mapper>

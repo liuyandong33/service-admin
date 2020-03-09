@@ -1,5 +1,11 @@
 package build.dream.devops.services;
 
+import build.dream.common.api.ApiRest;
+import build.dream.common.domains.admin.$Service;
+import build.dream.common.domains.admin.App;
+import build.dream.common.domains.admin.JavaOperation;
+import build.dream.common.domains.admin.ServiceConfiguration;
+import build.dream.common.utils.*;
 import build.dream.devops.constants.Constants;
 import build.dream.devops.mappers.ServiceMapper;
 import build.dream.devops.models.service.DeployModel;
@@ -7,12 +13,6 @@ import build.dream.devops.models.service.ListServicesModel;
 import build.dream.devops.models.service.ObtainServiceInfoModel;
 import build.dream.devops.models.service.SaveServiceModel;
 import build.dream.devops.utils.JSchUtils;
-import build.dream.common.api.ApiRest;
-import build.dream.common.domains.admin.$Service;
-import build.dream.common.domains.admin.App;
-import build.dream.common.domains.admin.JavaOperation;
-import build.dream.common.domains.admin.ServiceConfiguration;
-import build.dream.common.utils.*;
 import com.jcraft.jsch.ChannelSftp;
 import com.jcraft.jsch.Session;
 import org.apache.commons.collections.CollectionUtils;
@@ -252,5 +252,10 @@ public class ServiceService {
             JSchUtils.disconnectSession(session);
         }
         return ApiRest.builder().data(command.toString()).message("部署成功！").successful(true).build();
+    }
+
+    @Transactional(readOnly = true)
+    public List<Map<String, Object>> findAllServiceNodes() {
+        return serviceMapper.findAllServiceNodes();
     }
 }

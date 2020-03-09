@@ -50,7 +50,7 @@ dependencies {
     compile("org.springframework.security.oauth:spring-security-oauth2:2.3.2.RELEASE")
     compile("org.springframework.cloud:spring-cloud-starter-zookeeper-discovery")
     compile("org.springframework.cloud:spring-cloud-starter-zookeeper-config")
-    compile("com.alibaba:druid:1.1.9")
+    compile("org.springframework.boot:spring-boot-starter-quartz")
     compile("mysql:mysql-connector-java:6.0.6")
     compile("commons-lang:commons-lang:2.6")
     compile("com.google.code.gson:gson:2.8.0")
@@ -66,6 +66,7 @@ dependencies {
     compile("com.jcraft:jsch:0.1.54")
     compile("org.aspectj:aspectjweaver:1.9.2")
     compile group: 'commons-io', name: 'commons-io', version: '2.6'
+    compile("com.squareup.okhttp3:okhttp-urlconnection:4.3.1")
 }
 
 publishing {
