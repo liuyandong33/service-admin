@@ -3,6 +3,7 @@ package build.dream.devops.services;
 import build.dream.common.api.ApiRest;
 import build.dream.common.domains.admin.Host;
 import build.dream.common.utils.DatabaseHelper;
+import build.dream.common.utils.SearchModel;
 import build.dream.devops.mappers.HostMapper;
 import build.dream.devops.models.host.ListHostsModel;
 import build.dream.devops.models.host.SaveHostModel;
@@ -114,5 +115,10 @@ public class HostService {
         data.put("total", total);
         data.put("rows", hosts);
         return ApiRest.builder().data(data).message("查询主机列表成功！").successful(true).build();
+    }
+
+    @Transactional(readOnly = true)
+    public List<Host> obtainAllHosts() {
+        return DatabaseHelper.findAll(Host.class, SearchModel.builder().autoSetDeletedFalse().build());
     }
 }

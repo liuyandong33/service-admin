@@ -18,7 +18,7 @@ import java.util.List;
 import java.util.Map;
 
 @DisallowConcurrentExecution
-public class HealthCheckJob implements Job {
+public class JavaWebServiceHealthCheckJob implements Job {
     @Autowired
     private ServiceService serviceService;
 

@@ -26,7 +26,7 @@ public class JobScheduler {
         ScheduleCronJobModel scheduleCronJobModel = ScheduleCronJobModel.builder()
                 .jobName("Health_Check_Job")
                 .jobGroup("Health_Check_Job")
-                .jobClass(HealthCheckJob.class)
+                .jobClass(JavaWebServiceHealthCheckJob.class)
                 .triggerName("Health_Check_Trigger")
                 .triggerGroup("Health_Check_Trigger")
                 .cronExpression("0 */1 * * * ?")
