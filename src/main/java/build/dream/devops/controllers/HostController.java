@@ -50,7 +50,7 @@ public class HostController {
     }
 
     /**
-     * 关机
+     * 开机
      *
      * @return
      */
