@@ -22,10 +22,10 @@ import java.util.Objects;
 
 public class DeployTask implements Runnable {
     private static final String REPOSITORY_HOST_IP_ADDRESS = ConfigurationUtils.getConfiguration(ConfigurationKeys.REPOSITORY_HOST_IP_ADDRESS);
-    private static final String REPOSITORY_HOST_USERNAME = ConfigurationUtils.getConfiguration(ConfigurationKeys.REPOSITORY_HOST_IP_ADDRESS);
-    private static final String REPOSITORY_HOST_PASSWORD = ConfigurationUtils.getConfiguration(ConfigurationKeys.REPOSITORY_HOST_IP_ADDRESS);
-    private static final int REPOSITORY_HOST_SSH_PORT = Integer.parseInt(ConfigurationUtils.getConfiguration(ConfigurationKeys.REPOSITORY_HOST_IP_ADDRESS));
-    private static final String REPOSITORY_PATH = ConfigurationUtils.getConfiguration(ConfigurationKeys.REPOSITORY_HOST_IP_ADDRESS);
+    private static final String REPOSITORY_HOST_USERNAME = ConfigurationUtils.getConfiguration(ConfigurationKeys.REPOSITORY_HOST_USERNAME);
+    private static final String REPOSITORY_HOST_PASSWORD = ConfigurationUtils.getConfiguration(ConfigurationKeys.REPOSITORY_HOST_PASSWORD);
+    private static final int REPOSITORY_HOST_SSH_PORT = Integer.parseInt(ConfigurationUtils.getConfiguration(ConfigurationKeys.REPOSITORY_HOST_SSH_PORT));
+    private static final String REPOSITORY_PATH = ConfigurationUtils.getConfiguration(ConfigurationKeys.REPOSITORY_PATH);
     private static final String SERVICE_DEPLOYED_PATH = ConfigurationUtils.getConfiguration(ConfigurationKeys.SERVICE_DEPLOYED_PATH);
     private ServiceService serviceService;
     private $Service service;
