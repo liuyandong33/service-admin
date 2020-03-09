@@ -1,14 +1,20 @@
 package build.dream.devops.models.host;
 
-import build.dream.common.models.BasicModel;
+import build.dream.common.models.weixinpay.DevOpsBasicModel;
 import org.hibernate.validator.constraints.Length;
 
 import javax.validation.constraints.Max;
 import javax.validation.constraints.Min;
 import javax.validation.constraints.NotNull;
 
-public class SaveModel extends BasicModel {
+public class SaveHostModel extends DevOpsBasicModel {
     private Long id;
+
+    @NotNull
+    private Integer type;
+
+    @NotNull
+    private Long parentId;
 
     @NotNull
     @Length(max = 20)
@@ -42,15 +48,28 @@ public class SaveModel extends BasicModel {
     @Min(value = 10485760)
     private Integer memorySize;
 
-    @NotNull
-    private Long userId;
-
     public Long getId() {
         return id;
     }
 
     public void setId(Long id) {
         this.id = id;
+    }
+
+    public Integer getType() {
+        return type;
+    }
+
+    public void setType(Integer type) {
+        this.type = type;
+    }
+
+    public Long getParentId() {
+        return parentId;
+    }
+
+    public void setParentId(Long parentId) {
+        this.parentId = parentId;
     }
 
     public String getName() {
@@ -91,14 +110,6 @@ public class SaveModel extends BasicModel {
 
     public void setPassword(String password) {
         this.password = password;
-    }
-
-    public Long getUserId() {
-        return userId;
-    }
-
-    public void setUserId(Long userId) {
-        this.userId = userId;
     }
 
     public Integer getDiskSize() {
