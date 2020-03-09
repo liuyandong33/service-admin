@@ -12,7 +12,5 @@ public interface ServiceMapper {
 
     Long deleteServiceConfigurations(@Param("serviceId") Long serviceId);
 
-    List<Map<String, Object>> findAllServiceNodes();
-
     Long updateServiceNodeStatusAndPid(@Param("status") Integer status, @Param("pid") String pid, @Param("id") Long id);
 }

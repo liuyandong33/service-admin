@@ -175,13 +175,13 @@ public class ServiceService {
         List<Map<String, Object>> serviceNodes = serviceMapper.listServiceNodes(serviceId);
         ValidateUtils.notEmpty(serviceNodes, "服务节点为空！");
 
-        new DeployTask(this, service, javaOption, serviceConfigurations, serviceNodes).start();
+        new DeployTask(service, javaOption, serviceConfigurations, serviceNodes).start();
         return ApiRest.builder().message("服务已经开始部署！").successful(true).build();
     }
 
     @Transactional(readOnly = true)
-    public List<Map<String, Object>> findAllServiceNodes() {
-        return serviceMapper.findAllServiceNodes();
+    public List<Map<String, Object>> listServiceNodes(Long serviceId) {
+        return serviceMapper.listServiceNodes(serviceId);
     }
 
     @Transactional(rollbackFor = Exception.class)

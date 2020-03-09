@@ -6,7 +6,6 @@ import build.dream.common.domains.admin.ServiceConfiguration;
 import build.dream.common.utils.ConfigurationUtils;
 import build.dream.devops.constants.ConfigurationKeys;
 import build.dream.devops.constants.Constants;
-import build.dream.devops.services.ServiceService;
 import build.dream.devops.utils.JSchUtils;
 import com.jcraft.jsch.ChannelSftp;
 import com.jcraft.jsch.Session;
@@ -29,14 +28,12 @@ public class DeployTask implements Runnable {
     private static final int REPOSITORY_HOST_SSH_PORT = Integer.parseInt(ConfigurationUtils.getConfiguration(ConfigurationKeys.REPOSITORY_HOST_SSH_PORT));
     private static final String REPOSITORY_PATH = ConfigurationUtils.getConfiguration(ConfigurationKeys.REPOSITORY_PATH);
     private static final String SERVICE_DEPLOYED_PATH = ConfigurationUtils.getConfiguration(ConfigurationKeys.SERVICE_DEPLOYED_PATH);
-    private ServiceService serviceService;
     private $Service service;
     private JavaOption javaOption;
     private List<ServiceConfiguration> serviceConfigurations;
     private List<Map<String, Object>> serviceNodes;
 
-    public DeployTask(ServiceService serviceService, $Service service, JavaOption javaOperation, List<ServiceConfiguration> serviceConfigurations, List<Map<String, Object>> serviceNodes) {
-        this.serviceService = serviceService;
+    public DeployTask($Service service, JavaOption javaOperation, List<ServiceConfiguration> serviceConfigurations, List<Map<String, Object>> serviceNodes) {
         this.service = service;
         this.javaOption = javaOperation;
         this.serviceConfigurations = serviceConfigurations;
@@ -129,7 +126,6 @@ public class DeployTask implements Runnable {
             IOUtils.copy(inputStream, outputStream, 1024);
 
             String pid = JSchUtils.executeCommand(nodeSession, command);
-            serviceService.updateServiceNodeStatusAndPid(1, pid, serviceNodeId);
         } catch (Exception e) {
             throw new RuntimeException(e);
         } finally {
