@@ -2,6 +2,7 @@ package build.dream.devops.jobs;
 
 import build.dream.common.utils.LogUtils;
 import build.dream.common.utils.OkHttpUtils;
+import build.dream.devops.constants.Constants;
 import build.dream.devops.services.ServiceService;
 import build.dream.devops.utils.JSchUtils;
 import com.jcraft.jsch.Session;
@@ -38,8 +39,8 @@ public class HealthCheckJob implements Job {
             try {
                 response = OkHttpUtils.doGetNative("http://" + ipAddress + ":" + port + healthCheckPath);
                 if (response.isSuccessful()) {
-                    if (status != 1) {
-                        serviceService.updateServiceNodeStatusAndPid(1, pid, serviceNodeId);
+                    if (status != Constants.SERVICE_NODE_STATUS_RUNNING) {
+                        serviceService.updateServiceNodeStatusAndPid(Constants.SERVICE_NODE_STATUS_RUNNING, pid, serviceNodeId);
                     }
                     continue;
                 }
@@ -59,9 +60,9 @@ public class HealthCheckJob implements Job {
         try {
             session = JSchUtils.createSession(userName, password, ipAddress, sshPort);
             if (JSchUtils.processExists(session, pid)) {
-                serviceService.updateServiceNodeStatusAndPid(3, pid, serviceNodeId);
+                serviceService.updateServiceNodeStatusAndPid(Constants.SERVICE_NODE_STATUS_WRONG, pid, serviceNodeId);
             } else {
-                serviceService.updateServiceNodeStatusAndPid(2, pid, serviceNodeId);
+                serviceService.updateServiceNodeStatusAndPid(Constants.SERVICE_NODE_STATUS_STOPPED, pid, serviceNodeId);
             }
         } catch (Exception e) {
             JSchUtils.disconnectSession(session);

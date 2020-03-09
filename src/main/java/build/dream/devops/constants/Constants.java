@@ -12,4 +12,8 @@ public class Constants extends build.dream.common.constants.Constants {
     public static final String OPERATE_TYPE_UNDEFINE = "undefine";
 
     public static final String ZOOKEEPER_CONNECTION_STRING = "zookeeper.connection.string";
+
+    public static final Integer SERVICE_NODE_STATUS_RUNNING = 1;
+    public static final Integer SERVICE_NODE_STATUS_STOPPED = 2;
+    public static final Integer SERVICE_NODE_STATUS_WRONG = 3;
 }
