@@ -8,7 +8,7 @@ import java.util.Map;
 public interface ServiceMapper {
     List<Map<String, Object>> listServiceNodes(@Param("serviceId") Long serviceId);
 
-    Long deleteJavaOperations(@Param("serviceId") Long serviceId);
+    Long deleteJavaOptions(@Param("serviceId") Long serviceId);
 
     Long deleteServiceConfigurations(@Param("serviceId") Long serviceId);
 

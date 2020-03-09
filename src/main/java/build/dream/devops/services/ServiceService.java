@@ -126,7 +126,7 @@ public class ServiceService {
         }
         Long serviceId = service.getId();
 
-        serviceMapper.deleteJavaOperations(serviceId);
+        serviceMapper.deleteJavaOptions(serviceId);
         JavaOption javaOption = JacksonUtils.readValue(JacksonUtils.writeValueAsString(javaOpts), JavaOption.class);
         javaOption.setServiceId(serviceId);
         javaOption.setCreatedUserId(userId);

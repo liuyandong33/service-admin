@@ -12,10 +12,12 @@ import com.jcraft.jsch.ChannelSftp;
 import com.jcraft.jsch.Session;
 import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.collections.MapUtils;
+import org.apache.commons.io.IOUtils;
 
+import java.io.Closeable;
+import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 import java.util.Objects;
@@ -57,85 +59,26 @@ public class DeployTask implements Runnable {
                 commandStringBuilder.append(serviceConfiguration.getConfigurationValue());
             }
         }
-        commandStringBuilder.append(SERVICE_DEPLOYED_PATH).append("/");
         commandStringBuilder.append(" > ");
+        commandStringBuilder.append(SERVICE_DEPLOYED_PATH).append("/");
         commandStringBuilder.append(service.getProgramName());
         commandStringBuilder.append(".log");
-        commandStringBuilder.append(" 2>&1 & echo $!");
+        commandStringBuilder.append(" 2>&1 & echo -e $!'\\c'");
 
         String command = commandStringBuilder.toString();
 
         Session session = null;
         ChannelSftp channelSftp = null;
-        List<Session> nodeSessions = null;
-        List<ChannelSftp> nodeChannelSftps = null;
         try {
             session = JSchUtils.createSession(REPOSITORY_HOST_USERNAME, REPOSITORY_HOST_PASSWORD, REPOSITORY_HOST_IP_ADDRESS, REPOSITORY_HOST_SSH_PORT);
             channelSftp = (ChannelSftp) JSchUtils.openChannel(session, Constants.CHANNEL_TYPE_SFTP);
             channelSftp.connect();
-            InputStream inputStream = channelSftp.get(REPOSITORY_PATH + service.getProgramName() + "/" + service.getProgramName() + "-" + service.getProgramVersion() + ".jar");
-
-            nodeSessions = new ArrayList<Session>();
-            nodeChannelSftps = new ArrayList<ChannelSftp>();
             for (Map<String, Object> serviceNode : serviceNodes) {
-                int status = MapUtils.getIntValue(serviceNode, "status");
-                String userName = MapUtils.getString(serviceNode, "userName");
-                String password = MapUtils.getString(serviceNode, "password");
-                String ipAddress = MapUtils.getString(serviceNode, "ipAddress");
-                int sshPort = MapUtils.getIntValue(serviceNode, "sshPort");
-                Session nodeSession = JSchUtils.createSession(userName, password, ipAddress, sshPort);
-
-                if (status == 1) {
-                    String pid = MapUtils.getString(serviceNode, "pid");
-                    if (JSchUtils.processExists(nodeSession, pid)) {
-                        JSchUtils.killProcess(nodeSession, pid);
-                    }
-                }
-
-
-                ChannelSftp nodeChannelSftp = (ChannelSftp) JSchUtils.openChannel(nodeSession, Constants.CHANNEL_TYPE_SFTP);
-                nodeChannelSftp.connect();
-                nodeSessions.add(nodeSession);
-                nodeChannelSftps.add(nodeChannelSftp);
-            }
-
-            for (Session nodeSession : nodeSessions) {
-                if (!JSchUtils.exists(nodeSession, SERVICE_DEPLOYED_PATH)) {
-                    JSchUtils.mkdirs(nodeSession, SERVICE_DEPLOYED_PATH);
-                }
-
-                if (JSchUtils.exists(nodeSession, SERVICE_DEPLOYED_PATH + service.getProgramName() + ".jar")) {
-                    JSchUtils.delete(nodeSession, SERVICE_DEPLOYED_PATH + service.getProgramName() + ".jar");
-                }
-            }
-
-            List<OutputStream> outputStreams = new ArrayList<OutputStream>();
-            for (ChannelSftp nodeChannelSftp : nodeChannelSftps) {
-                OutputStream outputStream = nodeChannelSftp.put(SERVICE_DEPLOYED_PATH + service.getProgramName() + ".jar");
-                outputStreams.add(outputStream);
-            }
-
-            byte[] buffer = new byte[1024];
-            int length = 0;
-            while ((length = inputStream.read(buffer, 0, 1024)) != -1) {
-                for (OutputStream outputStream : outputStreams) {
-                    outputStream.write(buffer, 0, length);
-                }
-            }
-
-            for (Session nodeSession : nodeSessions) {
-                String pid = JSchUtils.executeCommand(nodeSession, command);
-                serviceService.updateServiceNodeStatusAndPid(1, pid, 100L);
+                deploy(serviceNode, channelSftp, command);
             }
         } catch (Exception e) {
             throw new RuntimeException(e);
         } finally {
-            if (CollectionUtils.isNotEmpty(nodeChannelSftps)) {
-                nodeChannelSftps.forEach(channelSftp1 -> JSchUtils.disconnectChannel(channelSftp1));
-            }
-            if (CollectionUtils.isNotEmpty(nodeSessions)) {
-                nodeSessions.forEach(session1 -> JSchUtils.disconnectSession(session1));
-            }
             JSchUtils.disconnectChannel(channelSftp);
             JSchUtils.disconnectSession(session);
         }
@@ -143,5 +86,67 @@ public class DeployTask implements Runnable {
 
     public void start() {
         new Thread(this).start();
+    }
+
+    private void deploy(Map<String, Object> serviceNode, ChannelSftp channelSftp, String command) {
+        Session nodeSession = null;
+        ChannelSftp nodeChannelSftp = null;
+        InputStream inputStream = null;
+        OutputStream outputStream = null;
+        try {
+            long serviceNodeId = MapUtils.getLongValue(serviceNode, "serviceNodeId");
+            int status = MapUtils.getIntValue(serviceNode, "status");
+            String userName = MapUtils.getString(serviceNode, "userName");
+            String password = MapUtils.getString(serviceNode, "password");
+            String ipAddress = MapUtils.getString(serviceNode, "ipAddress");
+            int sshPort = MapUtils.getIntValue(serviceNode, "sshPort");
+            nodeSession = JSchUtils.createSession(userName, password, ipAddress, sshPort);
+
+            if (status == 1) {
+                String pid = MapUtils.getString(serviceNode, "pid");
+                if (JSchUtils.processExists(nodeSession, pid)) {
+                    JSchUtils.killProcess(nodeSession, pid);
+                }
+            }
+
+            if (!JSchUtils.exists(nodeSession, SERVICE_DEPLOYED_PATH)) {
+                JSchUtils.mkdirs(nodeSession, SERVICE_DEPLOYED_PATH);
+            }
+
+            if (JSchUtils.exists(nodeSession, SERVICE_DEPLOYED_PATH + "/" + service.getProgramName() + ".jar")) {
+                JSchUtils.delete(nodeSession, SERVICE_DEPLOYED_PATH + "/" + service.getProgramName() + ".jar");
+            }
+
+            if (JSchUtils.exists(nodeSession, SERVICE_DEPLOYED_PATH + "/" + service.getProgramName() + ".log")) {
+                JSchUtils.delete(nodeSession, SERVICE_DEPLOYED_PATH + "/" + service.getProgramName() + ".log");
+            }
+
+            inputStream = channelSftp.get(REPOSITORY_PATH + "/" + service.getProgramName() + "/" + service.getProgramName() + "-" + service.getProgramVersion() + ".jar");
+            nodeChannelSftp = (ChannelSftp) JSchUtils.openChannel(nodeSession, Constants.CHANNEL_TYPE_SFTP);
+            nodeChannelSftp.connect();
+
+            outputStream = nodeChannelSftp.put(SERVICE_DEPLOYED_PATH + "/" + service.getProgramName() + ".jar");
+            IOUtils.copy(inputStream, outputStream, 1024);
+
+            String pid = JSchUtils.executeCommand(nodeSession, command);
+            serviceService.updateServiceNodeStatusAndPid(1, pid, serviceNodeId);
+        } catch (Exception e) {
+            throw new RuntimeException(e);
+        } finally {
+            close(outputStream);
+            close(inputStream);
+            JSchUtils.disconnectChannel(nodeChannelSftp);
+            JSchUtils.disconnectSession(nodeSession);
+        }
+    }
+
+    private void close(Closeable closeable) {
+        if (Objects.nonNull(closeable)) {
+            try {
+                closeable.close();
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        }
     }
 }
