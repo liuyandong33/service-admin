@@ -46,7 +46,7 @@ public class SaveHostModel extends DevOpsBasicModel {
 
     @NotNull
     @Min(value = 10485760)
-    private Integer memorySize;
+    private Long memorySize;
 
     public Long getId() {
         return id;
@@ -128,11 +128,11 @@ public class SaveHostModel extends DevOpsBasicModel {
         this.cpuCoreQuantity = cpuCoreQuantity;
     }
 
-    public Integer getMemorySize() {
+    public Long getMemorySize() {
         return memorySize;
     }
 
-    public void setMemorySize(Integer memorySize) {
+    public void setMemorySize(Long memorySize) {
         this.memorySize = memorySize;
     }
 }

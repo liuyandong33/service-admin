@@ -6,7 +6,6 @@ import build.dream.devops.models.host.SaveHostModel;
 import build.dream.devops.models.host.ShutdownModel;
 import build.dream.devops.models.host.StartModel;
 import build.dream.devops.services.HostService;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -15,9 +14,6 @@ import org.springframework.web.bind.annotation.ResponseBody;
 @Controller
 @RequestMapping(value = "/host")
 public class HostController {
-    @Autowired
-    private HostService hostService;
-
     @RequestMapping(value = "/saveHost", produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
     @ResponseBody
     @ApiRestAction(modelClass = SaveHostModel.class, serviceClass = HostService.class, serviceMethodName = "saveHost", error = "保存主机失败")

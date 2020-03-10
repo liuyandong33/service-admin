@@ -47,7 +47,7 @@ public class HostService {
         String password = saveHostModel.getPassword();
         int diskSize = saveHostModel.getDiskSize();
         int cpuCoreQuantity = saveHostModel.getCpuCoreQuantity();
-        int memorySize = saveHostModel.getMemorySize();
+        Long memorySize = saveHostModel.getMemorySize();
 
         Session session = null;
         try {
