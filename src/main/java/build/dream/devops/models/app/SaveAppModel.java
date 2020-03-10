@@ -1,6 +1,6 @@
 package build.dream.devops.models.app;
 
-import build.dream.common.models.weixinpay.DevOpsBasicModel;
+import build.dream.common.models.DevOpsBasicModel;
 import org.hibernate.validator.constraints.Length;
 
 import javax.validation.constraints.NotNull;

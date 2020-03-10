@@ -1,6 +1,6 @@
 package build.dream.devops.models.service;
 
-import build.dream.common.models.weixinpay.DevOpsBasicModel;
+import build.dream.common.models.DevOpsBasicModel;
 
 import javax.validation.constraints.NotNull;
 import java.util.Map;

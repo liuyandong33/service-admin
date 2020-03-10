@@ -1,6 +1,6 @@
 package build.dream.devops.models.app;
 
-import build.dream.common.models.weixinpay.DevOpsBasicModel;
+import build.dream.common.models.DevOpsBasicModel;
 
 import javax.validation.constraints.Max;
 import javax.validation.constraints.Min;
