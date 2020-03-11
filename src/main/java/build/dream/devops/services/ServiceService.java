@@ -243,8 +243,8 @@ public class ServiceService {
             List<String> keys = ZookeeperUtils.getChildren(path);
             for (String key : keys) {
                 Map<String, String> configuration = new HashMap<String, String>();
-                configuration.put("key", key);
-                configuration.put("value", ZookeeperUtils.getData(path + "/" + key));
+                configuration.put("configurationKey", key);
+                configuration.put("configurationValue", ZookeeperUtils.getData(path + "/" + key));
                 configurations.add(configuration);
             }
         }
@@ -262,7 +262,8 @@ public class ServiceService {
         String configurationKey = updateConfigurationModel.getConfigurationKey();
         String configurationValue = updateConfigurationModel.getConfigurationValue();
 
-        String path = "/configurations/" + obtainSpringApplicationName(serviceId);
+        String path = "/configurations/" + obtainSpringApplicationName(serviceId) + "/" + configurationKey;
+        ValidateUtils.isTrue(ZookeeperUtils.exists(path), "配置不存在，无法修改！");
         ZookeeperUtils.setData(path, configurationValue);
         return ApiRest.builder().message("修改配置成功！").successful(true).build();
     }
