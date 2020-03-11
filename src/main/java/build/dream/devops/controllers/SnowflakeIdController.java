@@ -1,6 +1,7 @@
 package build.dream.devops.controllers;
 
 import build.dream.common.annotations.ApiRestAction;
+import build.dream.devops.models.snowflakeid.ListSnowflakeIdConfigurationsModel;
 import build.dream.devops.models.snowflakeid.SaveSnowflakeIdConfigurationModel;
 import build.dream.devops.services.SnowflakeIdService;
 import org.springframework.http.MediaType;
@@ -20,6 +21,18 @@ public class SnowflakeIdController {
     @ResponseBody
     @ApiRestAction(modelClass = SaveSnowflakeIdConfigurationModel.class, serviceClass = SnowflakeIdService.class, serviceMethodName = "saveSnowflakeIdConfiguration", error = "保存雪花算法配置失败")
     public String saveSnowflakeIdConfiguration() {
+        return null;
+    }
+
+    /**
+     * 分页查询雪花算法配置
+     *
+     * @return
+     */
+    @RequestMapping(value = "/listSnowflakeIdConfigurations", produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
+    @ResponseBody
+    @ApiRestAction(modelClass = ListSnowflakeIdConfigurationsModel.class, serviceClass = SnowflakeIdService.class, serviceMethodName = "listSnowflakeIdConfigurations", error = "分页查询雪花算法配置失败")
+    public String listSnowflakeIdConfigurations() {
         return null;
     }
 }

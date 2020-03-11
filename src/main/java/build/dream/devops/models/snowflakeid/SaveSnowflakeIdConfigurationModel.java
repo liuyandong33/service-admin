@@ -38,6 +38,10 @@ public class SaveSnowflakeIdConfigurationModel extends DevOpsBasicModel {
     @Length(max = 50)
     private String applicationName;
 
+    @NotNull
+    @Length(max = 255)
+    private String description;
+
     public Integer getWorkerId() {
         return workerId;
     }
@@ -68,5 +72,13 @@ public class SaveSnowflakeIdConfigurationModel extends DevOpsBasicModel {
 
     public void setApplicationName(String applicationName) {
         this.applicationName = applicationName;
+    }
+
+    public String getDescription() {
+        return description;
+    }
+
+    public void setDescription(String description) {
+        this.description = description;
     }
 }
