@@ -1,7 +1,7 @@
 package build.dream.devops.services;
 
 import build.dream.common.api.ApiRest;
-import build.dream.common.domains.admin.Cluster;
+import build.dream.common.domains.devops.Cluster;
 import build.dream.common.utils.DatabaseHelper;
 import build.dream.common.utils.PagedSearchModel;
 import build.dream.common.utils.SearchCondition;

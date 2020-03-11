@@ -4,7 +4,7 @@ import build.dream.devops.constants.Constants;
 import build.dream.devops.models.app.ListAppsModel;
 import build.dream.devops.models.app.SaveAppModel;
 import build.dream.common.api.ApiRest;
-import build.dream.common.domains.admin.App;
+import build.dream.common.domains.devops.App;
 import build.dream.common.utils.*;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;

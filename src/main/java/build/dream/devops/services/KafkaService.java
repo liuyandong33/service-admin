@@ -7,7 +7,7 @@ import build.dream.devops.models.kafka.StartModel;
 import build.dream.devops.models.kafka.StopModel;
 import build.dream.devops.utils.JSchUtils;
 import build.dream.common.api.ApiRest;
-import build.dream.common.domains.admin.KafkaNode;
+import build.dream.common.domains.devops.KafkaNode;
 import build.dream.common.utils.DatabaseHelper;
 import build.dream.common.utils.SearchModel;
 import build.dream.common.utils.ValidateUtils;

@@ -1,6 +1,6 @@
 package build.dream.devops.jobs;
 
-import build.dream.common.domains.admin.Host;
+import build.dream.common.domains.devops.Host;
 import build.dream.devops.constants.Constants;
 import build.dream.devops.services.HostService;
 import build.dream.devops.utils.HostUtils;

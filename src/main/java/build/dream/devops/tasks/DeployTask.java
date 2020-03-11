@@ -1,7 +1,7 @@
 package build.dream.devops.tasks;
 
-import build.dream.common.domains.admin.$Service;
-import build.dream.common.domains.admin.JavaOption;
+import build.dream.common.domains.devops.$Service;
+import build.dream.common.domains.devops.JavaOption;
 import build.dream.common.utils.ConfigurationUtils;
 import build.dream.devops.constants.ConfigurationKeys;
 import build.dream.devops.constants.Constants;

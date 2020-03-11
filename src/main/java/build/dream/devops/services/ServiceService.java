@@ -1,9 +1,9 @@
 package build.dream.devops.services;
 
 import build.dream.common.api.ApiRest;
-import build.dream.common.domains.admin.$Service;
-import build.dream.common.domains.admin.App;
-import build.dream.common.domains.admin.JavaOption;
+import build.dream.common.domains.devops.$Service;
+import build.dream.common.domains.devops.App;
+import build.dream.common.domains.devops.JavaOption;
 import build.dream.common.utils.*;
 import build.dream.devops.constants.Constants;
 import build.dream.devops.mappers.ServiceMapper;

@@ -1,7 +1,7 @@
 package build.dream.devops.services;
 
 import build.dream.common.api.ApiRest;
-import build.dream.common.domains.admin.Host;
+import build.dream.common.domains.devops.Host;
 import build.dream.common.utils.DatabaseHelper;
 import build.dream.common.utils.SearchModel;
 import build.dream.common.utils.ValidateUtils;
