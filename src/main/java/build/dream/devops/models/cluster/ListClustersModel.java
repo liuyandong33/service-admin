@@ -1,15 +1,12 @@
 package build.dream.devops.models.cluster;
 
-import build.dream.common.models.BasicModel;
+import build.dream.common.models.DevOpsBasicModel;
 
 import javax.validation.constraints.Max;
 import javax.validation.constraints.Min;
 import javax.validation.constraints.NotNull;
 
-public class ListModel extends BasicModel {
-    @NotNull
-    private Long tenantId;
-
+public class ListClustersModel extends DevOpsBasicModel {
     @NotNull
     @Min(value = 1)
     private Integer page;
@@ -18,14 +15,6 @@ public class ListModel extends BasicModel {
     @Min(value = 1)
     @Max(value = 50)
     private Integer rows;
-
-    public Long getTenantId() {
-        return tenantId;
-    }
-
-    public void setTenantId(Long tenantId) {
-        this.tenantId = tenantId;
-    }
 
     public Integer getPage() {
         return page;

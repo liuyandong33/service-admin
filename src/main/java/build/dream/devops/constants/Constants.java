@@ -22,4 +22,6 @@ public class Constants extends build.dream.common.constants.Constants {
 
     public static final Integer HOST_TYPE_PHYSICAL_MACHINE = 1;
     public static final Integer HOST_TYPE_VIRTUAL_MACHINE = 2;
+
+    public static final Integer CLUSTER_TYPE_ZOOKEEPER = 1;
 }

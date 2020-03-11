@@ -1,13 +1,15 @@
 package build.dream.devops.models.cluster;
 
-import build.dream.common.models.BasicModel;
+import build.dream.common.models.DevOpsBasicModel;
 import build.dream.common.utils.ApplicationHandler;
+import build.dream.devops.constants.Constants;
+import org.apache.commons.lang.ArrayUtils;
 import org.hibernate.validator.constraints.Length;
 
 import javax.validation.constraints.NotNull;
 
-public class SaveModel extends BasicModel {
-    private static final Integer[] TYPES = {1};
+public class SaveClusterModel extends DevOpsBasicModel {
+    private static final Integer[] TYPES = {Constants.CLUSTER_TYPE_ZOOKEEPER};
 
     private Long id;
 
@@ -15,12 +17,8 @@ public class SaveModel extends BasicModel {
     @Length(max = 20)
     private String name;
 
-    private Integer type;
-
-    private Long tenantId;
-
     @NotNull
-    private Long userId;
+    private Integer type;
 
     public Long getId() {
         return id;
@@ -46,30 +44,14 @@ public class SaveModel extends BasicModel {
         this.type = type;
     }
 
-    public Long getTenantId() {
-        return tenantId;
-    }
-
-    public void setTenantId(Long tenantId) {
-        this.tenantId = tenantId;
-    }
-
-    public Long getUserId() {
-        return userId;
-    }
-
-    public void setUserId(Long userId) {
-        this.userId = userId;
+    @Override
+    public boolean validate() {
+        return super.validate() && ArrayUtils.contains(TYPES, type);
     }
 
     @Override
     public void validateAndThrow() {
         super.validateAndThrow();
-        if (id == null) {
-            ApplicationHandler.notNull(type, "type");
-            ApplicationHandler.inArray(TYPES, type, "type");
-
-            ApplicationHandler.notNull(tenantId, "tenantId");
-        }
+        ApplicationHandler.inArray(TYPES, type, "type");
     }
 }
