@@ -1,6 +1,9 @@
 package build.dream.devops.models.service;
 
 import build.dream.common.models.DevOpsBasicModel;
+import build.dream.common.utils.ApplicationHandler;
+import org.apache.commons.lang3.StringUtils;
+import org.hibernate.validator.constraints.Length;
 
 import javax.validation.constraints.NotNull;
 import java.util.Map;
@@ -30,7 +33,38 @@ public class SaveServiceModel extends DevOpsBasicModel {
     @NotNull
     private String healthCheckPath;
 
-    private Map<String, String> configurations;
+    /**
+     * 是否分区
+     */
+    @NotNull
+    private Boolean partitioned;
+
+    /**
+     * 部署环境
+     */
+    @NotNull
+    @Length(max = 255)
+    private String deploymentEnvironment;
+
+    /**
+     * 分区码
+     */
+    @Length(max = 20)
+    private String partitionCode;
+
+    /**
+     * 服务名称
+     */
+    @NotNull
+    @Length(max = 255)
+    private String serviceName;
+
+    /**
+     * zookeeper 连接字符串
+     */
+    @NotNull
+    @Length(max = 255)
+    private String zookeeperConnectString;
 
     private Map<String, Object> javaOpts;
 
@@ -74,14 +108,6 @@ public class SaveServiceModel extends DevOpsBasicModel {
         this.programVersion = programVersion;
     }
 
-    public Map<String, String> getConfigurations() {
-        return configurations;
-    }
-
-    public void setConfigurations(Map<String, String> configurations) {
-        this.configurations = configurations;
-    }
-
     public Map<String, Object> getJavaOpts() {
         return javaOpts;
     }
@@ -96,5 +122,62 @@ public class SaveServiceModel extends DevOpsBasicModel {
 
     public void setHealthCheckPath(String healthCheckPath) {
         this.healthCheckPath = healthCheckPath;
+    }
+
+    public Boolean getPartitioned() {
+        return partitioned;
+    }
+
+    public void setPartitioned(Boolean partitioned) {
+        this.partitioned = partitioned;
+    }
+
+    public String getDeploymentEnvironment() {
+        return deploymentEnvironment;
+    }
+
+    public void setDeploymentEnvironment(String deploymentEnvironment) {
+        this.deploymentEnvironment = deploymentEnvironment;
+    }
+
+    public String getPartitionCode() {
+        return partitionCode;
+    }
+
+    public void setPartitionCode(String partitionCode) {
+        this.partitionCode = partitionCode;
+    }
+
+    public String getServiceName() {
+        return serviceName;
+    }
+
+    public void setServiceName(String serviceName) {
+        this.serviceName = serviceName;
+    }
+
+    public String getZookeeperConnectString() {
+        return zookeeperConnectString;
+    }
+
+    public void setZookeeperConnectString(String zookeeperConnectString) {
+        this.zookeeperConnectString = zookeeperConnectString;
+    }
+
+    @Override
+    public boolean validate() {
+        boolean isOk = super.validate();
+        if (!partitioned) {
+            return isOk;
+        }
+        return isOk && StringUtils.isNotBlank(partitionCode);
+    }
+
+    @Override
+    public void validateAndThrow() {
+        super.validateAndThrow();
+        if (partitioned) {
+            ApplicationHandler.notBlank(partitionCode, "partitionCode");
+        }
     }
 }

@@ -2,14 +2,12 @@ package build.dream.devops.tasks;
 
 import build.dream.common.domains.admin.$Service;
 import build.dream.common.domains.admin.JavaOption;
-import build.dream.common.domains.admin.ServiceConfiguration;
 import build.dream.common.utils.ConfigurationUtils;
 import build.dream.devops.constants.ConfigurationKeys;
 import build.dream.devops.constants.Constants;
 import build.dream.devops.utils.JSchUtils;
 import com.jcraft.jsch.ChannelSftp;
 import com.jcraft.jsch.Session;
-import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.collections.MapUtils;
 import org.apache.commons.io.IOUtils;
 
@@ -30,13 +28,11 @@ public class DeployTask implements Runnable {
     private static final String SERVICE_DEPLOYED_PATH = ConfigurationUtils.getConfiguration(ConfigurationKeys.SERVICE_DEPLOYED_PATH);
     private $Service service;
     private JavaOption javaOption;
-    private List<ServiceConfiguration> serviceConfigurations;
     private List<Map<String, Object>> serviceNodes;
 
-    public DeployTask($Service service, JavaOption javaOperation, List<ServiceConfiguration> serviceConfigurations, List<Map<String, Object>> serviceNodes) {
+    public DeployTask($Service service, JavaOption javaOperation, List<Map<String, Object>> serviceNodes) {
         this.service = service;
         this.javaOption = javaOperation;
-        this.serviceConfigurations = serviceConfigurations;
         this.serviceNodes = serviceNodes;
     }
 
@@ -48,14 +44,12 @@ public class DeployTask implements Runnable {
             commandStringBuilder.append(javaOption.buildJavaOpts());
         }
         commandStringBuilder.append(" -jar ").append(SERVICE_DEPLOYED_PATH).append("/").append(service.getProgramName()).append(".jar");
-        if (CollectionUtils.isNotEmpty(serviceConfigurations)) {
-            for (ServiceConfiguration serviceConfiguration : serviceConfigurations) {
-                commandStringBuilder.append(" --");
-                commandStringBuilder.append(serviceConfiguration.getConfigurationKey());
-                commandStringBuilder.append("=");
-                commandStringBuilder.append(serviceConfiguration.getConfigurationValue());
-            }
+        commandStringBuilder.append(" --deployment.environment=").append(service.getDeploymentEnvironment());
+        if (service.isPartitioned()) {
+            commandStringBuilder.append(" --partition.code=").append(service.getDeploymentEnvironment());
         }
+        commandStringBuilder.append(" --service.name=").append(service.getServiceName());
+        commandStringBuilder.append(" --spring.cloud.zookeeper.connect-string=").append(service.getZookeeperConnectString());
         commandStringBuilder.append(" > ");
         commandStringBuilder.append(SERVICE_DEPLOYED_PATH).append("/");
         commandStringBuilder.append(service.getProgramName());

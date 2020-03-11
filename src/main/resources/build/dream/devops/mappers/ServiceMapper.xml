@@ -25,10 +25,6 @@
         DELETE FROM java_option WHERE service_id = #{serviceId}
     </delete>
 
-    <delete id="deleteServiceConfigurations">
-        DELETE FROM service_configuration WHERE service_id = #{serviceId}
-    </delete>
-
     <update id="updateServiceNodeStatusAndPid">
         UPDATE
         service_node

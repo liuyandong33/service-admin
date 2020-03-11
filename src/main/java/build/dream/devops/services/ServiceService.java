@@ -4,7 +4,6 @@ import build.dream.common.api.ApiRest;
 import build.dream.common.domains.admin.$Service;
 import build.dream.common.domains.admin.App;
 import build.dream.common.domains.admin.JavaOption;
-import build.dream.common.domains.admin.ServiceConfiguration;
 import build.dream.common.utils.*;
 import build.dream.devops.constants.Constants;
 import build.dream.devops.mappers.ServiceMapper;
@@ -13,7 +12,6 @@ import build.dream.devops.models.service.ListServicesModel;
 import build.dream.devops.models.service.ObtainServiceInfoModel;
 import build.dream.devops.models.service.SaveServiceModel;
 import build.dream.devops.tasks.DeployTask;
-import org.apache.commons.collections.MapUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -62,7 +60,6 @@ public class ServiceService {
         ValidateUtils.notNull(service, "服务不存在！");
 
         Map<String, Object> data = new HashMap<String, Object>();
-        data.put("service", service);
         SearchModel javaOptionSearchModel = SearchModel.builder()
                 .autoSetDeletedFalse()
                 .equal(JavaOption.ColumnName.SERVICE_ID, serviceId)
@@ -72,13 +69,8 @@ public class ServiceService {
             data.put("javaOpts", javaOption.buildJavaOpts());
         }
 
-        SearchModel serviceConfigurationSearchModel = SearchModel.builder()
-                .autoSetDeletedFalse()
-                .equal(ServiceConfiguration.ColumnName.SERVICE_ID, serviceId)
-                .build();
-        List<ServiceConfiguration> serviceConfigurations = DatabaseHelper.findAll(ServiceConfiguration.class, serviceConfigurationSearchModel);
         List<Map<String, Object>> serviceNodes = serviceMapper.listServiceNodes(serviceId);
-        data.put("configurations", serviceConfigurations);
+        data.put("service", service);
         data.put("nodes", serviceNodes);
         return ApiRest.builder().data(data).message("获取服务信息成功！").successful(true).build();
     }
@@ -92,7 +84,11 @@ public class ServiceService {
         String programName = saveServiceModel.getProgramName();
         String programVersion = saveServiceModel.getProgramVersion();
         String healthCheckPath = saveServiceModel.getHealthCheckPath();
-        Map<String, String> configurations = saveServiceModel.getConfigurations();
+        Boolean partitioned = saveServiceModel.getPartitioned();
+        String deploymentEnvironment = saveServiceModel.getDeploymentEnvironment();
+        String partitionCode = saveServiceModel.getPartitionCode();
+        String serviceName = saveServiceModel.getServiceName();
+        String zookeeperConnectString = saveServiceModel.getZookeeperConnectString();
         Map<String, Object> javaOpts = saveServiceModel.getJavaOpts();
 
         $Service service = null;
@@ -108,6 +104,11 @@ public class ServiceService {
             service.setProgramName(programName);
             service.setProgramVersion(programVersion);
             service.setHealthCheckPath(healthCheckPath);
+            service.setPartitioned(partitioned);
+            service.setDeploymentEnvironment(deploymentEnvironment);
+            service.setPartitionCode(partitioned ? partitionCode : Constants.VARCHAR_DEFAULT_VALUE);
+            service.setServiceName(serviceName);
+            service.setZookeeperConnectString(zookeeperConnectString);
             service.setUpdatedUserId(userId);
             service.setUpdatedRemark("修改服务信息！");
             DatabaseHelper.update(service);
@@ -118,6 +119,11 @@ public class ServiceService {
                     .programName(programName)
                     .programVersion(programVersion)
                     .healthCheckPath(healthCheckPath)
+                    .partitioned(partitioned)
+                    .deploymentEnvironment(deploymentEnvironment)
+                    .partitionCode(partitioned ? partitionCode : Constants.VARCHAR_DEFAULT_VALUE)
+                    .serviceName(serviceName)
+                    .zookeeperConnectString(zookeeperConnectString)
                     .createdUserId(userId)
                     .updatedUserId(userId)
                     .updatedRemark("新增服务信息！")
@@ -133,24 +139,6 @@ public class ServiceService {
         javaOption.setUpdatedUserId(userId);
         javaOption.setUpdatedRemark("设置JVM属性！");
         DatabaseHelper.insert(javaOption);
-
-        serviceMapper.deleteServiceConfigurations(serviceId);
-
-        if (MapUtils.isNotEmpty(configurations)) {
-            List<ServiceConfiguration> serviceConfigurations = new ArrayList<ServiceConfiguration>();
-            for (Map.Entry<String, String> entry : configurations.entrySet()) {
-                ServiceConfiguration serviceConfiguration = ServiceConfiguration.builder()
-                        .serviceId(serviceId)
-                        .configurationKey(entry.getKey())
-                        .configurationValue(entry.getValue())
-                        .createdUserId(userId)
-                        .updatedUserId(userId)
-                        .updatedRemark("设置配置！")
-                        .build();
-                serviceConfigurations.add(serviceConfiguration);
-            }
-            DatabaseHelper.insertAll(serviceConfigurations);
-        }
         return ApiRest.builder().message("保存服务成功！").successful(true).build();
     }
 
@@ -167,15 +155,10 @@ public class ServiceService {
                 .build();
         JavaOption javaOption = DatabaseHelper.find(JavaOption.class, javaOptionSearchModel);
 
-        SearchModel serviceConfigurationSearchModel = SearchModel.builder()
-                .autoSetDeletedFalse()
-                .equal(ServiceConfiguration.ColumnName.SERVICE_ID, serviceId)
-                .build();
-        List<ServiceConfiguration> serviceConfigurations = DatabaseHelper.findAll(ServiceConfiguration.class, serviceConfigurationSearchModel);
         List<Map<String, Object>> serviceNodes = serviceMapper.listServiceNodes(serviceId);
         ValidateUtils.notEmpty(serviceNodes, "服务节点为空！");
 
-        new DeployTask(service, javaOption, serviceConfigurations, serviceNodes).start();
+        new DeployTask(service, javaOption, serviceNodes).start();
         return ApiRest.builder().message("服务已经开始部署！").successful(true).build();
     }
 
