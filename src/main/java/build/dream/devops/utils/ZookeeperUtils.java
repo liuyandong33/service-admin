@@ -1,12 +1,8 @@
 package build.dream.devops.utils;
 
-import build.dream.devops.constants.Constants;
 import build.dream.common.utils.ApplicationHandler;
+import build.dream.devops.constants.Constants;
 import org.apache.curator.framework.CuratorFramework;
-import org.apache.curator.framework.api.DeleteBuilder;
-import org.apache.curator.framework.api.GetChildrenBuilder;
-import org.apache.curator.framework.api.GetDataBuilder;
-import org.apache.curator.framework.api.SetDataBuilder;
 import org.apache.zookeeper.CreateMode;
 import org.apache.zookeeper.data.Stat;
 
@@ -50,30 +46,18 @@ public class ZookeeperUtils {
     }
 
     public static Stat setData(String path, String value) {
-        return ApplicationHandler.callMethodSuppressThrow(() -> {
-            SetDataBuilder setDataBuilder = obtainCuratorFramework().setData();
-            return setDataBuilder.forPath(path, value.getBytes(Constants.CHARSET_UTF_8));
-        });
+        return ApplicationHandler.callMethodSuppressThrow(() -> obtainCuratorFramework().setData().forPath(path, value.getBytes(Constants.CHARSET_UTF_8)));
     }
 
     public static List<String> getChildren(String path) {
-        return ApplicationHandler.callMethodSuppressThrow(() -> {
-            GetChildrenBuilder getChildrenBuilder = obtainCuratorFramework().getChildren();
-            return getChildrenBuilder.forPath(path);
-        });
+        return ApplicationHandler.callMethodSuppressThrow(() -> obtainCuratorFramework().getChildren().forPath(path));
     }
 
     public static String getData(String path) {
-        return ApplicationHandler.callMethodSuppressThrow(() -> {
-            GetDataBuilder getDataBuilder = obtainCuratorFramework().getData();
-            return new String(getDataBuilder.forPath(path), Constants.CHARSET_UTF_8);
-        });
+        return ApplicationHandler.callMethodSuppressThrow(() -> new String(obtainCuratorFramework().getData().forPath(path), Constants.CHARSET_UTF_8));
     }
 
     public static void delete(String path) {
-        ApplicationHandler.callMethodSuppressThrow(() -> {
-            DeleteBuilder deleteBuilder = obtainCuratorFramework().delete();
-            deleteBuilder.forPath(path);
-        });
+        ApplicationHandler.callMethodSuppressThrow(() -> obtainCuratorFramework().delete().forPath(path));
     }
 }
