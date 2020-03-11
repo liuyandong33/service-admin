@@ -77,6 +77,7 @@ public class ServiceService {
         JavaOption javaOption = DatabaseHelper.find(JavaOption.class, javaOptionSearchModel);
         if (Objects.nonNull(javaOption)) {
             data.put("javaOpts", javaOption.buildJavaOpts());
+            data.put("javaOption", javaOption);
         }
 
         List<Map<String, Object>> serviceNodes = serviceMapper.listServiceNodes(serviceId);
