@@ -25,10 +25,17 @@
         DELETE FROM java_option WHERE service_id = #{serviceId}
     </delete>
 
-    <update id="updateServiceNodeStatusAndPid">
+    <update id="updateServiceNodeStatus">
         UPDATE
         service_node
-        SET status = #{status}, pid = #{pid}
+        SET status = #{status}
+        WHERE id = #{id}
+    </update>
+
+    <update id="updateServiceNodePid">
+        UPDATE
+        service_node
+        SET pid = #{pid}
         WHERE id = #{id}
     </update>
 </mapper>

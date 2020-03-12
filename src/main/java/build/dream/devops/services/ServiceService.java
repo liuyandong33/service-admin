@@ -181,7 +181,7 @@ public class ServiceService {
         List<Map<String, Object>> serviceNodes = serviceMapper.listServiceNodes(serviceId);
         ValidateUtils.notEmpty(serviceNodes, "服务节点为空！");
 
-        new DeployTask(service, javaOption, serviceNodes).start();
+        new DeployTask(ApplicationHandler.getBean(ServiceService.class), service, javaOption, serviceNodes).start();
         return ApiRest.builder().message("服务已经开始部署！").successful(true).build();
     }
 
@@ -191,8 +191,13 @@ public class ServiceService {
     }
 
     @Transactional(rollbackFor = Exception.class)
-    public void updateServiceNodeStatusAndPid(Integer status, String pid, Long id) {
-        serviceMapper.updateServiceNodeStatusAndPid(status, pid, id);
+    public void updateServiceNodeStatus(Integer status, Long id) {
+        serviceMapper.updateServiceNodeStatus(status, id);
+    }
+
+    @Transactional(rollbackFor = Exception.class)
+    public void updateServiceNodePid(String pid, Long id) {
+        serviceMapper.updateServiceNodePid(pid, id);
     }
 
     private String obtainSpringApplicationName(Long serviceId) {

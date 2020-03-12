@@ -10,5 +10,7 @@ public interface ServiceMapper {
 
     Long deleteJavaOptions(@Param("serviceId") Long serviceId);
 
-    Long updateServiceNodeStatusAndPid(@Param("status") Integer status, @Param("pid") String pid, @Param("id") Long id);
+    Long updateServiceNodeStatus(@Param("status") Integer status, @Param("id") Long id);
+
+    Long updateServiceNodePid(@Param("pid") String pid, @Param("id") Long id);
 }

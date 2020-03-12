@@ -40,7 +40,7 @@ public class JavaWebServiceHealthCheckJob implements Job {
                 response = OkHttpUtils.doGetNative("http://" + ipAddress + ":" + port + healthCheckPath);
                 if (response.isSuccessful()) {
                     if (status != Constants.SERVICE_NODE_STATUS_RUNNING) {
-                        serviceService.updateServiceNodeStatusAndPid(Constants.SERVICE_NODE_STATUS_RUNNING, pid, serviceNodeId);
+                        serviceService.updateServiceNodeStatus(Constants.SERVICE_NODE_STATUS_RUNNING, serviceNodeId);
                     }
                     continue;
                 }
@@ -60,11 +60,13 @@ public class JavaWebServiceHealthCheckJob implements Job {
         try {
             session = JSchUtils.createSession(userName, password, ipAddress, sshPort);
             if (JSchUtils.processExists(session, pid)) {
-                serviceService.updateServiceNodeStatusAndPid(Constants.SERVICE_NODE_STATUS_WRONG, pid, serviceNodeId);
+                serviceService.updateServiceNodeStatus(Constants.SERVICE_NODE_STATUS_WRONG, serviceNodeId);
             } else {
-                serviceService.updateServiceNodeStatusAndPid(Constants.SERVICE_NODE_STATUS_STOPPED, pid, serviceNodeId);
+                serviceService.updateServiceNodeStatus(Constants.SERVICE_NODE_STATUS_STOPPED, serviceNodeId);
             }
         } catch (Exception e) {
+            e.printStackTrace();
+        } finally {
             JSchUtils.disconnectSession(session);
         }
     }
