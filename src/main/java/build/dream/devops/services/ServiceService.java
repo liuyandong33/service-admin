@@ -100,6 +100,7 @@ public class ServiceService {
         String name = saveServiceModel.getName();
         String programName = saveServiceModel.getProgramName();
         String programVersion = saveServiceModel.getProgramVersion();
+        Integer port = saveServiceModel.getPort();
         String healthCheckPath = saveServiceModel.getHealthCheckPath();
         Boolean partitioned = saveServiceModel.getPartitioned();
         String deploymentEnvironment = saveServiceModel.getDeploymentEnvironment();
@@ -120,6 +121,7 @@ public class ServiceService {
             service.setName(name);
             service.setProgramName(programName);
             service.setProgramVersion(programVersion);
+            service.setPort(port);
             service.setHealthCheckPath(healthCheckPath);
             service.setPartitioned(partitioned);
             service.setDeploymentEnvironment(deploymentEnvironment);
@@ -135,6 +137,7 @@ public class ServiceService {
                     .name(name)
                     .programName(programName)
                     .programVersion(programVersion)
+                    .port(port)
                     .healthCheckPath(healthCheckPath)
                     .partitioned(partitioned)
                     .deploymentEnvironment(deploymentEnvironment)
@@ -186,8 +189,8 @@ public class ServiceService {
     }
 
     @Transactional(readOnly = true)
-    public List<Map<String, Object>> listServiceNodes(Long serviceId) {
-        return serviceMapper.listServiceNodes(serviceId);
+    public List<Map<String, Object>> findAllServiceNodes() {
+        return serviceMapper.findAllServiceNodes();
     }
 
     @Transactional(rollbackFor = Exception.class)

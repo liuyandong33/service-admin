@@ -13,4 +13,6 @@ public interface ServiceMapper {
     Long updateServiceNodeStatus(@Param("status") Integer status, @Param("id") Long id);
 
     Long updateServiceNodePid(@Param("pid") String pid, @Param("id") Long id);
+
+    List<Map<String, Object>> findAllServiceNodes();
 }

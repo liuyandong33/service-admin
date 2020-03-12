@@ -24,7 +24,7 @@ public class JavaWebServiceHealthCheckJob implements Job {
 
     @Override
     public void execute(JobExecutionContext jobExecutionContext) throws JobExecutionException {
-        List<Map<String, Object>> serviceNodes = serviceService.listServiceNodes(null);
+        List<Map<String, Object>> serviceNodes = serviceService.findAllServiceNodes();
         for (Map<String, Object> serviceNode : serviceNodes) {
             Long serviceNodeId = MapUtils.getLongValue(serviceNode, "serviceNodeId");
             Integer port = MapUtils.getIntValue(serviceNode, "port");

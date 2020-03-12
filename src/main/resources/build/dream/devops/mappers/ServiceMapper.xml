@@ -4,9 +4,22 @@
     <select id="listServiceNodes" resultType="build.dream.common.utils.UnderscoreToCamelCaseMap">
         SELECT
         service_node.id AS service_node_id,
-        service_node.port,
         service_node.status,
         service_node.pid,
+        host.name,
+        host.ip_address
+        FROM service_node
+        INNER JOIN host ON host.id = service_node.host_id AND host.deleted = 0
+        WHERE service_node.deleted = 0
+        AND service_node.service_id = #{serviceId}
+    </select>
+
+    <select id="findAllServiceNodes" resultType="build.dream.common.utils.UnderscoreToCamelCaseMap">
+        SELECT
+        service_node.id AS service_node_id,
+        service_node.status,
+        service_node.pid,
+        service.port,
         service.health_check_path,
         host.ip_address,
         host.user_name,
@@ -16,9 +29,7 @@
         INNER JOIN service ON service.id = service_node.service_id AND service.deleted = 0
         INNER JOIN host ON host.id = service_node.host_id AND host.deleted = 0
         WHERE service_node.deleted = 0
-        <if test="serviceId != null">
-            AND service_node.service_id = #{serviceId}
-        </if>
+        AND service_node.pid != ''
     </select>
 
     <delete id="deleteJavaOptions">

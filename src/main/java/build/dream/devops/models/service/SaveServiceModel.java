@@ -30,6 +30,11 @@ public class SaveServiceModel extends DevOpsBasicModel {
     @NotNull
     private String programVersion;
 
+    /**
+     * 服务端口
+     */
+    private Integer port;
+
     @NotNull
     private String healthCheckPath;
 
@@ -108,12 +113,12 @@ public class SaveServiceModel extends DevOpsBasicModel {
         this.programVersion = programVersion;
     }
 
-    public Map<String, Object> getJavaOpts() {
-        return javaOpts;
+    public Integer getPort() {
+        return port;
     }
 
-    public void setJavaOpts(Map<String, Object> javaOpts) {
-        this.javaOpts = javaOpts;
+    public void setPort(Integer port) {
+        this.port = port;
     }
 
     public String getHealthCheckPath() {
@@ -162,6 +167,14 @@ public class SaveServiceModel extends DevOpsBasicModel {
 
     public void setZookeeperConnectString(String zookeeperConnectString) {
         this.zookeeperConnectString = zookeeperConnectString;
+    }
+
+    public Map<String, Object> getJavaOpts() {
+        return javaOpts;
+    }
+
+    public void setJavaOpts(Map<String, Object> javaOpts) {
+        this.javaOpts = javaOpts;
     }
 
     @Override
