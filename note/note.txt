@@ -1,31 +1,80 @@
-{
-    "appId": 1,
-    "name": "zd1区餐饮服务",
-    "programName": "service-catering",
-    "programVersion": "0.1.0",
-    "configurations": {
-        "deployment.environment": "development",
-        "partition.code": "zd1",
-        "service.name": "catering",
-        "spring.cloud.zookeeper.connect-string": "node1:2181,node2:2181,node3:2181"
-    },
-    "javaOpts": {
-        "xms": "3072m",
-        "xmx": "3072m",
-        "xmn": "",
-        "xss": "",
-        "xxPermSize": "",
-        "xxMaxPermSize": "",
-        "xxUseSerialGc": false,
-        "xxUseParallelGc": true,
-        "xxParallelGcThreads": 4,
-        "xxUseParNewGc": false,
-        "xxUseParallelOldGc": false,
-        "xxUseConcMarkSweepGc": false,
-        "xxUseCmsCompactAtFullCollection": false,
-        "xxCmsInitiatingOccupancyFraction": "",
-        "xxMaxTenuringThreshold": "",
-        "xxMaxHeapFreeRation": "",
-        "xxMinHeapFreeRation": ""
-    }
-}
+应用层：
+表示层：
+会话层：
+传输层：
+网络层：
+数据链路层：
+物理层：
+
+
+
+OSI 7层模型中数据的传输结构
+应用层  Hello World (表示层 TEXT 会话层)
+传输层  报文消息头  TCP
+网络层  IP地址的报文消息头 IP
+链路层  添加一个以太信息
+物理层  网卡  0101010101100 电信号
+
+HTTP请求格式（请求协议）
+请求方法 空格 URL 空格 协议版本 回车符 换行符
+头部字段名 : 值 回车符 换行符
+头部字段名 : 值 回车符 换行符
+头部字段名 : 值 回车符 换行符
+头部字段名 : 值 回车符 换行符
+回车符 换行符
+请求数据
+
+GET /ping/ok HTTP/1.1
+Host: 111.229.61.54:9999
+Connection: keep-alive
+Cache-Control: max-age=0
+Upgrade-Insecure-Requests: 1
+User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10_14_1) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/80.0.3987.132 Safari/537.36
+Accept: text/html,application/xhtml+xml,application/xml;q=0.9,image/webp,image/apng,*/*;q=0.8,application/signed-exchange;v=b3;q=0.9
+Accept-Encoding: gzip, deflate
+Accept-Language: zh-CN,zh;q=0.9,en;q=0.8,pl;q=0.7
+
+
+Frame 289: 78 bytes on wire (624 bits), 78 bytes captured (624 bits) on interface en0, id 0
+Ethernet II, Src: Apple_60:75:60 (78:4f:43:60:75:60), Dst: RealtekU_f8:e3:8c (52:54:00:f8:e3:8c)
+Internet Protocol Version 4, Src: 192.168.1.2, Dst: 192.168.1.13
+Transmission Control Protocol, Src Port: 63344, Dst Port: 8889, Seq: 0, Len: 0
+
+Frame 289: 78 bytes on wire (624 bits), 78 bytes captured (624 bits) on interface en0, id 0
+Ethernet II, Src: Apple_60:75:60 (78:4f:43:60:75:60), Dst: RealtekU_f8:e3:8c (52:54:00:f8:e3:8c)
+Internet Protocol Version 4, Src: 192.168.1.2, Dst: 192.168.1.13
+Transmission Control Protocol, Src Port: 63344, Dst Port: 8889, Seq: 0, Len: 0
+    Source Port: 63344
+    Destination Port: 8889
+    [Stream index: 9]
+    [TCP Segment Len: 0]
+    Sequence number: 0    (relative sequence number)
+    Sequence number (raw): 2426434956
+    [Next sequence number: 1    (relative sequence number)]
+    Acknowledgment number: 0
+    Acknowledgment number (raw): 0
+    1011 .... = Header Length: 44 bytes (11)
+    Flags: 0x002 (SYN)
+    Window size value: 65535
+    [Calculated window size: 65535]
+    Checksum: 0x5627 [unverified]
+    [Checksum Status: Unverified]
+    Urgent pointer: 0
+    Options: (24 bytes), Maximum segment size, No-Operation (NOP), Window scale, No-Operation (NOP), No-Operation (NOP), Timestamps, SACK permitted, End of Option List (EOL)
+    [Timestamps]
+
+Frame 22: 487 bytes on wire (3896 bits), 487 bytes captured (3896 bits) on interface en0, id 0
+Ethernet II, Src: Apple_60:75:60 (78:4f:43:60:75:60), Dst: SichuanT_b7:97:b8 (9c:32:a9:b7:97:b8)
+Internet Protocol Version 4, Src: 192.168.1.2, Dst: 111.229.61.54
+Transmission Control Protocol, Src Port: 65523, Dst Port: 9999, Seq: 484, Ack: 115, Len: 433
+Hypertext Transfer Protocol
+
+
+一期新地址
+https://pan.baidu.com/s/1N9ApOFH7t-PfrRvlNb9GJQ
+提取码：j7ms
+二期新地址
+链接：https://pan.baidu.com/s/1hVII-jujJc6fFAkZwBzgRQ
+提取码：kqxh
+
+这个是我们的Java高级课程的vip链接，每节vip课的录播，资料、源码都会上传到这个链接里，你可以保存一下哦。
