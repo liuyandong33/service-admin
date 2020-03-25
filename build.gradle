@@ -1,6 +1,10 @@
 group "build.dream"
 version "0.1.0"
 
+if (!project.hasProperty("release")) {
+    version = version + "-SNAPSHOT"
+}
+
 buildscript {
     ext {
         springBootVersion = "2.0.0.RELEASE"
