@@ -98,8 +98,8 @@ publishing {
         maven(MavenPublication) {
             artifacts = ["build/libs/${projectName}-${version}.jar"]
             groupId project.group
+            artifactId projectName
             version version
-            artifactId = projectName
         }
     }
 }
