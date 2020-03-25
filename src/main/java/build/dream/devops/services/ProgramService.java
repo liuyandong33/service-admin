@@ -1,10 +1,12 @@
 package build.dream.devops.services;
 
+import build.dream.common.api.ApiRest;
+import build.dream.common.utils.ConfigurationUtils;
+import build.dream.devops.constants.ConfigurationKeys;
 import build.dream.devops.constants.Constants;
 import build.dream.devops.models.program.ListProgramsModel;
 import build.dream.devops.models.program.ListVersionsModel;
 import build.dream.devops.utils.JSchUtils;
-import build.dream.common.api.ApiRest;
 import com.jcraft.jsch.ChannelSftp;
 import com.jcraft.jsch.Session;
 import org.springframework.stereotype.Service;
@@ -15,23 +17,21 @@ import java.util.Vector;
 
 @Service
 public class ProgramService {
-    public ApiRest listPrograms(ListProgramsModel listProgramsModel) {
-        String type = listProgramsModel.getType();
+    private static final String REPOSITORY_HOST_IP_ADDRESS = ConfigurationUtils.getConfiguration(ConfigurationKeys.REPOSITORY_HOST_IP_ADDRESS);
+    private static final String REPOSITORY_HOST_USERNAME = ConfigurationUtils.getConfiguration(ConfigurationKeys.REPOSITORY_HOST_USERNAME);
+    private static final String REPOSITORY_HOST_PASSWORD = ConfigurationUtils.getConfiguration(ConfigurationKeys.REPOSITORY_HOST_PASSWORD);
+    private static final int REPOSITORY_HOST_SSH_PORT = Integer.parseInt(ConfigurationUtils.getConfiguration(ConfigurationKeys.REPOSITORY_HOST_SSH_PORT));
+    private static final String REPOSITORY_PATH = ConfigurationUtils.getConfiguration(ConfigurationKeys.REPOSITORY_PATH);
 
+    public ApiRest listPrograms(ListProgramsModel listProgramsModel) {
         List<String> programs = new ArrayList<String>();
         Session session = null;
         ChannelSftp channelSftp = null;
         try {
-            session = JSchUtils.createSession("root", "root", "192.168.1.10", 22);
+            session = JSchUtils.createSession(REPOSITORY_HOST_USERNAME, REPOSITORY_HOST_PASSWORD, REPOSITORY_HOST_IP_ADDRESS, REPOSITORY_HOST_SSH_PORT);
             channelSftp = (ChannelSftp) JSchUtils.openChannel(session, Constants.CHANNEL_TYPE_SFTP);
             channelSftp.connect();
-            String path = "/usr/local/development/";
-            if ("snapshot".equals(type)) {
-                path += "snapshots";
-            } else if ("release".equals(type)) {
-                path += "releases";
-            }
-            Vector vector = channelSftp.ls(path);
+            Vector vector = channelSftp.ls(REPOSITORY_PATH);
 
             for (int index = 0; index < vector.size(); index++) {
                 ChannelSftp.LsEntry lsEntry = (ChannelSftp.LsEntry) vector.get(index);
@@ -51,23 +51,16 @@ public class ProgramService {
     }
 
     public ApiRest listVersions(ListVersionsModel listVersionsModel) {
-        String type = listVersionsModel.getType();
         String name = listVersionsModel.getName();
 
         List<String> versions = new ArrayList<String>();
         Session session = null;
         ChannelSftp channelSftp = null;
         try {
-            session = JSchUtils.createSession("root", "root", "192.168.1.10", 22);
+            session = JSchUtils.createSession(REPOSITORY_HOST_USERNAME, REPOSITORY_HOST_PASSWORD, REPOSITORY_HOST_IP_ADDRESS, REPOSITORY_HOST_SSH_PORT);
             channelSftp = (ChannelSftp) JSchUtils.openChannel(session, Constants.CHANNEL_TYPE_SFTP);
             channelSftp.connect();
-            String path = "/usr/local/development/";
-            if ("snapshot".equals(type)) {
-                path += "snapshots/" + name;
-            } else if ("release".equals(type)) {
-                path += "releases/" + name;
-            }
-            Vector vector = channelSftp.ls(path);
+            Vector vector = channelSftp.ls(REPOSITORY_PATH + "/" + name);
 
             for (int index = 0; index < vector.size(); index++) {
                 ChannelSftp.LsEntry lsEntry = (ChannelSftp.LsEntry) vector.get(index);

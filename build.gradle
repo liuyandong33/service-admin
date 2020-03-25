@@ -5,7 +5,7 @@ buildscript {
     ext {
         springBootVersion = "2.0.0.RELEASE"
         springCloudVersion = "Finchley.RELEASE"
-        projectName = "service-admin"
+        projectName = "service-devops"
     }
     repositories {
         mavenLocal()
