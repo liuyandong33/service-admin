@@ -1,7 +1,6 @@
 package build.dream.devops.controllers;
 
 import build.dream.common.annotations.ApiRestAction;
-import build.dream.common.annotations.PermitAll;
 import build.dream.devops.models.program.ListProgramsModel;
 import build.dream.devops.models.program.ListVersionsModel;
 import build.dream.devops.services.ProgramService;
@@ -12,7 +11,6 @@ import org.springframework.web.bind.annotation.ResponseBody;
 
 @Controller
 @RequestMapping(value = "/program")
-@PermitAll
 public class ProgramController {
     /**
      * 查询程序列表
