@@ -127,8 +127,8 @@ public class HostService {
     }
 
     @Transactional(rollbackFor = Exception.class)
-    public void updateHost(Host host) {
-        DatabaseHelper.update(host);
+    public long updateHost(Host host) {
+        return DatabaseHelper.update(host);
     }
 
     /**
