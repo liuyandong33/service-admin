@@ -5,15 +5,14 @@ import build.dream.common.utils.DatabaseHelper;
 import build.dream.common.utils.PagedSearchModel;
 import build.dream.common.utils.SearchCondition;
 import build.dream.common.utils.SearchModel;
+import build.dream.devops.constants.Constants;
 import build.dream.devops.domains.LoggingEvent;
 import build.dream.devops.models.log.ListLogsModel;
+import org.apache.commons.lang.StringUtils;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 @Service
 public class LogService {
@@ -22,10 +21,26 @@ public class LogService {
         String deploymentEnvironment = listLogsModel.getDeploymentEnvironment();
         String partitionCode = listLogsModel.getPartitionCode();
         String serviceName = listLogsModel.getServiceName();
+        Date startTime = listLogsModel.getStartTime();
+        Date endTime = listLogsModel.getEndTime();
+        String levelString = listLogsModel.getLevelString();
+        String searchString = listLogsModel.getSearchString();
         Integer page = listLogsModel.getPage();
         Integer rows = listLogsModel.getRows();
 
         List<SearchCondition> searchConditions = new ArrayList<SearchCondition>();
+        if (Objects.nonNull(startTime)) {
+            searchConditions.add(new SearchCondition("timestmp", Constants.SQL_OPERATION_SYMBOL_GREATER_THAN_EQUAL, startTime.getTime()));
+        }
+        if (Objects.nonNull(endTime)) {
+            searchConditions.add(new SearchCondition("timestmp", Constants.SQL_OPERATION_SYMBOL_LESS_THAN_EQUAL, endTime.getTime()));
+        }
+        if (StringUtils.isNotBlank(levelString)) {
+            searchConditions.add(new SearchCondition("level_string", Constants.SQL_OPERATION_SYMBOL_EQUAL, levelString));
+        }
+        if (StringUtils.isNotBlank(searchString)) {
+            searchConditions.add(new SearchCondition("formatted_message", Constants.SQL_OPERATION_SYMBOL_LIKE, "%" + searchString + "%"));
+        }
         SearchModel searchModel = SearchModel.builder().searchConditions(searchConditions).build();
         long total = DatabaseHelper.count(LoggingEvent.class, searchModel);
         List<LoggingEvent> loggingEvents = null;
@@ -34,6 +49,7 @@ public class LogService {
                     .searchConditions(searchConditions)
                     .page(page)
                     .rows(rows)
+                    .orderBy("timestmp DESC, event_id DESC")
                     .build();
             loggingEvents = DatabaseHelper.findAllPaged(LoggingEvent.class, pagedSearchModel);
         } else {

@@ -5,6 +5,7 @@ import build.dream.common.models.BasicModel;
 import javax.validation.constraints.Max;
 import javax.validation.constraints.Min;
 import javax.validation.constraints.NotNull;
+import java.util.Date;
 
 public class ListLogsModel extends BasicModel {
     /**
@@ -23,6 +24,14 @@ public class ListLogsModel extends BasicModel {
      */
     @NotNull
     private String serviceName;
+
+    private Date startTime;
+
+    private Date endTime;
+
+    private String levelString;
+
+    private String searchString;
 
     @NotNull
     @Min(value = 1)
@@ -55,6 +64,38 @@ public class ListLogsModel extends BasicModel {
 
     public void setServiceName(String serviceName) {
         this.serviceName = serviceName;
+    }
+
+    public Date getStartTime() {
+        return startTime;
+    }
+
+    public void setStartTime(Date startTime) {
+        this.startTime = startTime;
+    }
+
+    public Date getEndTime() {
+        return endTime;
+    }
+
+    public void setEndTime(Date endTime) {
+        this.endTime = endTime;
+    }
+
+    public String getLevelString() {
+        return levelString;
+    }
+
+    public void setLevelString(String levelString) {
+        this.levelString = levelString;
+    }
+
+    public String getSearchString() {
+        return searchString;
+    }
+
+    public void setSearchString(String searchString) {
+        this.searchString = searchString;
     }
 
     public Integer getPage() {
