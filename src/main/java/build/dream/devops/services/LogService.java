@@ -7,6 +7,7 @@ import build.dream.common.utils.SearchCondition;
 import build.dream.common.utils.SearchModel;
 import build.dream.devops.constants.Constants;
 import build.dream.devops.domains.LoggingEvent;
+import build.dream.devops.models.log.ClearLogsModel;
 import build.dream.devops.models.log.ListLogsModel;
 import org.apache.commons.lang.StringUtils;
 import org.springframework.stereotype.Service;
@@ -16,6 +17,12 @@ import java.util.*;
 
 @Service
 public class LogService {
+    /**
+     * 分页查询日志
+     *
+     * @param listLogsModel
+     * @return
+     */
     @Transactional(readOnly = true)
     public ApiRest listLogs(ListLogsModel listLogsModel) {
         String deploymentEnvironment = listLogsModel.getDeploymentEnvironment();
@@ -59,5 +66,22 @@ public class LogService {
         data.put("total", total);
         data.put("rows", loggingEvents);
         return ApiRest.builder().data(data).message("查询日志成功！").successful(true).build();
+    }
+
+    /**
+     * 清除日志
+     *
+     * @param clearLogsModel
+     * @return
+     */
+    @Transactional(rollbackFor = Exception.class)
+    public ApiRest clearLogs(ClearLogsModel clearLogsModel) {
+        String deploymentEnvironment = clearLogsModel.getDeploymentEnvironment();
+        String partitionCode = clearLogsModel.getPartitionCode();
+        String serviceName = clearLogsModel.getServiceName();
+        DatabaseHelper.truncateTable("logging_event");
+        DatabaseHelper.truncateTable("logging_event_property");
+        DatabaseHelper.truncateTable("logging_event_exception");
+        return ApiRest.builder().message("清除日志成功！").successful(true).build();
     }
 }
