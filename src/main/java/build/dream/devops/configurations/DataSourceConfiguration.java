@@ -65,14 +65,15 @@ public class DataSourceConfiguration {
     @Primary
     @Bean(name = "routingDataSource")
     public DataSource routingDataSource() {
+        DataSource defaultTargetDataSource = hikariDevopsDataSource();
         Map<Object, Object> targetDataSources = new HashMap<Object, Object>();
-        targetDataSources.put("devops", hikariDevopsDataSource());
+        targetDataSources.put("devops", defaultTargetDataSource);
         targetDataSources.put("test-zd1-catering-log", hikariTestZd1CateringLogDataSource());
         targetDataSources.put("beta-zd1-catering-log", hikariBetaZd1CateringLogDataSource());
         targetDataSources.put("production-zd1-catering-log", hikariProductionZd1CateringLogDataSource());
         targetDataSources.put("test-platform-log", hikariTestPlatformLogDataSource());
         targetDataSources.put("beta-platform-log", hikariBetaPlatformLogDataSource());
         targetDataSources.put("production-platform-log", hikariProductionPlatformLogDataSource());
-        return new RoutingDataSource(hikariDevopsDataSource(), targetDataSources);
+        return new RoutingDataSource(defaultTargetDataSource, targetDataSources);
     }
 }
