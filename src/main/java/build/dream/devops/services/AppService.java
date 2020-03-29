@@ -1,11 +1,11 @@
 package build.dream.devops.services;
 
-import build.dream.devops.constants.Constants;
-import build.dream.devops.models.app.ListAppsModel;
-import build.dream.devops.models.app.SaveAppModel;
 import build.dream.common.api.ApiRest;
 import build.dream.common.domains.devops.App;
 import build.dream.common.utils.*;
+import build.dream.devops.constants.Constants;
+import build.dream.devops.models.app.ListAppsModel;
+import build.dream.devops.models.app.SaveAppModel;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -13,6 +13,12 @@ import java.util.*;
 
 @Service
 public class AppService {
+    /**
+     * 分页查询应用
+     *
+     * @param listAppsModel
+     * @return
+     */
     @Transactional(readOnly = true)
     public ApiRest listApps(ListAppsModel listAppsModel) {
         Integer page = listAppsModel.getPage();
@@ -43,6 +49,12 @@ public class AppService {
         return ApiRest.builder().data(data).message("查询应用列表成功！").build();
     }
 
+    /**
+     * 保存应用
+     *
+     * @param saveAppModel
+     * @return
+     */
     @Transactional(rollbackFor = Exception.class)
     public ApiRest saveApp(SaveAppModel saveAppModel) {
         Long userId = saveAppModel.obtainUserId();
