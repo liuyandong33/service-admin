@@ -37,16 +37,16 @@ public class LogService {
 
         List<SearchCondition> searchConditions = new ArrayList<SearchCondition>();
         if (Objects.nonNull(startTime)) {
-            searchConditions.add(new SearchCondition("timestmp", Constants.SQL_OPERATION_SYMBOL_GREATER_THAN_EQUAL, startTime.getTime()));
+            searchConditions.add(new SearchCondition(LoggingEvent.ColumnName.TIMESTMP, Constants.SQL_OPERATION_SYMBOL_GREATER_THAN_EQUAL, startTime.getTime()));
         }
         if (Objects.nonNull(endTime)) {
-            searchConditions.add(new SearchCondition("timestmp", Constants.SQL_OPERATION_SYMBOL_LESS_THAN_EQUAL, endTime.getTime()));
+            searchConditions.add(new SearchCondition(LoggingEvent.ColumnName.TIMESTMP, Constants.SQL_OPERATION_SYMBOL_LESS_THAN_EQUAL, endTime.getTime()));
         }
         if (StringUtils.isNotBlank(levelString)) {
-            searchConditions.add(new SearchCondition("level_string", Constants.SQL_OPERATION_SYMBOL_EQUAL, levelString));
+            searchConditions.add(new SearchCondition(LoggingEvent.ColumnName.LEVEL_STRING, Constants.SQL_OPERATION_SYMBOL_EQUAL, levelString));
         }
         if (StringUtils.isNotBlank(searchString)) {
-            searchConditions.add(new SearchCondition("formatted_message", Constants.SQL_OPERATION_SYMBOL_LIKE, "%" + searchString + "%"));
+            searchConditions.add(new SearchCondition(LoggingEvent.ColumnName.FORMATTED_MESSAGE, Constants.SQL_OPERATION_SYMBOL_LIKE, "%" + searchString + "%"));
         }
         SearchModel searchModel = SearchModel.builder().searchConditions(searchConditions).build();
         long total = DatabaseHelper.count(LoggingEvent.class, searchModel);
@@ -56,7 +56,7 @@ public class LogService {
                     .searchConditions(searchConditions)
                     .page(page)
                     .rows(rows)
-                    .orderBy("timestmp DESC, event_id DESC")
+                    .orderBy(LoggingEvent.ColumnName.TIMESTMP + " " + Constants.DESC + ", " + LoggingEvent.ColumnName.EVENT_ID + " " + Constants.DESC)
                     .build();
             loggingEvents = DatabaseHelper.findAllPaged(LoggingEvent.class, pagedSearchModel);
         } else {

@@ -138,4 +138,22 @@ public class LoggingEvent {
     public void setEventId(Long eventId) {
         this.eventId = eventId;
     }
+
+    public static class ColumnName {
+        public static final String TIMESTMP = "timestmp";
+        public static final  String FORMATTED_MESSAGE = "formatted_message";
+        public static final  String LOGGER_NAME = "logger_name";
+        public static final  String LEVEL_STRING = "level_string";
+        public static final  String THREAD_NAME = "thread_name";
+        public static final  String REFERENCE_FLAG = "reference_flag";
+        public static final  String ARG0 = "arg0";
+        public static final  String ARG1 = "arg1";
+        public static final  String ARG2 = "arg2";
+        public static final  String ARG3 = "arg3";
+        public static final  String CALLER_FILENAME = "caller_filename";
+        public static final  String CALLER_CLASS = "caller_class";
+        public static final  String CALLER_METHOD = "caller_method";
+        public static final  String CALLER_LINE = "caller_line";
+        public static final  String EVENT_ID = "event_id";
+    }
 }
