@@ -62,6 +62,24 @@ public class DataSourceConfiguration {
         return DataSourceBuilder.create().type(HikariDataSource.class).build();
     }
 
+    @Bean
+    @ConfigurationProperties(prefix = "datasource.hikari.test-devops-log")
+    public DataSource hikariTestDevopsLogDataSource() {
+        return DataSourceBuilder.create().type(HikariDataSource.class).build();
+    }
+
+    @Bean
+    @ConfigurationProperties(prefix = "datasource.hikari.beta-devops-log")
+    public DataSource hikariBetaDevopsLogDataSource() {
+        return DataSourceBuilder.create().type(HikariDataSource.class).build();
+    }
+
+    @Bean
+    @ConfigurationProperties(prefix = "datasource.hikari.production-devops-log")
+    public DataSource hikariProductionDevopsLogDataSource() {
+        return DataSourceBuilder.create().type(HikariDataSource.class).build();
+    }
+
     @Primary
     @Bean(name = "routingDataSource")
     public DataSource routingDataSource() {
@@ -74,6 +92,9 @@ public class DataSourceConfiguration {
         targetDataSources.put("test-platform-log", hikariTestPlatformLogDataSource());
         targetDataSources.put("beta-platform-log", hikariBetaPlatformLogDataSource());
         targetDataSources.put("production-platform-log", hikariProductionPlatformLogDataSource());
+        targetDataSources.put("test-devops-log", hikariTestDevopsLogDataSource());
+        targetDataSources.put("beta-devops-log", hikariBetaDevopsLogDataSource());
+        targetDataSources.put("production-devops-log", hikariProductionDevopsLogDataSource());
         return new RoutingDataSource(defaultTargetDataSource, targetDataSources);
     }
 }
