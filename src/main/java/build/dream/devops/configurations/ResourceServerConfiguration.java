@@ -31,7 +31,7 @@ public class ResourceServerConfiguration extends ResourceServerConfigurerAdapter
     @Autowired
     private RedisConnectionFactory redisConnectionFactory;
 
-    private static final String[] PERMIT_ALL_ANT_PATTERNS = {};
+    private static final String[] PERMIT_ALL_ANT_PATTERNS = {"/favicon.ico"};
 
     @Bean
     public TokenStore tokenStore() {
