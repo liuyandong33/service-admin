@@ -80,3 +80,7 @@ https://pan.baidu.com/s/1N9ApOFH7t-PfrRvlNb9GJQ
 这个是我们的Java高级课程的vip链接，每节vip课的录播，资料、源码都会上传到这个链接里，你可以保存一下哦。
 
 https://market.cosmoplat.com/boss/insertelasticgoods.htm
+
+http://10.138.228.199:32473/
+
+http://10.138.228.199:34612/

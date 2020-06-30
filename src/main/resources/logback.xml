@@ -6,16 +6,16 @@
         </encoder>
     </appender>
 
-    <appender name="database" class="build.dream.common.logback.DatabaseAppender"></appender>
+<!--    <appender name="database" class="build.dream.common.logback.DatabaseAppender"></appender>-->
 
-    <appender name="async" class="ch.qos.logback.classic.AsyncAppender">
-        <discardingThreshold>0</discardingThreshold>
-        <queueSize>512</queueSize>
-        <appender-ref ref="database"></appender-ref>
-    </appender>
+<!--    <appender name="async" class="ch.qos.logback.classic.AsyncAppender">-->
+<!--        <discardingThreshold>0</discardingThreshold>-->
+<!--        <queueSize>512</queueSize>-->
+<!--        <appender-ref ref="database"></appender-ref>-->
+<!--    </appender>-->
 
     <root level="INFO">
         <appender-ref ref="console"></appender-ref>
-        <appender-ref ref="async"></appender-ref>
+<!--        <appender-ref ref="async"></appender-ref>-->
     </root>
 </configuration>

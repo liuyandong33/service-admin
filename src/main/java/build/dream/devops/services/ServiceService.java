@@ -7,9 +7,11 @@ import build.dream.common.domains.devops.JavaOption;
 import build.dream.common.utils.*;
 import build.dream.devops.constants.Constants;
 import build.dream.devops.mappers.ServiceMapper;
-import build.dream.devops.models.service.*;
+import build.dream.devops.models.service.DeployModel;
+import build.dream.devops.models.service.ListServicesModel;
+import build.dream.devops.models.service.ObtainServiceInfoModel;
+import build.dream.devops.models.service.SaveServiceModel;
 import build.dream.devops.tasks.DeployTask;
-import build.dream.devops.utils.ZookeeperUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -212,83 +214,83 @@ public class ServiceService {
         return service.getDeploymentEnvironment() + "-" + service.getServiceName();
     }
 
-    /**
-     * 新增配置
-     *
-     * @param addConfigurationModel
-     * @return
-     */
-    public ApiRest addConfiguration(AddConfigurationModel addConfigurationModel) {
-        Long serviceId = addConfigurationModel.getServiceId();
-        String configurationKey = addConfigurationModel.getConfigurationKey();
-        String configurationValue = addConfigurationModel.getConfigurationValue();
-
-        String springApplicationName = obtainSpringApplicationName(serviceId);
-        ZookeeperUtils.notExistsCreate("/configurations");
-        ZookeeperUtils.notExistsCreate("/configurations/" + springApplicationName);
-
-        String path = "/configurations/" + springApplicationName + "/" + configurationKey;
-        if (ZookeeperUtils.exists(path)) {
-            ZookeeperUtils.setData(path, configurationValue);
-        } else {
-            ZookeeperUtils.create(path, configurationValue);
-        }
-
-        return ApiRest.builder().message("新增配置成功！").successful(true).build();
-    }
-
-    /**
-     * 查询配置
-     *
-     * @param listConfigurationsModel
-     * @return
-     */
-    public ApiRest listConfigurations(ListConfigurationsModel listConfigurationsModel) {
-        Long serviceId = listConfigurationsModel.getServiceId();
-        String path = "/configurations/" + obtainSpringApplicationName(serviceId);
-
-        List<Map<String, String>> configurations = new ArrayList<Map<String, String>>();
-        if (ZookeeperUtils.exists(path)) {
-            List<String> keys = ZookeeperUtils.getChildren(path);
-            for (String key : keys) {
-                Map<String, String> configuration = new HashMap<String, String>();
-                configuration.put("configurationKey", key);
-                configuration.put("configurationValue", ZookeeperUtils.getData(path + "/" + key));
-                configurations.add(configuration);
-            }
-        }
-        return ApiRest.builder().data(configurations).message("查询配置成功！").successful(true).build();
-    }
-
-    /**
-     * 修改配置
-     *
-     * @param updateConfigurationModel
-     * @return
-     */
-    public ApiRest updateConfiguration(UpdateConfigurationModel updateConfigurationModel) {
-        Long serviceId = updateConfigurationModel.getServiceId();
-        String configurationKey = updateConfigurationModel.getConfigurationKey();
-        String configurationValue = updateConfigurationModel.getConfigurationValue();
-
-        String path = "/configurations/" + obtainSpringApplicationName(serviceId) + "/" + configurationKey;
-        ValidateUtils.isTrue(ZookeeperUtils.exists(path), "配置不存在，无法修改！");
-        ZookeeperUtils.setData(path, configurationValue);
-        return ApiRest.builder().message("修改配置成功！").successful(true).build();
-    }
-
-    /**
-     * 删除配置
-     *
-     * @param deleteConfigurationModel
-     * @return
-     */
-    public ApiRest deleteConfiguration(DeleteConfigurationModel deleteConfigurationModel) {
-        Long serviceId = deleteConfigurationModel.getServiceId();
-        String configurationKey = deleteConfigurationModel.getConfigurationKey();
-
-        String path = "/configurations/" + obtainSpringApplicationName(serviceId) + "/" + configurationKey;
-        ZookeeperUtils.delete(path);
-        return ApiRest.builder().message("删除配置成功！").successful(true).build();
-    }
+//    /**
+//     * 新增配置
+//     *
+//     * @param addConfigurationModel
+//     * @return
+//     */
+//    public ApiRest addConfiguration(AddConfigurationModel addConfigurationModel) {
+//        Long serviceId = addConfigurationModel.getServiceId();
+//        String configurationKey = addConfigurationModel.getConfigurationKey();
+//        String configurationValue = addConfigurationModel.getConfigurationValue();
+//
+//        String springApplicationName = obtainSpringApplicationName(serviceId);
+//        ZookeeperUtils.notExistsCreate("/configurations");
+//        ZookeeperUtils.notExistsCreate("/configurations/" + springApplicationName);
+//
+//        String path = "/configurations/" + springApplicationName + "/" + configurationKey;
+//        if (ZookeeperUtils.exists(path)) {
+//            ZookeeperUtils.setData(path, configurationValue);
+//        } else {
+//            ZookeeperUtils.create(path, configurationValue);
+//        }
+//
+//        return ApiRest.builder().message("新增配置成功！").successful(true).build();
+//    }
+//
+//    /**
+//     * 查询配置
+//     *
+//     * @param listConfigurationsModel
+//     * @return
+//     */
+//    public ApiRest listConfigurations(ListConfigurationsModel listConfigurationsModel) {
+//        Long serviceId = listConfigurationsModel.getServiceId();
+//        String path = "/configurations/" + obtainSpringApplicationName(serviceId);
+//
+//        List<Map<String, String>> configurations = new ArrayList<Map<String, String>>();
+//        if (ZookeeperUtils.exists(path)) {
+//            List<String> keys = ZookeeperUtils.getChildren(path);
+//            for (String key : keys) {
+//                Map<String, String> configuration = new HashMap<String, String>();
+//                configuration.put("configurationKey", key);
+//                configuration.put("configurationValue", ZookeeperUtils.getData(path + "/" + key));
+//                configurations.add(configuration);
+//            }
+//        }
+//        return ApiRest.builder().data(configurations).message("查询配置成功！").successful(true).build();
+//    }
+//
+//    /**
+//     * 修改配置
+//     *
+//     * @param updateConfigurationModel
+//     * @return
+//     */
+//    public ApiRest updateConfiguration(UpdateConfigurationModel updateConfigurationModel) {
+//        Long serviceId = updateConfigurationModel.getServiceId();
+//        String configurationKey = updateConfigurationModel.getConfigurationKey();
+//        String configurationValue = updateConfigurationModel.getConfigurationValue();
+//
+//        String path = "/configurations/" + obtainSpringApplicationName(serviceId) + "/" + configurationKey;
+//        ValidateUtils.isTrue(ZookeeperUtils.exists(path), "配置不存在，无法修改！");
+//        ZookeeperUtils.setData(path, configurationValue);
+//        return ApiRest.builder().message("修改配置成功！").successful(true).build();
+//    }
+//
+//    /**
+//     * 删除配置
+//     *
+//     * @param deleteConfigurationModel
+//     * @return
+//     */
+//    public ApiRest deleteConfiguration(DeleteConfigurationModel deleteConfigurationModel) {
+//        Long serviceId = deleteConfigurationModel.getServiceId();
+//        String configurationKey = deleteConfigurationModel.getConfigurationKey();
+//
+//        String path = "/configurations/" + obtainSpringApplicationName(serviceId) + "/" + configurationKey;
+//        ZookeeperUtils.delete(path);
+//        return ApiRest.builder().message("删除配置成功！").successful(true).build();
+//    }
 }
